@@ -20,7 +20,7 @@ def get_representation(adata, method_class, method_name, **kwargs):
     try:
         method_instance = method_class(**kwargs)
 
-        if method_name == "composition":
+        if method_name == "ct_pseudobulk":
             # Set stricter thresholds for sample and cluster size
             method_instance.prepare_anndata(adata, sample_size_threshold=100, cluster_size_threshold=5)
         else:
