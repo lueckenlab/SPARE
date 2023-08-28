@@ -1,6 +1,11 @@
+import random
+
 import numpy as np
 import patient_representation as pr
 import scanpy as sc 
+
+random.seed(42)
+np.random.seed(42)
 
 
 def save_results(adata, method, method_name):

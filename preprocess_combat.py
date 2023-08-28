@@ -1,6 +1,13 @@
+import random
+
 import scanpy as sc
 import scvi
 import pandas as pd
+import numpy as np
+
+random.seed(42)
+np.random.seed(42)
+
 
 ADATA_PATH = "../data/COMBAT-CITESeq-DATA.h5ad"
 IFN_1_SIGNATURE_PATH = "../data/ifn_1_score.tsv"
