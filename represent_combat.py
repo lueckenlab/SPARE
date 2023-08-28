@@ -31,8 +31,8 @@ def get_representation(adata, method_class, method_name, **kwargs):
     return adata
 
 
-ADATA_PATH = "data/combat_processed.h5ad"
-RESULT_PATH = "data/combat_with_representations.h5ad"
+ADATA_PATH = "../data/combat_processed.h5ad"
+RESULT_PATH = "../data/combat_with_representations.h5ad"
 SAMPLE_KEY = "scRNASeq_sample_ID"
 CELL_TYPE_KEY = "Annotation_major_subset"
 
