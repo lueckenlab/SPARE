@@ -36,7 +36,8 @@ def get_representation(adata, method_class, method_name, **kwargs):
 
         print("Success", end="\n\n")
 
-    except Exception:
+    except Exception as e:
+        print(e)
         print("Failed", end="\n\n")
 
     return adata
