@@ -27,17 +27,29 @@ adata = sc.read_h5ad(ADATA_PATH)
 # COMBAT data is multimodal i.e. it contains protein expression as well
 # We will leave it behind for now and focus only on the RNA expression data
 print("Subsetting gene expression data")
-adata = adata[:, adata.var["feature_types"] == "Gene Expression"].copy()
+is_rna_expression = adata.var["feature_types"] == "Gene Expression"
+adata = adata[:, is_rna_expression].copy()
 
 # Remove cells with no label
 adata = adata[adata.obs["Annotation_major_subset"] != "nan"]
+
+# Extract raw counts that are needed by some methods
+print("Moving raw counts to obsm and layers")
+adata.obsm["X_raw_counts"] = adata.layers["raw"][:, is_rna_expression]
+adata.layers["raw"] = adata.layers["raw"][:, is_rna_expression]
+print("adata.obsm['X_raw_counts'].shape", adata.obsm["X_raw_counts"].shape)
+print("adata.layers['raw'].shape", adata.layers["raw"].shape)
 
 # Find highly-variable genes
 print("Subsetting HVG")
 sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5, flavor="seurat_v3",
                             n_top_genes=3000, layer="raw")
-
 adata = adata[:, adata.var.highly_variable].copy()
+adata.obsm["X_raw_counts"] = adata.obsm["X_raw_counts"][:, adata.var.highly_variable]
+adata.layers["raw"] = adata.layers["raw"][:, adata.var.highly_variable]
+print("adata.shape", adata.shape)
+print("adata.obsm['X_raw_counts'].shape", adata.obsm["X_raw_counts"].shape)
+print("adata.layers['raw'].shape", adata.layers["raw"].shape)
 
 print("Calculating IFN1 signature")
 sc.tl.score_genes(adata, ifn_1_signature_genes, score_name="ifn_1_score")
