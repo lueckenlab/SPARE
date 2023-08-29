@@ -34,8 +34,10 @@ def get_representation(adata, method_class, method_name, **kwargs):
         adata = save_results(adata, method_instance, method_name)
         adata.write(RESULT_PATH)
 
+        print("Success", end="\n\n")
+
     except Exception:
-        print("Failed")
+        print("Failed", end="\n\n")
 
     return adata
 
