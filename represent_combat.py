@@ -92,7 +92,7 @@ methods = [
     (pr.tl.WassersteinTSNE, "wasserstein_scanvi", {"replicate_key": CELL_TYPE_KEY, "layer": "X_scANVI"}),
     (pr.tl.WassersteinTSNE, "wasserstein_scvi_pool", {"replicate_key": CELL_TYPE_KEY, "layer": "X_scVI_Pool_ID"}),
     (pr.tl.WassersteinTSNE, "wasserstein_scanvi_pool", {"replicate_key": CELL_TYPE_KEY, "layer": "X_scANVI_Pool_ID"}),
-    (pr.tl.MrVI, "mrvi", {"categorical_nuisance_keys": ["Pool_ID"], "layer": "X_raw_counts", "max_epochs": 100}),
+    (pr.tl.MrVI, "mrvi", {"categorical_nuisance_keys": ["Pool_ID"], "layer": "raw", "max_epochs": 100}),
     # (pr.tl.PILOT, "pilot", {"patient_state_col": "Outcome", "dataset_name": "COMBAT_subset", "layer": "X_pca"})  # Broken API ATM
 ]
 
