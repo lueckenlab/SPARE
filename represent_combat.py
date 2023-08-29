@@ -18,15 +18,19 @@ def save_results(adata, method, method_name):
 def get_representation(adata, method_class, method_name, **kwargs):
     print(f"Running {method_name}")
     try:
+        print("Initializing method")
         method_instance = method_class(**kwargs)
 
+        print("Preparing adata")
         if method_name == "ct_pseudobulk":
             # Set stricter thresholds for sample and cluster size
             method_instance.prepare_anndata(adata, sample_size_threshold=100, cluster_size_threshold=5)
         else:
             method_instance.prepare_anndata(adata, sample_size_threshold=0, cluster_size_threshold=0)
         
+        print("Calculating distances")
         method_instance.calculate_distance_matrix(force=True)
+        print("Saving results")
         adata = save_results(adata, method_instance, method_name)
         adata.write(RESULT_PATH)
 
