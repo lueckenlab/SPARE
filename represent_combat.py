@@ -53,19 +53,29 @@ print(adata)
 
 # Run scPoli manually to save its cell representation
 try:
-    print("Running scPoli")
+    print("Setting up scPoli")
     scpoli = pr.tl.SCPoli(sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY, layer="X_raw_counts")
+
+    print("Preparing adata")
     scpoli.prepare_anndata(adata, sample_size_threshold=0, cluster_size_threshold=0)
+
+    print("Calculating distances")
     scpoli.calculate_distance_matrix(force=True)
+
+    print("Saving results")
     adata = save_results(adata, scpoli, "scpoli")
+
+    print("Saving scPoli cell representation")
     adata.obsm["X_scpoli"] = scpoli.model.get_latent(
         adata.obsm["X_raw_counts"],
         adata.obs["scRNASeq_sample_ID"].values,
         mean=True
     )
     adata.write(RESULT_PATH)
-except Exception:
-    print("Failed")
+    print("Success", sep="\n\n")
+except Exception as e:
+    print(e)
+    print("Failed", sep="\n\n")
 
 # method class, method name, additional arguments
 methods = [
