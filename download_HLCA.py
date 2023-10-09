@@ -1,4 +1,5 @@
 import cellxgene_census
+import scanpy as sc
 
 FULL_HLCA_ID = "9f222629-9e39-47d0-b83f-e08d610c7479"
 
@@ -23,9 +24,14 @@ pneumonia_related_diseases = [
     # pulmonary sarcoidosis
 ]
 
-with cellxgene_census.open_soma() as census:
-    adata = cellxgene_census.get_anndata(
-        census, organism="Homo sapiens", obs_value_filter=f"dataset_id == '{FULL_HLCA_ID}' and disease in {str(pneumonia_related_diseases)}"
-    )
+cellxgene_census.download_source_h5ad(
+    FULL_HLCA_ID, to_path="../data/HLCA.h5ad"
+)
 
-adata.write("data/HLCA_subset.h5ad")
+adata = sc.read_h5ad("../data/HLCA.h5ad")
+
+print("HLCA shape before filtering out diseases:", adata.shape)
+adata = adata[adata.obs["disease"].isin(pneumonia_related_diseases)]
+print("HLCA shape after filtering out diseases:", adata.shape)
+
+adata.write("../data/HLCA_subset.h5ad")
