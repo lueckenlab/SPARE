@@ -20,14 +20,13 @@ sc.pp.log1p(adata)
 
 # Find highly-variable genes
 print("Subsetting HVG")
-sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5, flavor="seurat_v3",
-                            n_top_genes=3000, layer="raw")
+sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5, flavor="seurat_v3", n_top_genes=3000)
 adata = adata[:, adata.var.highly_variable].copy()
 
 # Obtain scVI embedding
 print("Running scVI")
 adata.raw = adata
-scvi.model.SCVI.setup_anndata(adata, layer="raw", batch_key=BATCH_KEY)
+scvi.model.SCVI.setup_anndata(adata, batch_key=BATCH_KEY)
 vae = scvi.model.SCVI(adata, n_layers=2, n_latent=30, gene_likelihood="nb")
 vae.train()
 adata.obsm["X_scVI"] = vae.get_latent_representation()
