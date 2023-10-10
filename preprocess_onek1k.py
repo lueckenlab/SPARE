@@ -11,8 +11,10 @@ CELL_TYPE_KEY = "cell_type"
 BATCH_KEY = "pool_number"
 
 # Copy raw counts to obsm
-adata.obsm["raw"] = adata.X
-adata.layers["raw"] = adata.X
+adata.obsm["raw"] = adata.X.copy()
+adata.layers["raw"] = adata.X.copy()
+
+# TODO: add checks that "raw" counts are not normalized
 
 print("Normalizing data")
 sc.pp.normalize_total(adata, target_sum=1e4)
