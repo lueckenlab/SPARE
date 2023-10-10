@@ -27,8 +27,8 @@ adata = adata[:, adata.var.highly_variable].copy()
 # Obtain scVI embedding
 print("Running scVI")
 adata.raw = adata
-scvi.model.SCVI.setup_anndata(adata, batch_key=BATCH_KEY)
-vae = scvi.model.SCVI(adata, n_layers=2, n_latent=30, gene_likelihood="nb", layer="raw")
+scvi.model.SCVI.setup_anndata(adata, batch_key=BATCH_KEY, layer="raw")
+vae = scvi.model.SCVI(adata, n_layers=2, n_latent=30, gene_likelihood="nb")
 vae.train()
 adata.obsm["X_scVI"] = vae.get_latent_representation()
 
