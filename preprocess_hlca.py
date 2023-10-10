@@ -18,8 +18,8 @@ sc.pp.log1p(adata)
 print("Calculating HVG")
 sc.pp.highly_variable_genes(adata, flavor="seurat_v3", n_top_genes=3000, batch_key=BATCH_KEY, layer="raw")
 
-adata = adata[:, adata.var.highly_variable].copy()
 adata.layers["raw"] = adata.layers["raw"][:, adata.var.highly_variable]
+adata = adata[:, adata.var.highly_variable].copy()
 
 sc.tl.pca(adata)
 
