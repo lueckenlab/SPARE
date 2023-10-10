@@ -82,11 +82,13 @@ methods = [
     (pr.tl.RandomVector, "random_vec", {}),
     (pr.tl.TotalPseudobulk, "pseudobulk", {"layer": "raw"}),
     (pr.tl.TotalPseudobulk, "pseudobulk_pca", {"layer": "X_pca"}),
+    (pr.tl.TotalPseudobulk, "pseudobulk_harmony", {"layer": "X_harmony"}),
     (pr.tl.CellTypePseudobulk, "ct_pseudobulk", {}),
     (pr.tl.CellTypesComposition, "composition", {}),
     (pr.tl.TotalPseudobulk, "pseudobulk_scvi", {"layer": "X_scVI"}),
     (pr.tl.TotalPseudobulk, "pseudobulk_scanvi", {"layer": "X_scANVI"}),
     (pr.tl.TotalPseudobulk, "pseudobulk_scpoli", {"layer": "X_scpoli"}),
+    (pr.tl.WassersteinTSNE, "wasserstein_scvi", {"replicate_key": CELL_TYPE_KEY, "layer": "X_scVI"}),
     (pr.tl.WassersteinTSNE, "wasserstein_scanvi", {"replicate_key": CELL_TYPE_KEY, "layer": "X_scANVI"}),
     (pr.tl.MrVI, "mrvi", {"categorical_nuisance_keys": ["pool_number"], "layer": "raw", "max_epochs": 100}),
     (pr.tl.PILOT, "pilot", {"patient_state_col": "sex", "layer": "X_pca"})
