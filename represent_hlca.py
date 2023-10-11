@@ -88,7 +88,7 @@ methods = [
     (pr.tl.TotalPseudobulk, "pseudobulk_scanvi", {"layer": "X_scanvi_emb"}),
     (pr.tl.TotalPseudobulk, "pseudobulk_scpoli", {"layer": "X_scpoli"}),
     (pr.tl.WassersteinTSNE, "wasserstein_scanvi", {"replicate_key": CELL_TYPE_KEY, "layer": "X_scanvi_emb"}),
-    (pr.tl.MrVI, "mrvi", {"categorical_nuisance_keys": ["dataset"], "layer": "X", "max_epochs": 100}),
+    (pr.tl.MrVI, "mrvi", {"categorical_nuisance_keys": ["dataset"], "layer": "X", "max_epochs": 50}),
     (pr.tl.PILOT, "pilot", {"patient_state_col": "disease", "layer": "X_pca"})
 ]
 
