@@ -28,9 +28,11 @@ sc.pp.normalize_total(adata, target_sum=1e4)
 print("Log-transforming data")
 sc.pp.log1p(adata)
 
-features_to_take = adata.var.highly_variable
-adata = adata[:, features_to_take].copy()
-adata.layers["raw"] = adata.layers["raw"][:, features_to_take]
+adata = adata[:, adata.var.highly_variable].copy()
+adata.layers["raw"] = adata.layers["raw"][:, adata.index]
+print("adata.shape", adata.shape)
+print("adata.layers['raw'].shape", adata.layers["raw"].shape)
+adata.obsm["raw"] = adata.layers["raw"]
 
 # Obtain scVI embedding
 print("Running scVI")
