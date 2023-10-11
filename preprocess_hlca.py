@@ -10,13 +10,13 @@ BATCH_KEY = "dataset"
 adata.obsm["raw"] = adata.X.copy()
 adata.layers["raw"] = adata.X.copy()
 
+print("Calculating HVG")
+sc.pp.highly_variable_genes(adata, flavor="seurat_v3", n_top_genes=3000, batch_key=BATCH_KEY, layer="raw")
+
 print("Normalizing data")
 sc.pp.normalize_total(adata, target_sum=1e4)
 print("Log-transforming data")
 sc.pp.log1p(adata)
-
-print("Calculating HVG")
-sc.pp.highly_variable_genes(adata, flavor="seurat_v3", n_top_genes=3000, batch_key=BATCH_KEY, layer="raw")
 
 features_to_take = adata.var.highly_variable
 adata = adata[:, features_to_take].copy()

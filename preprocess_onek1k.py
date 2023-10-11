@@ -16,14 +16,14 @@ adata.layers["raw"] = adata.X.copy()
 
 # TODO: add checks that "raw" counts are not normalized
 
+# Find highly-variable genes
+print("Subsetting HVG")
+sc.pp.highly_variable_genes(adata, flavor="seurat_v3", n_top_genes=3000, layer="raw", batch_key=BATCH_KEY)
+
 print("Normalizing data")
 sc.pp.normalize_total(adata, target_sum=1e4)
 print("Log-transforming data")
 sc.pp.log1p(adata)
-
-# Find highly-variable genes
-print("Subsetting HVG")
-sc.pp.highly_variable_genes(adata, flavor="seurat_v3", n_top_genes=3000, layer="raw", batch_key=BATCH_KEY)
 
 features_to_take = adata.var.highly_variable
 adata = adata[:, features_to_take].copy()
