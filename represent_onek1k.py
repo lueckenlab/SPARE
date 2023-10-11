@@ -92,7 +92,9 @@ methods = [
     (pr.tl.WassersteinTSNE, "wasserstein_scvi", {"replicate_key": CELL_TYPE_KEY, "layer": "X_scVI"}),
     (pr.tl.WassersteinTSNE, "wasserstein_scanvi", {"replicate_key": CELL_TYPE_KEY, "layer": "X_scANVI"}),
     (pr.tl.MrVI, "mrvi", {"categorical_nuisance_keys": ["pool_number"], "layer": "raw", "max_epochs": 50}),
-    (pr.tl.PILOT, "pilot", {"patient_state_col": "sex", "layer": "X_pca"})
+    (pr.tl.PILOT, "pilot", {"patient_state_col": "sex", "layer": "X_pca"}),
+    (pr.tl.PILOT, "pilot_harmony", {"patient_state_col": "sex", "layer": "X_harmony"}),
+    (pr.tl.PILOT, "pilot_scvi", {"patient_state_col": "sex", "layer": "X_scVI"}),
 ]
 
 for method_class, method_name, kwargs in methods:
