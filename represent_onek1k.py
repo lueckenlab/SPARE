@@ -116,4 +116,21 @@ pd.DataFrame(
     adata.obs[SAMPLE_KEY]
 ).to_csv("../data/gloscope_input/onek1k_samples.csv", index=False)
 
+for cells_per_sample in (200, 500):
+    print("Subsetting cells, trying", cells_per_sample, "cells per sample")
+    adata_subset = pr.pp.subsample(
+        adata,
+        obs_category_col=SAMPLE_KEY,
+        min_samples_per_category=cells_per_sample,
+        n_obs=cells_per_sample
+    #     fraction=0.1
+    )
+    print("Subset size:", adata_subset.shape)
+    print("Saving")
+    adata_subset.write(f"../data/onek1k_{cells_per_sample}_cells_per_sample.h5ad")
+    print("Trying to run PhEMD")
+    adata_subset = get_representation(adata_subset, pr.tl.PhEMD, f"phemd_{cells_per_sample}", sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY)
+    print("Calculated representation, saving")
+    adata_subset.write(f"../data/onek1k_{cells_per_sample}_cells_per_sample.h5ad")
+
 print("Done")
