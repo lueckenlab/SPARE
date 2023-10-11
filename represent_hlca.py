@@ -104,13 +104,13 @@ for layer, feature_name in [("X_pca", "PC"), ("X_scanvi_emb", "scanvi"), ("X_scp
             adata.obsm[layer],
             index=adata.obs_names,
             columns=[f"{feature_name}{i}" for i in range(adata.obsm[layer].shape[1])]
-        ).to_csv(f"../data/hlca_{layer}.csv")
+        ).to_csv(f"../data/gloscope_input/hlca_{layer}.csv")
     except Exception as e:
         print("Failed", e)
 
 print("Saving samples")
 pd.DataFrame(
     adata.obs[SAMPLE_KEY]
-).to_csv("../data/hlca_samples.csv", index=False)
+).to_csv("../data/gloscope_input/hlca_samples.csv", index=False)
 
 print("Done")
