@@ -26,8 +26,8 @@ print("Subsetting HVG")
 sc.pp.highly_variable_genes(adata, flavor="seurat_v3", n_top_genes=3000, layer="raw", batch_key=BATCH_KEY)
 
 features_to_take = adata.var.highly_variable
-adata.layers["raw"] = adata.layers["raw"][:, features_to_take]
 adata = adata[:, features_to_take].copy()
+adata.layers["raw"] = adata.layers["raw"][:, features_to_take]
 
 # Obtain scVI embedding
 print("Running scVI")
