@@ -94,7 +94,9 @@ methods = [
     (pr.tl.WassersteinTSNE, "wasserstein_scvi_pool", {"replicate_key": CELL_TYPE_KEY, "layer": "X_scVI_Pool_ID"}),
     (pr.tl.WassersteinTSNE, "wasserstein_scanvi_pool", {"replicate_key": CELL_TYPE_KEY, "layer": "X_scANVI_Pool_ID"}),
     (pr.tl.MrVI, "mrvi", {"categorical_nuisance_keys": ["Pool_ID"], "layer": "raw", "max_epochs": 50}),
-    (pr.tl.PILOT, "pilot", {"patient_state_col": "Outcome", "layer": "X_pca"})  # Broken API ATM
+    (pr.tl.PILOT, "pilot", {"patient_state_col": "Outcome", "layer": "X_pca"}),
+    (pr.tl.PILOT, "pilot_scvi_pool", {"patient_state_col": "Outcome", "layer": "X_scVI_Pool_ID"}),
+    (pr.tl.PILOT, "pilot_scanvi_pool", {"patient_state_col": "Outcome", "layer": "X_scANVI_Pool_ID"}),
 ]
 
 for method_class, method_name, kwargs in methods:

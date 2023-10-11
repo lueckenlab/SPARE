@@ -95,6 +95,8 @@ methods = [
     (pr.tl.PILOT, "pilot", {"patient_state_col": "sex", "layer": "X_pca"}),
     (pr.tl.PILOT, "pilot_harmony", {"patient_state_col": "sex", "layer": "X_harmony"}),
     (pr.tl.PILOT, "pilot_scvi", {"patient_state_col": "sex", "layer": "X_scVI"}),
+    (pr.tl.PILOT, "pilot_scanvi", {"patient_state_col": "sex", "layer": "X_scANVI"}),
+    (pr.tl.PILOT, "pilot_scpoli", {"patient_state_col": "sex", "layer": "X_scpoli"}),
 ]
 
 for method_class, method_name, kwargs in methods:
