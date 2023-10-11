@@ -24,9 +24,12 @@ pneumonia_related_diseases = [
     # pulmonary sarcoidosis
 ]
 
-cellxgene_census.download_source_h5ad(
-    FULL_HLCA_ID, to_path="../data/HLCA.h5ad"
-)
+try:
+    cellxgene_census.download_source_h5ad(
+        FULL_HLCA_ID, to_path="../data/HLCA.h5ad"
+    )
+except Exception as e:
+    print("Failed to download:", e)
 
 adata = sc.read_h5ad("../data/HLCA.h5ad")
 
