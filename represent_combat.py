@@ -1,6 +1,7 @@
 import random
 
 import numpy as np
+import pandas as pd
 import patient_representation as pr
 import scanpy as sc 
 
@@ -98,3 +99,23 @@ methods = [
 
 for method_class, method_name, kwargs in methods:
     adata = get_representation(adata, method_class, method_name, sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY, **kwargs)
+
+print("Saving layers for GloScope")
+
+for layer, feature_name in [("X_pca", "PC"), ("X_scVI_Pool_ID", "scvi"), ("X_scANVI_Pool_ID", "scanvi"), ("X_scpoli", "scpoli")]:
+    print("Working with layer", layer)
+    try: 
+        pd.DataFrame(
+            adata.obsm[layer],
+            index=adata.obs_names,
+            columns=[f"{feature_name}{i}" for i in range(adata.obsm[layer].shape[1])]
+        ).to_csv(f"../data/gloscope_input/combat_{layer}.csv")
+    except Exception as e:
+        print("Failed", e)
+
+print("Saving samples")
+pd.DataFrame(
+    adata.obs[SAMPLE_KEY]
+).to_csv("../data/gloscope_input/combat_samples.csv", index=False)
+
+print("Done")
