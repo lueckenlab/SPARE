@@ -1,3 +1,4 @@
+from patient_representation.pp import is_count_data
 import scanpy as sc
 
 adata = sc.read_h5ad("../data/HLCA_subset.h5ad")
@@ -5,6 +6,8 @@ adata = sc.read_h5ad("../data/HLCA_subset.h5ad")
 SAMPLE_KEY = "donor_id"
 CELL_TYPE_KEY = "cell_type"
 BATCH_KEY = "dataset"
+
+print("X contains count data:", is_count_data(adata.X))
 
 # Copy raw counts to obsm
 adata.obsm["raw"] = adata.X.copy()

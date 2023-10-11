@@ -3,6 +3,7 @@ import random
 import scanpy as sc
 import scvi
 import pandas as pd
+from patient_representation.pp import is_count_data
 import numpy as np
 
 random.seed(42)
@@ -32,6 +33,8 @@ adata = adata[:, is_rna_expression].copy()
 
 # Remove cells with no label
 adata = adata[adata.obs["Annotation_major_subset"] != "nan"]
+
+print("X contains count data:", is_count_data(adata.X))
 
 # Extract raw counts that are needed by some methods
 print("Moving raw counts to obsm and layers")

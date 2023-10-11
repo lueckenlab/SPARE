@@ -1,3 +1,4 @@
+from patient_representation.pp import is_count_data
 import scanpy as sc
 import scvi
 
@@ -9,6 +10,8 @@ adata = sc.read_h5ad(ADATA_PATH)
 SAMPLE_KEY = "donor_id"
 CELL_TYPE_KEY = "cell_type"
 BATCH_KEY = "pool_number"
+
+print("X contains count data:", is_count_data(adata.X))
 
 # Copy raw counts to obsm
 adata.obsm["raw"] = adata.X.copy()
