@@ -55,10 +55,15 @@ print(adata)
 # Run scPoli manually to save its cell representation
 try:
     print("Setting up scPoli")
-    scpoli = pr.tl.SCPoli(sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY, layer="raw")
+    scpoli = pr.tl.SCPoli(sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY, layer="X")
+    scpoli_adata = sc.AnnData(
+            X=adata.layers["raw"],
+            obs=adata.obs[[SAMPLE_KEY, CELL_TYPE_KEY]],
+            var=pd.DataFrame(index=adata.var_names)
+    )
 
     print("Preparing adata")
-    scpoli.prepare_anndata(adata, sample_size_threshold=0, cluster_size_threshold=0)
+    scpoli.prepare_anndata(scpoli_adata, sample_size_thresshold=0, cluster_size_threshold=0, optimize_adata=False)
 
     print("Calculating distances")
     scpoli.calculate_distance_matrix(force=True)
