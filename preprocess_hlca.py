@@ -8,10 +8,11 @@ CELL_TYPE_KEY = "cell_type"
 BATCH_KEY = "dataset"
 
 print("X contains count data:", is_count_data(adata.X))
+print("raw.X contains count data:", is_count_data(adata.raw.X))
 
 # Copy raw counts to obsm
-adata.obsm["raw"] = adata.X.copy()
-adata.layers["raw"] = adata.X.copy()
+adata.obsm["raw"] = adata.raw.X.copy()
+adata.layers["raw"] = adata.raw.X.copy()
 
 print("Calculating HVG")
 sc.pp.highly_variable_genes(adata, flavor="seurat_v3", n_top_genes=3000, batch_key=BATCH_KEY, layer="raw")
