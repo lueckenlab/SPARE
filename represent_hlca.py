@@ -55,7 +55,7 @@ print(adata)
 # Run scPoli manually to save its cell representation
 try:
     print("Setting up scPoli")
-    scpoli = pr.tl.SCPoli(sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY, layer="X")
+    scpoli = pr.tl.SCPoli(sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY, layer="raw")
 
     print("Preparing adata")
     scpoli.prepare_anndata(adata, sample_size_threshold=0, cluster_size_threshold=0)
