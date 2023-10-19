@@ -46,7 +46,6 @@ print("Subsetting HVG")
 sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5, flavor="seurat_v3",
                             n_top_genes=3000, layer="raw")
 adata = adata[:, adata.var.highly_variable].copy()
-adata.layers["raw"] = adata.layers["raw"][:, adata.index]
 print("adata.shape", adata.shape)
 print("adata.layers['raw'].shape", adata.layers["raw"].shape)
 

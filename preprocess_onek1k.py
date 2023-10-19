@@ -29,7 +29,6 @@ print("Log-transforming data")
 sc.pp.log1p(adata)
 
 adata = adata[:, adata.var.highly_variable].copy()
-adata.layers["raw"] = adata.layers["raw"][:, adata.index]
 print("adata.shape", adata.shape)
 print("adata.layers['raw'].shape", adata.layers["raw"].shape)
 adata.obsm["raw"] = adata.layers["raw"]
