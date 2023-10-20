@@ -81,14 +81,14 @@ except Exception as e:
 # method class, method name, additional arguments
 methods = [
     (pr.tl.RandomVector, "random_vec", {}),
-    (pr.tl.TotalPseudobulk, "pseudobulk", {"layer": "X_pca"}),
+    (pr.tl.TotalPseudobulk, "pseudobulk", {"layer": "raw"}),
     (pr.tl.TotalPseudobulk, "pseudobulk_pca", {"layer": "X_pca"}),
     (pr.tl.CellTypePseudobulk, "ct_pseudobulk", {}),
     (pr.tl.CellTypesComposition, "composition", {}),
     (pr.tl.TotalPseudobulk, "pseudobulk_scanvi", {"layer": "X_scanvi_emb"}),
     (pr.tl.TotalPseudobulk, "pseudobulk_scpoli", {"layer": "X_scpoli"}),
     (pr.tl.WassersteinTSNE, "wasserstein_scanvi", {"replicate_key": CELL_TYPE_KEY, "layer": "X_scanvi_emb"}),
-    (pr.tl.MrVI, "mrvi", {"categorical_nuisance_keys": ["dataset"], "layer": "X", "max_epochs": 50}),
+    (pr.tl.MrVI, "mrvi", {"categorical_nuisance_keys": ["dataset"], "layer": "raw", "max_epochs": 50}),
     (pr.tl.PILOT, "pilot", {"patient_state_col": "disease", "layer": "X_pca"}),
     (pr.tl.PILOT, "pilot_scanvi", {"patient_state_col": "disease", "layer": "X_scanvi_emb"}),
     (pr.tl.PILOT, "pilot_scpoli", {"patient_state_col": "disease", "layer": "X_scpoli"}),
