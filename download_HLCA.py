@@ -1,5 +1,6 @@
 import cellxgene_census
 import scanpy as sc
+import pandas as pd
 
 FULL_HLCA_ID = "9f222629-9e39-47d0-b83f-e08d610c7479"
 
@@ -36,5 +37,9 @@ adata = sc.read_h5ad("../data/HLCA.h5ad")
 print("HLCA shape before filtering out diseases:", adata.shape)
 adata = adata[adata.obs["disease"].isin(pneumonia_related_diseases)]
 print("HLCA shape after filtering out diseases:", adata.shape)
+
+print("Filtering cells with no annotation")
+adata = adata[pd.notna(adata.obs["study"])]
+print("HLCA shape after filtering out unannotated cells:", adata.shape)
 
 adata.write("../data/HLCA_subset.h5ad")
