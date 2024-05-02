@@ -1,0 +1,19 @@
+functionality:
+  name: download_onek1k
+  description: "download_onek1k..."
+  arguments:
+    - type: file
+      name: --dataset
+      example: combat_processed.h5ad
+      
+  resources:
+    - type: python_script
+      path: download_onek1k.py
+
+platforms:
+  - type: native
+
+  # - type: docker
+  #   image: patient_representation_img
+
+  - type: nextflow
