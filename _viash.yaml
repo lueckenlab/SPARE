@@ -1,0 +1,18 @@
+viash_version: 0.8.4
+
+source: src
+target: target
+
+config_mods: |
+  .functionality.version := '0.2.3'
+  .platforms[.type == 'nextflow'].directives.tag := '$id'
+  
+
+# config_mods: |
+#   .functionality.version := '0.2.3'
+#   .platforms[.type == 'docker'].target_registry := 'ghcr.io'
+#   .platforms[.type == 'docker'].target_organization := 'viash-io/viash_project_template'
+#   .platforms[.type == 'docker'].target_image_source := 'https://github.com/viash-io/viash_project_template'
+#   .platforms[.type == 'nextflow'].directives.tag := '$id'
+
+ 
