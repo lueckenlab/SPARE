@@ -1,0 +1,24 @@
+functionality:
+  name: represent_combat
+  description: "represent_combat..."
+  # arguments:
+  #   - type: file
+  #     name: --input
+  #     example: file.txt
+  #     required: true
+  #   - type: file
+  #     name: --output
+  #     direction: output
+  #     example: output.txt
+  #     required: true
+  resources:
+    - type: python_script
+      path: represent_combat.py
+
+platforms:
+  - type: native
+
+  # - type: docker
+  #   image: patient_representation_img
+  
+  - type: nextflow
