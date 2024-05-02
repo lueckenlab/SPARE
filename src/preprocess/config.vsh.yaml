@@ -1,0 +1,19 @@
+functionality:
+  name: preprocess_combat
+  description: "preprocess_combat..."
+  arguments:
+    - type: file
+      name: --dataset
+      example: combat_processed.h5ad
+      
+  resources:
+    - type: python_script
+      path: preprocess_combat.py
+
+platforms:
+  - type: native
+
+  # - type: docker
+  #   image: patient_representation_img
+
+  - type: nextflow
