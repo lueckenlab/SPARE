@@ -161,3 +161,18 @@ cython_debug/
 
 # Don't upload data
 data/
+
+# temporary files
+temp
+
+# Nextflow
+work/
+.nextflow*
+
+# Mac OS
+.DS_Store
+
+# Viash
+.viash_log*
+target
+bin
