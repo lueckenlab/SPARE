@@ -176,3 +176,5 @@ work/
 .viash_log*
 target
 bin
+
+experiments.ipynb
