@@ -17,15 +17,19 @@ par = {
 COMBAT_URL = "https://zenodo.org/record/6120249/files/COMBAT-CITESeq-DATA.h5ad"
 IFN_1_SIGNATURE_PATH = "data/ifn_1_score.tsv"
 
-def download_file(url, filename, max_chunks=None):
-    response = requests.get(url, stream=True)
+def download_file(url, filename, max_chunks=None, block_size = 131072):
+    with requests.get(url, stream=True) as response:
+        response.raise_for_status()
+        total_size_in_bytes = int(response.headers.get('content-length', 0))
+    
+        with open(filename, "wb") as file:
+            with tqdm(unit="iB", unit_scale=True, total=total_size_in_bytes) as progress:
+                for chunk_number, data in enumerate(response.iter_content(block_size)):
+                    if max_chunks is not None and chunk_number >= max_chunks:
+                        break
 
-    with open(filename, "wb") as f:
-        for chunk_number, data_chunk in enumerate(tqdm(response.iter_content())):
-            f.write(data_chunk)
-
-            if max_chunks is not None and chunk_number >= max_chunks:
-                break
+                    file.write(data)
+                    progress.update(len(data))
 
 
 download_dir = Path(par["output"]).parent
@@ -56,6 +60,11 @@ is_rna_expression = adata.var["feature_types"] == "Gene Expression"
 adata = adata[:, is_rna_expression].copy()
 
 # Remove cells with no label
+print("Removing cells with no label")
 adata = adata[adata.obs["Annotation_major_subset"] != "nan"]
 
+print("Copying raw counts to layers")
+adata.obsm["X_raw_counts"] = adata.layers["raw"]
+
+print("Saving output")
 adata.write(par["output"], compression=par["output_compression"])
