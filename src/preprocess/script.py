@@ -40,23 +40,6 @@ BATCH_COVARIATES = par["batch_covariates"]
 print("Reading data")
 adata = sc.read_h5ad(ADATA_PATH)
 
-
-##########################
-#all to bedeleted, was just for testing
-# print("X contains count data:", is_count_data(adata.X))
-# # Copy raw counts to obsm
-# adata.obsm["raw"] = adata.X.copy()
-# adata.layers["raw"] = adata.X.copy()
-
-#error for combat and onek1k1, only for hlca
-####only for hlca -> because of raw.X
-# print("raw.X contains count data:", is_count_data(adata.raw.X))
-# Copy raw counts to obsm
-# adata.obsm["raw"] = adata.raw.X.copy()
-# adata.layers["raw"] = adata.raw.X.copy()
-######################
-
-
 # Find highly-variable genes
 print("Subsetting HVG")
 sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5, flavor="seurat_v3",
