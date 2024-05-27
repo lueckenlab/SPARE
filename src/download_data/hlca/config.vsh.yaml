@@ -1,14 +1,27 @@
 functionality:
   name: download_hlca
   description: "download_hlca..."
-  # arguments:
-  #   - type: file
-  #     name: --dataset
-  #     example: combat_processed.h5ad
+  arguments:
+  - name: --output
+    description: The path of the output file
+    type: file
+    example: hlca.h5ad
+    default: data/hlca.h5ad
+    direction: output
+  # - name: --max_chunks
+  #   description: The maximum number of chunks to download. Used for test purposes
+  #   type: integer
+  #   example: 5
+  #   required: false
+  - name: --output_compression
+    description: The compression format of the output file
+    type: string
+    example: gzip
+    required: false
       
   resources:
     - type: python_script
-      path: download_hlca.py
+      path: script.py
 
 platforms:
   - type: native
