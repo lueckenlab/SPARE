@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 ## VIASH START
 par = {
-    "output": "combat.h5mu",
+    "output": "combat.h5ad",
     "output_compression": "gzip",
     "max_chunks": None
 }
@@ -63,8 +63,19 @@ adata = adata[:, is_rna_expression].copy()
 print("Removing cells with no label")
 adata = adata[adata.obs["Annotation_major_subset"] != "nan"]
 
+# Extract raw counts that are needed by some methods
+print("Moving raw counts to obsm and layers")
+adata.layers["raw"] = adata.layers["raw"][:, is_rna_expression]
+print("adata.layers['raw'].shape", adata.layers["raw"].shape)
+
+#obsm["X_raw_counts"] or obsm["raw"]? -> for hlca and onek1k is obsm["raw"]
 print("Copying raw counts to layers")
 adata.obsm["X_raw_counts"] = adata.layers["raw"]
+print("adata.obsm['X_raw_counts'].shape", adata.obsm["X_raw_counts"].shape)
+
+#score_genes here instead in preprocessing, cuz hlca, onek1k didnt have one->?
+print("Calculating IFN1 signature")
+sc.tl.score_genes(adata, ifn_1_signature_genes, score_name="ifn_1_score")
 
 print("Saving output")
 adata.write(par["output"], compression=par["output_compression"])
