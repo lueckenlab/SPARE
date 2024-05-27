@@ -15,7 +15,7 @@ from patient_representation.pp import is_count_data
 ## VIASH START
 par = {
     "output": "one1k1.h5ad",
-    "output_compression": "gzip", #needed? 
+    "output_compression": "gzip",
     # "max_chunks": None -> this was complicated to implement with boto3
 }
 ## VIASH END
@@ -74,3 +74,13 @@ if not download_dir.exists():
     download_dir.mkdir(parents=True)
 
 download_file_from_s3(bucket, key, par["output"], region_name)
+
+adata = sc.read_h5ad(par["output"])
+
+print("X contains count data:", is_count_data(adata.X))
+
+# Copy raw counts to obsm
+adata.obsm["raw"] = adata.X.copy()
+adata.layers["raw"] = adata.X.copy()
+
+adata.write(par["output"], compression=par["output_compression"])
