@@ -74,10 +74,6 @@ download_dir = Path(par["output"]).parent
 if not download_dir.exists():
     download_dir.mkdir(parents=True)
 
-#for debug
-print(download_dir)
-print(par["output"])
-
 download_file_from_s3(bucket, key, par["output"], region_name)
 
 # The whole list of diseases in HLCA. The ones that are not pneumonia-related are commented out.
@@ -110,5 +106,14 @@ print("HLCA shape after filtering out diseases:", adata.shape)
 print("Filtering cells with no annotation")
 adata = adata[pd.notna(adata.obs["study"])]
 print("HLCA shape after filtering out unannotated cells:", adata.shape)
+
+print("X contains count data:", is_count_data(adata.X))
+print("raw.X contains count data:", is_count_data(adata.raw.X))
+
+# Copy raw counts to obsm
+#but whas is need of Copy() and having in both layers and obsm
+#maybe at least delete raw.X after first copy and then start next copy step
+adata.obsm["raw"] = adata.raw.X.copy()
+adata.layers["raw"] = adata.raw.X.copy()
 
 adata.write(par["output"], compression=par["output_compression"])
