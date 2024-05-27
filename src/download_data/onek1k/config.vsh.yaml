@@ -2,13 +2,26 @@ functionality:
   name: download_onek1k
   description: "download_onek1k..."
   arguments:
-    - type: file
-      name: --dataset
-      example: combat_processed.h5ad
+    - name: --output
+      description: The path of the output file
+      type: file
+      example: onek1k1.h5ad
+      default: data/onek1k1.h5ad
+      direction: output
+    # - name: --max_chunks
+    #   description: The maximum number of chunks to download. Used for test purposes
+    #   type: integer
+    #   example: 5
+    #   required: false
+    - name: --output_compression
+      description: The compression format of the output file
+      type: string
+      example: gzip
+      required: false
       
   resources:
     - type: python_script
-      path: download_onek1k.py
+      path: script.py
 
 platforms:
   - type: native
