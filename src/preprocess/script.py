@@ -72,6 +72,9 @@ print("adata.layers['raw'].shape", adata.layers["raw"].shape)
 print("Running PCA")
 sc.tl.pca(adata)
 
+print("Running Harmony on PCA embeddings")
+sc.external.pp.harmony_integrate(adata, basis='X_pca', key=BATCH_EFFECT, adjusted_basis='X_harmony')
+
 def plot_loss(history, loss_keys, title, filenames, counter):
     plt.figure(figsize=(10, 5))
     for loss_key, filename in zip(loss_keys, filenames):
