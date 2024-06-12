@@ -15,6 +15,7 @@ par = {
     "output": "data/combat_processed.h5ad",
     "cell_type_key":"Annotation_major_subset",
     "batch_covariates":["scRNASeq_sample_ID","Pool_ID"],
+    "batch_effect_covariate":"Pool_ID",
     "output_compression": "gzip",
 }
 ## VIASH END
@@ -34,41 +35,35 @@ par = {
 # CELL_TYPE_KEY = "cell_type"
 # BATCH_KEY = "dataset"
 
+#stephenson
+# SAMPLE_KEY = "sample_id"
+# CELL_TYPE_KEY = "cell_type"
+# BATCH_KEY = "Site"
+
 ADATA_PATH = par["input"]
 CELL_TYPE_KEY = par["cell_type_key"]
 BATCH_COVARIATES = par["batch_covariates"]
+BATCH_EFFECT = par["batch_effect_covariate"]
 print("Reading data")
 adata = sc.read_h5ad(ADATA_PATH)
 
+print("Normalizing data")
+sc.pp.normalize_total(adata, target_sum=1e4)
+print("Log-transforming data")
+sc.pp.log1p(adata)
+
 # Find highly-variable genes
 print("Subsetting HVG")
-sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5, flavor="seurat_v3",
-                            n_top_genes=3000, layer="raw")
+sc.pp.highly_variable_genes(adata, flavor="seurat_v3",span=0.5, n_top_genes=3000, layer="raw", batch_key=BATCH_EFFECT)
 adata = adata[:, adata.var.highly_variable].copy()
 
-####not batch_key given to calc HVG for COMBAT
-##if batch_key is needed to subset to HVG -> change in batch_covariates args needed
-#below is for ONEK1K
-#sc.pp.highly_variable_genes(adata, flavor="seurat_v3", n_top_genes=3000, layer="raw", batch_key=BATCH_KEY)
-
-#below is for HLCA
-#sc.pp.highly_variable_genes(adata, flavor="seurat_v3", n_top_genes=3000, batch_key=BATCH_KEY, layer="raw")
-
-# before subsetting to HVG for HLCA and ONEK1K
-# print("Normalizing data")
-# sc.pp.normalize_total(adata, target_sum=1e4)
-# print("Log-transforming data")
-# sc.pp.log1p(adata)
 
 print("adata.shape", adata.shape)
 print("adata.layers['raw'].shape", adata.layers["raw"].shape)
 
-# Run PCA
-# not being done for onek1k
 print("Running PCA")
 sc.tl.pca(adata)
 
-#scvi, scanvi not for hlca ?
 for batch_key in BATCH_COVARIATES:
     print(f"Obtain scVI and scanVI for batch key: {batch_key}")
     # Run scVI
@@ -90,5 +85,6 @@ for batch_key in BATCH_COVARIATES:
     embedding_name_scANVI = f"X_scANVI_{batch_key}"
     adata.obsm[embedding_name_scANVI] = lvae.get_latent_representation()
     print(f"Embedding stored: {embedding_name_scANVI}")
+
 
 adata.write(par["output"], compression=par["output_compression"])
