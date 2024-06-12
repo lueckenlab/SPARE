@@ -1,19 +1,33 @@
 functionality:
-  name: represent_combat
-  description: "represent_combat..."
-  # arguments:
-  #   - type: file
-  #     name: --input
-  #     example: file.txt
-  #     required: true
-  #   - type: file
-  #     name: --output
-  #     direction: output
-  #     example: output.txt
-  #     required: true
+  name: representation
+  description: "get patient representation..."
+  arguments: 
+    - name: --output
+      type: file
+      example: combat_with_patient_representations.h5ad
+      direction: output
+      required: true
+    - name: --input
+      type: file
+      example: combat.h5ad
+      required: true
+    - name: --sample_key
+      type: string
+      example: "scRNASeq_sample_ID"
+      required: true
+    - name: --cell_type_key
+      type: string
+      example: Annotation_major_subset
+      required: true
+    - name: --output_compression
+      description: The compression format of the output file
+      type: string
+      example: gzip
+      required: false
+  
   resources:
     - type: python_script
-      path: represent_combat.py
+      path: script.py
 
 platforms:
   - type: native
