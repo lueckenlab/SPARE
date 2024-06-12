@@ -5,25 +5,25 @@ functionality:
     - name: --output
       type: file
       example: combat_processed.h5ad
-      # default: data/combat.h5ad -> not needed here maybe?
       direction: output
       required: true
     - name: --input
       type: file
       example: combat.h5ad
-      # default: data/combat.h5ad -> not needed here maybe?
       required: true
     - name: --batch_covariates
       type: string
       example: ["scRNASeq_sample_ID","Pool_ID"]
       multiple: true
       multiple_sep: ","
-      # default: ["scRNASeq_sample_ID","Pool_ID"] -> not needed here maybe?
+      required: true
+    - name: --batch_effect_covariate
+      type: string
+      example: "Pool_ID"
       required: true
     - name: --cell_type_key
       type: string
       example: Annotation_major_subset
-      # default: Annotation_major_subset -> not needed here maybe?
       required: true
     - name: --output_compression
       description: The compression format of the output file
