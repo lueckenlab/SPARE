@@ -14,6 +14,7 @@ par = {
 }
 ## VIASH END
 
+# TODO: check out downloading combat from cellxgene LATER
 COMBAT_URL = "https://zenodo.org/record/6120249/files/COMBAT-CITESeq-DATA.h5ad"
 IFN_1_SIGNATURE_PATH = "data/ifn_1_score.tsv"
 
@@ -68,12 +69,14 @@ print("Moving raw counts to obsm and layers")
 adata.layers["raw"] = adata.layers["raw"][:, is_rna_expression]
 print("adata.layers['raw'].shape", adata.layers["raw"].shape)
 
-#obsm["X_raw_counts"] or obsm["raw"]? -> for hlca and onek1k is obsm["raw"]
-print("Copying raw counts to layers")
-adata.obsm["X_raw_counts"] = adata.layers["raw"]
-print("adata.obsm['X_raw_counts'].shape", adata.obsm["X_raw_counts"].shape)
+adata.X = adata.layers["raw"].copy()
+del adata.layers["raw"]
 
-#score_genes here instead in preprocessing, cuz hlca, onek1k didnt have one->?
+print("Copying raw counts to layers")
+adata.layers["X_raw_counts"] = adata.X.copy()
+adata.obsm["X_raw_counts"] = adata.X.copy()
+
+print("adata.obsm['X_raw_counts'].shape", adata.obsm["X_raw_counts"].shape)
 print("Calculating IFN1 signature")
 sc.tl.score_genes(adata, ifn_1_signature_genes, score_name="ifn_1_score")
 
