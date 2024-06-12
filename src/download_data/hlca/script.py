@@ -110,10 +110,11 @@ print("HLCA shape after filtering out unannotated cells:", adata.shape)
 print("X contains count data:", is_count_data(adata.X))
 print("raw.X contains count data:", is_count_data(adata.raw.X))
 
-# Copy raw counts to obsm
-#but whas is need of Copy() and having in both layers and obsm
-#maybe at least delete raw.X after first copy and then start next copy step
-adata.obsm["raw"] = adata.raw.X.copy()
-adata.layers["raw"] = adata.raw.X.copy()
+# Copy raw counts to obsm and layers
+
+adata.obsm["X_raw_counts"] = adata.raw.X.copy()
+del adata.raw.X
+adata.layers["X_raw_counts"] = adata.obsm["X_raw_counts"].copy()
+print(adata)
 
 adata.write(par["output"], compression=par["output_compression"])
