@@ -80,5 +80,7 @@ print("adata.obsm['X_raw_counts'].shape", adata.obsm["X_raw_counts"].shape)
 print("Calculating IFN1 signature")
 sc.tl.score_genes(adata, ifn_1_signature_genes, score_name="ifn_1_score")
 
+print(adata)
+
 print("Saving output")
 adata.write(par["output"], compression=par["output_compression"])

@@ -113,7 +113,7 @@ print("raw.X contains count data:", is_count_data(adata.raw.X))
 # Copy raw counts to obsm and layers
 
 adata.obsm["X_raw_counts"] = adata.raw.X.copy()
-del adata.raw.X
+del adata.raw
 adata.layers["X_raw_counts"] = adata.obsm["X_raw_counts"].copy()
 print(adata)
 

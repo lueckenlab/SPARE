@@ -83,4 +83,5 @@ print("X contains count data:", is_count_data(adata.X))
 adata.obsm["X_raw_counts"] = adata.X.copy()
 adata.layers["X_raw_counts"] = adata.X.copy()
 
+print(adata)
 adata.write(par["output"], compression=par["output_compression"])
