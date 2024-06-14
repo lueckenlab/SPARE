@@ -14,7 +14,7 @@ from patient_representation.pp import is_count_data
 
 ## VIASH START
 par = {
-    "output": "one1k1.h5ad",
+    "output": "onek1k.h5ad",
     "output_compression": "gzip",
     # "max_chunks": None -> this was complicated to implement with boto3
 }

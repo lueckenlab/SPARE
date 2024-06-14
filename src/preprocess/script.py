@@ -23,24 +23,45 @@ par = {
 ## VIASH END
 
 #combat
-# CELL_TYPE_KEY = "Annotation_major_subset"
-# SAMPLE_KEY = "scRNASeq_sample_ID"
-# BATCH_KEY = "Pool_ID"
+# par = {
+#     "input": "data/combat.h5ad",
+#     "output": "data/combat_processed.h5ad",
+#     "cell_type_key":"Annotation_major_subset",
+#     "batch_covariates":["scRNASeq_sample_ID","Pool_ID"],
+#     "batch_effect_covariate":"Pool_ID",
+#     "output_compression": "gzip",
+# }
 
 #onek1k
-# SAMPLE_KEY = "donor_id"
-# CELL_TYPE_KEY = "cell_type"
-# BATCH_KEY = "pool_number"
+# par = {
+#     "input": "data/onek1k.h5ad",
+#     "output": "data/onek1k_processed.h5ad",
+#     "cell_type_key":"cell_type",
+#     "batch_covariates":["donor_id","pool_number"],
+#     "batch_effect_covariate":"pool_number",
+#     "output_compression": "gzip",
+# }
 
 #hlca
-# SAMPLE_KEY = "donor_id"
-# CELL_TYPE_KEY = "cell_type"
-# BATCH_KEY = "dataset"
+# par = {
+#     "input": "data/hlca.h5ad",
+#     "output": "data/hlca_processed.h5ad",
+#     "cell_type_key":"cell_type",
+#     "batch_covariates":["donor_id","dataset"],
+#     "batch_effect_covariate":"dataset",
+#     "output_compression": "gzip",
+# }
 
 #stephenson
-# SAMPLE_KEY = "sample_id"
-# CELL_TYPE_KEY = "cell_type"
-# BATCH_KEY = "Site"
+# par = {
+#     "input": "data/stephenson.h5ad",
+#     "output": "data/stephenson_processed.h5ad",
+#     "cell_type_key":"cell_type",
+#     "batch_covariates":["sample_id","Site"],
+#     "batch_effect_covariate":"Site",
+#     "output_compression": "gzip",
+# }
+
 
 ADATA_PATH = par["input"]
 CELL_TYPE_KEY = par["cell_type_key"]
@@ -62,12 +83,12 @@ sc.pp.log1p(adata)
 
 # Find highly-variable genes
 print("Subsetting HVG")
-sc.pp.highly_variable_genes(adata, flavor="seurat_v3",span=0.5, n_top_genes=3000, layer="raw", batch_key=BATCH_EFFECT)
+sc.pp.highly_variable_genes(adata, flavor="seurat_v3",span=0.5, n_top_genes=3000, layer="X_raw_counts", batch_key=BATCH_EFFECT)
 adata = adata[:, adata.var.highly_variable].copy()
 
 
 print("adata.shape", adata.shape)
-print("adata.layers['raw'].shape", adata.layers["raw"].shape)
+print("adata.layers['X_raw_counts'].shape", adata.layers["X_raw_counts"].shape)
 
 print("Running PCA")
 sc.tl.pca(adata)
@@ -96,7 +117,7 @@ counter = 1
 for batch_key in BATCH_COVARIATES:
     print(f"Obtain scVI and scanVI for batch key: {batch_key}")
     # Run scVI
-    scvi.model.SCVI.setup_anndata(adata, layer="raw", batch_key=batch_key)
+    scvi.model.SCVI.setup_anndata(adata, layer="X_raw_counts", batch_key=batch_key)
     vae = scvi.model.SCVI(adata, n_layers=2, n_latent=30, gene_likelihood="nb")
     vae.train()
     embedding_name_scVI = f"X_scVI_{batch_key}"
