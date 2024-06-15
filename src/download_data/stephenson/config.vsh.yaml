@@ -1,5 +1,7 @@
 functionality:
   name: download_stephenson
+  # TODO: description for stephenson
+  description: "download stephenson..."
   arguments:
     - name: --output
       description: The path of the output file

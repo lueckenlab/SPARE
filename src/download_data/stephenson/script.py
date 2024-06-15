@@ -71,6 +71,7 @@ adata.obsm["X_raw_counts"]  = adata.X.copy()
 adata.layers["X_raw_counts"] = adata.X.copy()
 print("adata.obsm['X_raw_counts'].shape", adata.obsm["X_raw_counts"].shape)
 
+#TODO: rest of the dataset specefic preprocessing
 print(adata)
 print("Saving output")
 adata.write(par["output"], compression=par["output_compression"])
