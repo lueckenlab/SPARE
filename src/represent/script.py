@@ -102,8 +102,6 @@ except Exception as e:
     print(e)
     print("Failed", sep="\n\n")
 
-
-#TODO:PILOT fails on raw count
 #TODO: update and fixs MRVI and add it to methods 
 
 base_layers = [
@@ -120,8 +118,9 @@ for layer, method_name_suffix in base_layers:
     methods.extend([
         (pr.tl.CellTypePseudobulk, f"ct_pseudobulk_{method_name_suffix}", {"layer": layer}),
         (pr.tl.TotalPseudobulk, f"pseudobulk_{method_name_suffix}", {"layer": layer}),
-        (pr.tl.PILOT, f"pilot_{method_name_suffix}", {"patient_state_col": "Outcome", "layer": layer})
     ])
+    if layer != "X_raw_counts":
+        methods.append((pr.tl.PILOT, f"pilot_{method_name_suffix}", {"patient_state_col": "Outcome", "layer": layer}))
     if layer == "X_scpoli":
         methods.append((pr.tl.WassersteinTSNE, f"wasserstein_{method_name_suffix}", {"replicate_key": CELL_TYPE_KEY, "layer": layer}))
 
