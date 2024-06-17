@@ -16,15 +16,37 @@ np.random.seed(42)
 
 ## VIASH START
 par = {
-    "input": "combat_processed.h5ad",
-    "output": "combat_represent.h5ad",
+    "input": "data/combat_processed.h5ad",
+    "output": "data/combat_represent.h5ad",
     "cell_type_key":"Annotation_major_subset",
     "sample_key":"scRNASeq_sample_ID",
-    "batch_effect_covariate":"Pool_ID",
+    "patient_state_key":"Outcome",
     "batch_covariates":["scRNASeq_sample_ID","Pool_ID"],
     "output_compression": "gzip",
 }
 ## VIASH END
+
+#combat
+# par = {
+#     "input": "data/combat_processed.h5ad",
+#     "output": "data/combat_represent.h5ad",
+#     "cell_type_key":"Annotation_major_subset",
+#     "sample_key":"scRNASeq_sample_ID",
+#     "patient_state_key":"Outcome",
+#     "batch_covariates":["scRNASeq_sample_ID","Pool_ID"],
+#     "output_compression": "gzip",
+# }
+
+#onek1k
+# par = {
+#     "input": "data/onek1k_processed.h5ad",
+#     "output": "data/onek1k_represent.h5ad",
+#     "cell_type_key":"cell_type",
+#     "sample_key":"donor_id",
+#     "patient_state_key":"sex",
+#     "batch_covariates":["donor_id","pool_number"],
+#     "output_compression": "gzip",
+# }
 
 def save_results(adata, method, method_name):
     method.embed(method="UMAP") 
@@ -67,7 +89,7 @@ ADATA_PATH = par["input"]
 CELL_TYPE_KEY = par["cell_type_key"]
 SAMPLE_KEY = par["sample_key"]
 BATCH_COVARIATES = par["batch_covariates"]
-BATCH_EFFECT = par["batch_effect_covariate"]
+PATIENT_STATE_KEY = par["patient_state_key"]
 OUTPUT_NAME = os.path.splitext(os.path.basename(RESULT_PATH))[0]
 
 
@@ -120,7 +142,7 @@ for layer, method_name_suffix in base_layers:
         (pr.tl.TotalPseudobulk, f"pseudobulk_{method_name_suffix}", {"layer": layer}),
     ])
     if layer != "X_raw_counts":
-        methods.append((pr.tl.PILOT, f"pilot_{method_name_suffix}", {"patient_state_col": "Outcome", "layer": layer}))
+        methods.append((pr.tl.PILOT, f"pilot_{method_name_suffix}", {"patient_state_col": PATIENT_STATE_KEY, "layer": layer}))
     if layer == "X_scpoli":
         methods.append((pr.tl.WassersteinTSNE, f"wasserstein_{method_name_suffix}", {"replicate_key": CELL_TYPE_KEY, "layer": layer}))
 
@@ -132,7 +154,7 @@ for covariate in BATCH_COVARIATES:
             (pr.tl.TotalPseudobulk, f"pseudobulk_{model}_{covariate}", {"layer": layer_name}),
             (pr.tl.CellTypePseudobulk, f"ct_pseudobulk_{model}_{covariate}", {"layer": layer_name}),
             (pr.tl.WassersteinTSNE, f"wasserstein_{model}_{covariate}", {"replicate_key": CELL_TYPE_KEY, "layer": layer_name}),
-            (pr.tl.PILOT, f"pilot_{model}_{covariate}", {"patient_state_col": "Outcome", "layer": layer_name})
+            (pr.tl.PILOT, f"pilot_{model}_{covariate}", {"patient_state_col": PATIENT_STATE_KEY, "layer": layer_name})
         ])
 
 methods.sort(key=lambda x: (x[0].__name__, x[1]))
@@ -161,6 +183,22 @@ print(adata)
 # ).to_csv("../data/gloscope_input/combat_samples.csv", index=False)
 
 #TODO: fix error on phate lib
+#### error on PhEMD
+
+# Traceback (most recent call last):
+#   File "/ictstr01/home/icb/moghareh.dehkordi/patpy/pipeline/src/represent/./run_no_scpoli.py", line 50, in get_representation
+#     method_instance.calculate_distance_matrix(force=True)
+#   File "/ictstr01/home/icb/moghareh.dehkordi/patpy/patient_representation_1_23/src/patient_representation/tl/basic.py", line 1407, in calculate_distance_matrix
+#     distances = phemd(
+#   File "/ictstr01/home/icb/moghareh.dehkordi/patpy/patient_representation_1_23/src/patient_representation/tl/basic.py", line 91, in phemd
+#     [
+#   File "/ictstr01/home/icb/moghareh.dehkordi/patpy/patient_representation_1_23/src/patient_representation/tl/basic.py", line 92, in <listcomp>
+#     np.average(
+#   File "<__array_function__ internals>", line 200, in average
+#   File "/home/icb/moghareh.dehkordi/miniconda3/envs/pat1.23/lib/python3.10/site-packages/numpy/lib/function_base.py", line 538, in average
+#     if wgt.shape[0] != a.shape[axis]:
+# IndexError: tuple index out of range
+
 for cells_per_sample in (200, 500, 700):
     print("Subsetting cells, trying", cells_per_sample, "cells per sample")
     adata_subset = pr.pp.subsample(
