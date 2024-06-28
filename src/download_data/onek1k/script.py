@@ -80,7 +80,6 @@ adata = sc.read_h5ad(par["output"])
 print("X contains count data:", is_count_data(adata.X))
 
 # Copy raw counts to obsm
-adata.obsm["X_raw_counts"] = adata.X.copy()
 adata.layers["X_raw_counts"] = adata.X.copy()
 
 print(adata)
