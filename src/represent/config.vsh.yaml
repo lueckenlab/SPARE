@@ -19,10 +19,6 @@ functionality:
       type: string
       example: Annotation_major_subset
       required: true
-    - name: --patient_state_key
-      type: string
-      example: Outcome
-      required: true
     - name: --output_compression
       description: The compression format of the output file
       type: string

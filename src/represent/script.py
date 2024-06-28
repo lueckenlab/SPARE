@@ -20,7 +20,6 @@ par = {
     "output": "data/combat_represent.h5ad",
     "cell_type_key":"Annotation_major_subset",
     "sample_key":"scRNASeq_sample_ID",
-    "patient_state_key":"Outcome",
     "batch_covariates":["scRNASeq_sample_ID","Pool_ID"],
     "output_compression": "gzip",
 }
@@ -89,7 +88,6 @@ ADATA_PATH = par["input"]
 CELL_TYPE_KEY = par["cell_type_key"]
 SAMPLE_KEY = par["sample_key"]
 BATCH_COVARIATES = par["batch_covariates"]
-PATIENT_STATE_KEY = par["patient_state_key"]
 OUTPUT_NAME = os.path.splitext(os.path.basename(RESULT_PATH))[0]
 
 
@@ -125,7 +123,6 @@ except Exception as e:
     print("Failed", sep="\n\n")
 
 #TODO: update and fixs MRVI and add it to methods 
-
 base_layers = [
     ("X_raw_counts", "raw_counts"),
     ("X_pca", "pca"),
@@ -142,7 +139,7 @@ for layer, method_name_suffix in base_layers:
         (pr.tl.TotalPseudobulk, f"pseudobulk_{method_name_suffix}", {"layer": layer}),
     ])
     if layer != "X_raw_counts":
-        methods.append((pr.tl.PILOT, f"pilot_{method_name_suffix}", {"patient_state_col": PATIENT_STATE_KEY, "layer": layer}))
+        methods.append((pr.tl.PILOT, f"pilot_{method_name_suffix}", {"patient_state_col": SAMPLE_KEY, "layer": layer}))
     if layer == "X_scpoli":
         methods.append((pr.tl.WassersteinTSNE, f"wasserstein_{method_name_suffix}", {"replicate_key": CELL_TYPE_KEY, "layer": layer}))
 
@@ -154,7 +151,7 @@ for covariate in BATCH_COVARIATES:
             (pr.tl.TotalPseudobulk, f"pseudobulk_{model}_{covariate}", {"layer": layer_name}),
             (pr.tl.CellTypePseudobulk, f"ct_pseudobulk_{model}_{covariate}", {"layer": layer_name}),
             (pr.tl.WassersteinTSNE, f"wasserstein_{model}_{covariate}", {"replicate_key": CELL_TYPE_KEY, "layer": layer_name}),
-            (pr.tl.PILOT, f"pilot_{model}_{covariate}", {"patient_state_col": PATIENT_STATE_KEY, "layer": layer_name})
+            (pr.tl.PILOT, f"pilot_{model}_{covariate}", {"patient_state_col": SAMPLE_KEY, "layer": layer_name})
         ])
 
 methods.sort(key=lambda x: (x[0].__name__, x[1]))
@@ -182,8 +179,7 @@ print(adata)
 #     adata.obs[SAMPLE_KEY]
 # ).to_csv("../data/gloscope_input/combat_samples.csv", index=False)
 
-#TODO: fix error on phate lib
-#### error on PhEMD
+#TODO: fix error on PhEMD
 
 # Traceback (most recent call last):
 #   File "/ictstr01/home/icb/moghareh.dehkordi/patpy/pipeline/src/represent/./run_no_scpoli.py", line 50, in get_representation
@@ -199,22 +195,23 @@ print(adata)
 #     if wgt.shape[0] != a.shape[axis]:
 # IndexError: tuple index out of range
 
-for cells_per_sample in (200, 500, 700):
-    print("Subsetting cells, trying", cells_per_sample, "cells per sample")
-    adata_subset = pr.pp.subsample(
-        adata,
-        obs_category_col=SAMPLE_KEY,
-        min_samples_per_category=cells_per_sample,
-        n_obs=cells_per_sample
-    #     fraction=0.1
-    )
-    print("Subset size:", adata_subset.shape)
-    print("Saving")
-    adata_subset.write(f"{OUTPUT_NAME}_{cells_per_sample}_cells_per_sample.h5ad")
-    print("Trying to run PhEMD")
-    adata_subset = get_representation(adata_subset, pr.tl.PhEMD, f"phemd_{cells_per_sample}", sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY)
-    print("Calculated representation, saving")
-    adata_subset.write(f"{OUTPUT_NAME}_{cells_per_sample}_cells_per_sample.h5ad")
+#run PhEMD
+# for cells_per_sample in (200, 500, 700):
+#     print("Subsetting cells, trying", cells_per_sample, "cells per sample")
+#     adata_subset = pr.pp.subsample(
+#         adata,
+#         obs_category_col=SAMPLE_KEY,
+#         min_samples_per_category=cells_per_sample,
+#         n_obs=cells_per_sample
+#     #     fraction=0.1
+#     )
+#     print("Subset size:", adata_subset.shape)
+#     print("Saving")
+#     adata_subset.write(f"{OUTPUT_NAME}_{cells_per_sample}_cells_per_sample.h5ad")
+#     print("Trying to run PhEMD")
+#     adata_subset = get_representation(adata_subset, pr.tl.PhEMD, f"phemd_{cells_per_sample}", sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY)
+#     print("Calculated representation, saving")
+#     adata_subset.write(f"{OUTPUT_NAME}_{cells_per_sample}_cells_per_sample.h5ad")
 
 print("Done")
 
