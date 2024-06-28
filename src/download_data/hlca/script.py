@@ -98,6 +98,7 @@ pneumonia_related_diseases = [
 ]
 
 adata = sc.read_h5ad(par["output"])
+adata.X = adata.raw.X.copy()
 
 print("HLCA shape before filtering out diseases:", adata.shape)
 adata = adata[adata.obs["disease"].isin(pneumonia_related_diseases)]
@@ -110,11 +111,10 @@ print("HLCA shape after filtering out unannotated cells:", adata.shape)
 print("X contains count data:", is_count_data(adata.X))
 print("raw.X contains count data:", is_count_data(adata.raw.X))
 
-# Copy raw counts to obsm and layers
+# Copy counts to layers
 
-adata.obsm["X_raw_counts"] = adata.raw.X.copy()
+adata.layers["X_raw_counts"] = adata.X.copy()
 del adata.raw
-adata.layers["X_raw_counts"] = adata.obsm["X_raw_counts"].copy()
 print(adata)
 
 adata.write(par["output"], compression=par["output_compression"])
