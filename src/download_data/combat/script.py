@@ -74,7 +74,6 @@ del adata.layers["raw"]
 
 print("Copying raw counts to layers")
 adata.layers["X_raw_counts"] = adata.X.copy()
-adata.obsm["X_raw_counts"] = adata.X.copy()
 
 print("adata.obsm['X_raw_counts'].shape", adata.obsm["X_raw_counts"].shape)
 print("Calculating IFN1 signature")
