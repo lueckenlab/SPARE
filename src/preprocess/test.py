@@ -6,26 +6,6 @@ import scanpy as sc
 from subprocess import run
 import os
 
-# def create_synthetic_data():
-#     n_genes = 100  # Number of genes
-#     n_cells = 12  # 3 cells per patient
-#     n_patients = 4
-#     cell_types = ['A', 'B', 'C'] * n_patients
-
-#     # Creating a synthetic dataset with the specified relationships
-#     data = np.random.rand(n_cells, n_genes)
-#     data[3:6] = data[0:3]  # Patients 1 and 2 are identical
-#     data[9:12] = data[0:3] + 0.1  # Patient 4 is close to patients 1 and 2
-
-#     obs = pd.DataFrame({
-#         'patient': np.repeat(['P1', 'P2', 'P3', 'P4'], 3),
-#         'cell_type': cell_types
-#     })
-
-#     adata = sc.AnnData(X=data, obs=obs)
-#     adata.layers["X_raw_counts"] = adata.X.copy()
-#     return adata
-
 def create_synthetic_data():
     n_genes = 100  # Number of genes
     n_cells_per_patient = 10  # Increase the number of cells per patient
@@ -65,7 +45,7 @@ def test_preprocess_script(synthetic_data):
     
     # Check the structure and content of the processed data
     assert 'X_pca' in adata_processed.obsm_keys()  
-    # assert 'X_harmony' in adata_processed.obsm_keys() 
+    assert 'X_harmony' in adata_processed.obsm_keys() 
     assert 'X_scVI_patient' in adata_processed.obsm_keys()  
     assert 'X_scANVI_patient' in adata_processed.obsm_keys()  
     assert adata_processed.shape[1] == 100  # Ensure the number of genes remains the same
