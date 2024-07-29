@@ -8,8 +8,8 @@ import os
 
 def create_synthetic_data():
     n_genes = 100  # Number of genes
-    n_cells_per_patient = 10  # Increase the number of cells per patient
-    n_patients = 10  # Increase the number of patients
+    n_cells_per_patient = 10  # number of cells per patient
+    n_patients = 10  # Number of patients
     cell_types = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'] * n_cells_per_patient
 
     # Creating a synthetic dataset with distinct clusters
@@ -51,5 +51,4 @@ def test_preprocess_script(synthetic_data):
     assert adata_processed.shape[1] == 100  # Ensure the number of genes remains the same
 
 
-# Run the test with pytest
-pytest.main(["-v", "test.py"])
+# pytest.main(["-v", "test.py"])
