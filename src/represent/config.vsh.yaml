@@ -9,7 +9,8 @@ functionality:
       required: true
     - name: --input
       type: file
-      example: combat.h5ad
+      example: combat_processed.h5ad
+      direction: input
       required: true
     - name: --sample_key
       type: string
@@ -37,6 +38,7 @@ functionality:
   test_resources:
     - type: python_script
       path: test.py
+
 
 platforms:
   - type: native

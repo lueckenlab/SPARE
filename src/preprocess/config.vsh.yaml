@@ -10,6 +10,7 @@ functionality:
     - name: --input
       type: file
       example: combat.h5ad
+      direction: input
       required: true
     - name: --batch_covariates
       type: string
@@ -37,6 +38,8 @@ functionality:
   test_resources:
     - type: python_script
       path: test.py
+    - path: "../../data/"
+
 platforms:
   - type: native
 
