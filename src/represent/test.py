@@ -33,7 +33,9 @@ def test_represent_script():
         "--output", output_file,
         "--cell_type_key", "cell_type",
         "--batch_covariates=patient",
-        "--sample_key", "patient"
+        "--sample_key", "patient",
+        #setting sample size threshold to 0 for testing the synthetic data to avoid removing all samples
+        "--celltype_pseudobulk_sample_size_threshold","0",
     ]
     result = run(cmd_args, check=True)
 
@@ -48,15 +50,16 @@ def test_represent_script():
     # Check if the representations were stored correctly
     assert 'pseudobulk_pca_distances' in adata_represent.uns_keys()
     assert 'pseudobulk_pca_UMAP' in adata_represent.uns_keys()
-    # assert 'ct_pseudobulk_pca_distances' in adata_represent.uns_keys()
-    # assert 'ct_pseudobulk_pca_UMAP' in adata_represent.uns_keys()
+    assert 'ct_pseudobulk_pca_distances' in adata_represent.uns_keys()
+    assert 'ct_pseudobulk_pca_UMAP' in adata_represent.uns_keys()
 
     distances_pseudobulk = adata_represent.uns['pseudobulk_pca_distances']
-    # distances_ct_pseudobulk = adata_represent.uns['ct_pseudobulk_X_pca_distances']
+    distances_ct_pseudobulk = adata_represent.uns['ct_pseudobulk_pca_distances']
     assert distances_pseudobulk.shape == (10, 10) 
-    # assert distances_ct_pseudobulk.shape == (10, 10) 
+    assert distances_ct_pseudobulk.shape == (10, 10) 
 
     print("evaluate:")
+    #### add coments
     pat_instance = pr.tl.TotalPseudobulk(sample_key="patient", cells_type_key="cell_type")
     pat_instance.prepare_anndata(adata_represent, sample_size_threshold=0, cluster_size_threshold=0)
     metadata = pat_instance._extract_metadata(["outcome","patient"])
