@@ -57,8 +57,47 @@ def test_represent_script():
     assert distances_pseudobulk.shape == (10, 10) 
     # assert distances_ct_pseudobulk.shape == (10, 10) 
 
+    print("evaluate:")
+    pat_instance = pr.tl.TotalPseudobulk(sample_key="patient", cells_type_key="cell_type")
+    pat_instance.prepare_anndata(adata_represent, sample_size_threshold=0, cluster_size_threshold=0)
+    metadata = pat_instance._extract_metadata(["outcome","patient"])
+    outcome = metadata["outcome"]
+    patients = metadata["patient"].astype('category').cat.codes
+    # outcome = metadata["outcome"].reset_index(drop=True)
+    # patients = metadata["patient"].reset_index(drop=True)
+
+    # outcome = pat_instance._extract_metadata(["outcome"])["outcome"].reset_index(drop=True).astype('category').cat.codes
+    # patients = pat_instance._extract_metadata(["patient"])["patient"].reset_index(drop=True).astype('category').cat.codes
+    print(outcome)
+    print(patients)
+    # outcome = adata_represent.obs['outcome'].copy()
+    # patients = adata_represent.obs['patient'].copy()
+
+    #distances for eval
+    distances = [
+        # "random_vec_distances",
+        "pseudobulk_pca_distances",
+       "pseudobulk_scVI_patient_distances", 
+        "wasserstein_scANVI_patient_distances"
+    ]
+    targets = [outcome, patients]
+    tasks = ["classification", "regression"]
+    for task in tasks:
+        print(f"Starting task: {task}")
+        for distance in distances:
+            for target in targets:
+                # print(f"{distance}: {pr.tl.evaluate_representation(distance, target,num_donors_subset=None, proportion_donors_subset=None, method='knn', n_neighbors=5, task=task)}")
+                target_name = "outcome" if target is outcome else "patient"
+                try:
+                    print(f"dist: {distance},task: {task},target: {target_name}: {pr.tl.evaluate_representation(adata_represent.uns[distance], target,num_donors_subset=None, proportion_donors_subset=None, method='knn', n_neighbors=5, task=task)}")
+                except Exception as e:
+                    print("failed: ", distance, " ", task, "\n", e)
+  
+    print("The End!")
 
 synthetic_processed_data()
 test_represent_script()
 
 # pytest.main(["-v", "test.py"])
+# if __name__ == '__main__':
+#     sys.exit(pytest.main([__file__]))
