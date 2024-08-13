@@ -160,7 +160,7 @@ cython_debug/
 #.idea/
 
 # Don't upload data
-data/
+data/*
 
 # temporary files
 temp
@@ -179,3 +179,5 @@ bin
 output
 
 experiments.ipynb
+
+!data/synthetic_processed.h5ad
