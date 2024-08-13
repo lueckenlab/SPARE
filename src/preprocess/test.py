@@ -19,11 +19,8 @@ meta = {
 import sys
 sys.path.append(meta['resources_dir'])
 
-# input_file ="synthetic.h5ad"
 input_file = f"{meta['resources_dir']}/synthetic.h5ad"
 output_file = f"{meta['resources_dir']}/synthetic_processed.h5ad"
-# output_file3 = "../../data/synthetic_preprocess.h5ad"
-# output_file2 = "data/synthetic_preprocess.h5ad"
 
 print(f"meta['resources_dir'] {meta['resources_dir']}")
 print(f"meta['executable'] { meta['executable']}")
@@ -56,25 +53,17 @@ def create_synthetic_data():
 
 
 
-@pytest.fixture
+# @pytest.fixture
 def synthetic_data():
-    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-    print("create data")
+    print("<<<<<<<<<<<<<<<<<<<<< create data >>>>>>>>>>>>>>>>>>>")
     adata = create_synthetic_data()
     adata.write(input_file)
     return adata
 
-def test_preprocess_script(synthetic_data):
-# def test_preprocess_script():
+# def test_preprocess_script(synthetic_data):
+def test_preprocess_script():
 
     # Run the preprocess script
-    print("ls:")
-    print(check_output(["ls"]))
-    print("PWD:")
-    print(check_output(["pwd"]))
-    print("ls meta resource:")
-    print(check_output(["ls", meta['resources_dir']]))
-    print("hello")
     print(">>> Run executable")
     cmd_args = [
         meta["executable"],
@@ -86,13 +75,10 @@ def test_preprocess_script(synthetic_data):
     ]
     result = run(cmd_args, check=True)
 
-    # result = run(["viash","run","config.vsh.yaml","-p" ,"native", "--", "--input", "synthetic.h5ad", "--output", "../../data/synthetic_processed.h5ad", "--cell_type_key", "cell_type", "--batch_covariates=patient", "--batch_effect_covariate", "patient"], check=True)
     assert result.returncode == 0
     # Load the processed data
     adata_processed = sc.read(output_file)
     
-    # adata_processed.write(output_file3)
-
     # Check the structure and content of the processed data
     assert 'X_pca' in adata_processed.obsm_keys()  
     assert 'X_harmony' in adata_processed.obsm_keys() 
@@ -101,12 +87,12 @@ def test_preprocess_script(synthetic_data):
     assert adata_processed.shape[1] == 100  # Ensure the number of genes remains the same
     print("++++++++++++++++++++++++++++++++++++++++++")
 
-# synthetic_data()
-# test_preprocess_script()
+synthetic_data()
+test_preprocess_script()
 
 # pytest.main(["-v", "test.py"])
 # # if __name__ == '__main__':
 # #     sys.exit(pytest.main([__file__]))
 
-if __name__ == '__main__':
-    pytest.main(["-v"])
+# if __name__ == '__main__':
+#     pytest.main(["-v"])
