@@ -20,7 +20,6 @@ print(input_file)
 
 # @pytest.fixture
 def synthetic_processed_data():
-    # Assuming the preprocess test has already been run and synthetic_processed.h5ad exists
     input_file = f"{meta['resources_dir']}/synthetic_processed.h5ad"
     return sc.read(input_file)
 
@@ -63,15 +62,9 @@ def test_represent_script():
     metadata = pat_instance._extract_metadata(["outcome","patient"])
     outcome = metadata["outcome"]
     patients = metadata["patient"].astype('category').cat.codes
-    # outcome = metadata["outcome"].reset_index(drop=True)
-    # patients = metadata["patient"].reset_index(drop=True)
-
-    # outcome = pat_instance._extract_metadata(["outcome"])["outcome"].reset_index(drop=True).astype('category').cat.codes
-    # patients = pat_instance._extract_metadata(["patient"])["patient"].reset_index(drop=True).astype('category').cat.codes
+ 
     print(outcome)
     print(patients)
-    # outcome = adata_represent.obs['outcome'].copy()
-    # patients = adata_represent.obs['patient'].copy()
 
     #distances for eval
     distances = [
@@ -86,7 +79,6 @@ def test_represent_script():
         print(f"Starting task: {task}")
         for distance in distances:
             for target in targets:
-                # print(f"{distance}: {pr.tl.evaluate_representation(distance, target,num_donors_subset=None, proportion_donors_subset=None, method='knn', n_neighbors=5, task=task)}")
                 target_name = "outcome" if target is outcome else "patient"
                 try:
                     print(f"dist: {distance},task: {task},target: {target_name}: {pr.tl.evaluate_representation(adata_represent.uns[distance], target,num_donors_subset=None, proportion_donors_subset=None, method='knn', n_neighbors=5, task=task)}")
@@ -99,5 +91,3 @@ synthetic_processed_data()
 test_represent_script()
 
 # pytest.main(["-v", "test.py"])
-# if __name__ == '__main__':
-#     sys.exit(pytest.main([__file__]))
