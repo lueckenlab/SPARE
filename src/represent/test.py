@@ -17,19 +17,16 @@ input_file = f"{meta['resources_dir']}/synthetic_processed.h5ad"
 output_file = f"{meta['resources_dir']}/synthetic_represent.h5ad"
 print(input_file)
 
-#### no output?
-# output_file = "../../data/synthetic_represent.h5ad"
 
-@pytest.fixture
+# @pytest.fixture
 def synthetic_processed_data():
     # Assuming the preprocess test has already been run and synthetic_processed.h5ad exists
     input_file = f"{meta['resources_dir']}/synthetic_processed.h5ad"
     return sc.read(input_file)
 
-def test_represent_script(synthetic_processed_data):
-# def test_represent_script():
+# def test_represent_script(synthetic_processed_data):
+def test_represent_script():
     # Run the represent script
-    # result = run(["viash","run","config.vsh.yaml","--", "--input", "synthetic_processed.h5ad", "--output", "synthetic_represent.h5ad", "--cell_type_key", "cell_type","--batch_covariates=patient", "--sample_key", "patient"], check=True)
     print(">>> Run executable")
     cmd_args = [
         meta["executable"],
@@ -61,9 +58,7 @@ def test_represent_script(synthetic_processed_data):
     # assert distances_ct_pseudobulk.shape == (10, 10) 
 
 
-# synthetic_processed_data()
-# test_represent_script()
+synthetic_processed_data()
+test_represent_script()
 
-pytest.main(["-v", "test.py"])
-if __name__ == '__main__':
-    sys.exit(pytest.main([__file__]))
+# pytest.main(["-v", "test.py"])
