@@ -63,7 +63,7 @@ def get_representation(adata, method_class, method_name, **kwargs):
         print("Preparing adata")
         if isinstance(method_instance, pr.tl.CellTypePseudobulk):
             # Set stricter thresholds for sample and cluster size
-            method_instance.prepare_anndata(adata, sample_size_threshold=500, cluster_size_threshold=0)
+            method_instance.prepare_anndata(adata, sample_size_threshold=par["celltype_pseudobulk_sample_size_threshold"], cluster_size_threshold=0)
         else:
             method_instance.prepare_anndata(adata, sample_size_threshold=0, cluster_size_threshold=0)
         
