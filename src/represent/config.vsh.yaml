@@ -25,7 +25,11 @@ functionality:
       example: ["scRNASeq_sample_ID","Pool_ID"]
       multiple: true
       multiple_sep: ","
-      required: true    
+      required: true
+    - name: --celltype_pseudobulk_sample_size_threshold
+      type: integer
+      default: 500
+      required: false
     - name: --output_compression
       description: The compression format of the output file
       type: string
