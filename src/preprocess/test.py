@@ -15,14 +15,17 @@ def create_synthetic_data():
     # Creating a synthetic dataset with distinct clusters
     data = np.zeros((n_cells_per_patient * n_patients, n_genes))
     for i in range(n_patients):
-        if i < 5:  # First half of patients have similar expression patterns
+        if i < 3:  # First group of patients (dead)
             data[i * n_cells_per_patient:(i + 1) * n_cells_per_patient, :] = np.random.rand(n_cells_per_patient, n_genes) + i * 0.1
-        else:  # Second half of patients have distinct but close expression patterns
-            data[i * n_cells_per_patient:(i + 1) * n_cells_per_patient, :] = np.random.rand(n_cells_per_patient, n_genes) + 1.5 + i * 0.1
+        elif i < 7:  # Second group of patients (sick)
+            data[i * n_cells_per_patient:(i + 1) * n_cells_per_patient, :] = np.random.rand(n_cells_per_patient, n_genes) + 1.0 + (i - 3) * 0.1
+        else:  # Third group of patients (healthy)
+            data[i * n_cells_per_patient:(i + 1) * n_cells_per_patient, :] = np.random.rand(n_cells_per_patient, n_genes) + 2.0 + (i - 7) * 0.1
 
     obs = pd.DataFrame({
         'patient': np.repeat([f'P{i+1}' for i in range(n_patients)], n_cells_per_patient),
-        'cell_type': cell_types
+        'cell_type': cell_types,
+        'outcome': np.repeat([1]*3 + [2]*4 + [3]*3, n_cells_per_patient)
     })
 
     adata = sc.AnnData(X=data, obs=obs)
