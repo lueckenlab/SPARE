@@ -37,6 +37,20 @@ def represented_data():
     assert result.returncode == 0
     return sc.read(output_file)
 
+def test_representation_keys(represented_data):
+    adata_represent = represented_data
+    print(adata_represent)
+
+    # Check if the representations were stored correctly
+    assert 'pseudobulk_pca_distances' in adata_represent.uns_keys()
+    assert 'pseudobulk_pca_UMAP' in adata_represent.uns_keys()
+    assert 'ct_pseudobulk_pca_distances' in adata_represent.uns_keys()
+    assert 'ct_pseudobulk_pca_UMAP' in adata_represent.uns_keys()
+
+    distances_pseudobulk = adata_represent.uns['pseudobulk_pca_distances']
+    distances_ct_pseudobulk = adata_represent.uns['ct_pseudobulk_pca_distances']
+    assert distances_pseudobulk.shape == (10, 10)
+    assert distances_ct_pseudobulk.shape == (10, 10)
 
 # def test_represent_script():
 #     # Run the represent script
