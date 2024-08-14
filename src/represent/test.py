@@ -85,6 +85,29 @@ def test_classification_patient(prepare_data, represented_data):
         )['score']
         assert score == 0.0, f"Expected 0 score, but got {score} for {distance} with patient target in classification."
 
+def test_classification_outcome(prepare_data, represented_data):
+    metadata = prepare_data
+    adata_represent = represented_data
+
+    outcome = metadata["outcome"]
+
+    # Perform classification on outcome target
+    distances = [
+        # pseudobulk_pca_distances is commented out since it delivers 0 score
+        # "pseudobulk_pca_distances",
+        "pseudobulk_scVI_patient_distances",
+        "wasserstein_scANVI_patient_distances"
+    ]
+
+    for distance in distances:
+        score = pr.tl.evaluate_representation(
+            adata_represent.uns[distance], outcome,
+            num_donors_subset=None, proportion_donors_subset=None,
+            method='knn', n_neighbors=5, task="classification"
+        )['score']
+        assert score > 0.8, f"Expected classification score > 0.8, but got {score} for {distance} with outcome target."
+
+
 # def test_represent_script():
 #     # Run the represent script
 #     print(">>> Run executable")
