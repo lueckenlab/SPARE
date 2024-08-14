@@ -64,13 +64,10 @@ def test_representation_keys(represented_data):
     assert distances_ct_pseudobulk.shape == (10, 10)
 
 # we expect score 0 for the following, because each patient has unique identifier and can not be classified by other's patient keys
-def test_classification_patient(represented_data):
+def test_classification_patient(prepare_data, represented_data):
+    metadata = prepare_data
     adata_represent = represented_data
 
-    # Prepare data
-    pat_instance = pr.tl.TotalPseudobulk(sample_key="patient", cells_type_key="cell_type")
-    pat_instance.prepare_anndata(adata_represent, sample_size_threshold=0, cluster_size_threshold=0)
-    metadata = pat_instance._extract_metadata(["outcome", "patient"])
     patients = metadata["patient"].astype('category').cat.codes
 
     # Perform classification on patient target
@@ -86,7 +83,7 @@ def test_classification_patient(represented_data):
             num_donors_subset=None, proportion_donors_subset=None,
             method='knn', n_neighbors=5, task="classification"
         )['score']
-        assert score == 0.0, f"Expected 0 score, but got {score} for {distance} with patient target for the classification."
+        assert score == 0.0, f"Expected 0 score, but got {score} for {distance} with patient target in classification."
 
 # def test_represent_script():
 #     # Run the represent script
