@@ -18,12 +18,7 @@ output_file = f"{meta['resources_dir']}/synthetic_represent.h5ad"
 print(input_file)
 
 
-@pytest.fixture
-def synthetic_processed_data():
-    input_file = f"{meta['resources_dir']}/synthetic_processed.h5ad"
-    return sc.read(input_file)
-
-def test_represent_script(synthetic_processed_data):
+def test_represent_script():
     # Run the represent script
     print(">>> Run executable")
     cmd_args = [
