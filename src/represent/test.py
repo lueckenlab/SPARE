@@ -52,6 +52,30 @@ def test_representation_keys(represented_data):
     assert distances_pseudobulk.shape == (10, 10)
     assert distances_ct_pseudobulk.shape == (10, 10)
 
+def test_classification_patient(represented_data):
+    adata_represent = represented_data
+
+    # Prepare data
+    pat_instance = pr.tl.TotalPseudobulk(sample_key="patient", cells_type_key="cell_type")
+    pat_instance.prepare_anndata(adata_represent, sample_size_threshold=0, cluster_size_threshold=0)
+    metadata = pat_instance._extract_metadata(["outcome", "patient"])
+    patients = metadata["patient"].astype('category').cat.codes
+
+    # Perform classification on patient target
+    distances = [
+        "pseudobulk_pca_distances",
+        "pseudobulk_scVI_patient_distances",
+        "wasserstein_scANVI_patient_distances"
+    ]
+    
+    for distance in distances:
+        score = pr.tl.evaluate_representation(
+            adata_represent.uns[distance], patients,
+            num_donors_subset=None, proportion_donors_subset=None,
+            method='knn', n_neighbors=5, task="classification"
+        )['score']
+        assert score == 0.0, f"Expected 0 score, but got {score} for {distance} with patient target for the classification."
+
 # def test_represent_script():
 #     # Run the represent script
 #     print(">>> Run executable")
