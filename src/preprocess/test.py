@@ -53,16 +53,14 @@ def create_synthetic_data():
 
 
 
-# @pytest.fixture
+@pytest.fixture
 def synthetic_data():
     print("<<<<<<<<<<<<<<<<<<<<< create data >>>>>>>>>>>>>>>>>>>")
     adata = create_synthetic_data()
     adata.write(input_file)
     return adata
 
-# def test_preprocess_script(synthetic_data):
-def test_preprocess_script():
-
+def test_preprocess_script(synthetic_data):
     # Run the preprocess script
     print(">>> Run executable")
     cmd_args = [
@@ -87,12 +85,6 @@ def test_preprocess_script():
     assert adata_processed.shape[1] == 100  # Ensure the number of genes remains the same
     print("++++++++++++++++++++++++++++++++++++++++++")
 
-synthetic_data()
-test_preprocess_script()
 
-# pytest.main(["-v", "test.py"])
-# # if __name__ == '__main__':
-# #     sys.exit(pytest.main([__file__]))
-
-# if __name__ == '__main__':
-#     pytest.main(["-v"])
+if __name__ == '__main__':
+    sys.exit(pytest.main([__file__]))

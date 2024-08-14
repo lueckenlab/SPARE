@@ -18,13 +18,12 @@ output_file = f"{meta['resources_dir']}/synthetic_represent.h5ad"
 print(input_file)
 
 
-# @pytest.fixture
+@pytest.fixture
 def synthetic_processed_data():
     input_file = f"{meta['resources_dir']}/synthetic_processed.h5ad"
     return sc.read(input_file)
 
-# def test_represent_script(synthetic_processed_data):
-def test_represent_script():
+def test_represent_script(synthetic_processed_data):
     # Run the represent script
     print(">>> Run executable")
     cmd_args = [
@@ -90,7 +89,7 @@ def test_represent_script():
   
     print("The End!")
 
-synthetic_processed_data()
-test_represent_script()
 
-# pytest.main(["-v", "test.py"])
+
+if __name__ == '__main__':
+    sys.exit(pytest.main([__file__]))
