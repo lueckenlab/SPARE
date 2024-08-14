@@ -37,6 +37,17 @@ def represented_data():
     assert result.returncode == 0
     return sc.read(output_file)
 
+@pytest.fixture(scope="module")
+def prepare_data(represented_data):
+    adata_represent = represented_data
+
+    # Prepare data
+    pat_instance = pr.tl.TotalPseudobulk(sample_key="patient", cells_type_key="cell_type")
+    pat_instance.prepare_anndata(adata_represent, sample_size_threshold=0, cluster_size_threshold=0)
+    metadata = pat_instance._extract_metadata(["outcome", "patient"])
+    
+    return metadata
+
 def test_representation_keys(represented_data):
     adata_represent = represented_data
     print(adata_represent)
