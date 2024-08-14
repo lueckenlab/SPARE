@@ -52,6 +52,7 @@ def test_representation_keys(represented_data):
     assert distances_pseudobulk.shape == (10, 10)
     assert distances_ct_pseudobulk.shape == (10, 10)
 
+# we expect score 0 for the following, because each patient has unique identifier and can not be classified by other's patient keys
 def test_classification_patient(represented_data):
     adata_represent = represented_data
 
