@@ -3,6 +3,7 @@ import random
 import scanpy as sc
 import scvi
 import pandas as pd
+import patient_representation as pr
 from patient_representation.pp import is_count_data
 import numpy as np
 import os
@@ -16,9 +17,12 @@ par = {
     "input": "data/combat.h5ad",
     "output": "data/combat_processed.h5ad",
     "cell_type_key":"Annotation_major_subset",
-    "batch_covariates":["scRNASeq_sample_ID","Pool_ID"],
+    "sample_key":"scRNASeq_sample_ID",
+    "batch_covariates":["scRNASeq_sample_ID","Pool_ID","Institute"],
+    "samples_metadata_cols":["Source", "Outcome", "Death28", "Institute", "Pool_ID"],
     "batch_effect_covariate":"Pool_ID",
     "output_compression": "gzip",
+    "output_metadata": "data/combat_metadata_200.csv",
 }
 ## VIASH END
 
@@ -67,6 +71,9 @@ ADATA_PATH = par["input"]
 CELL_TYPE_KEY = par["cell_type_key"]
 BATCH_COVARIATES = par["batch_covariates"]
 BATCH_EFFECT = par["batch_effect_covariate"]
+SAMPLE_KEY = par["sample_key"]
+SAMPLE_METADATA_COLS = par["samples_metadata_cols"]
+OUTPUT_METADATA_PATH = par["output_metadata"]
 
 figures_directory = os.path.join(os.path.dirname(par["output"]), "figures")
 
@@ -105,7 +112,6 @@ def plot_loss(history, loss_keys, title, filenames, counter):
             plt.ylabel('Loss')
             plt.title(title)
             plt.legend()
-            # Add counter to filename
             filename_with_counter = f"{counter}_{filename}"
             full_path = os.path.join(figures_directory, filename_with_counter)
             plt.savefig(full_path)
@@ -147,4 +153,37 @@ for batch_key in BATCH_COVARIATES:
     [f'reconstruction_loss_scANVI_{batch_key}.png', f'train_loss_epoch_scANVI_{batch_key}.png', f'elbo_train_scANVI_{batch_key}.png'], counter)
 
 
+
+
+## QC metrics:
+
+# mitochondrial genes
+adata.var["mt"] = adata.var_names.str.startswith("MT-")
+# ribosomal genes
+adata.var["ribo"] = adata.var_names.str.startswith(("RPS", "RPL"))
+
+##commented out, because its blood cells specefic
+# hemoglobin genes.
+# adata.var["hb"] = adata.var_names.str.contains(("^HB[^(P)]"))
+
+sc.pp.calculate_qc_metrics(
+    adata, qc_vars=["mt", "ribo"], inplace=True, log1p=True
+)
+
+cell_qc_metadata = pr.pp.calculate_cell_qc_metrics(adata, sample_key=SAMPLE_KEY, cell_qc_vars=["n_genes_by_counts", "total_counts", "pct_counts_mt"])
+n_genes_metadata = pr.pp.calculate_n_cells_per_sample(adata, SAMPLE_KEY)
+composition_metadata = pr.pp.calculate_compositional_metrics(adata, SAMPLE_KEY, [CELL_TYPE_KEY], normalize_to=100)
+
+metadata = pr.pp.extract_metadata(adata,SAMPLE_KEY,SAMPLE_METADATA_COLS)
+metadata = pd.concat([
+    metadata,
+    cell_qc_metadata.loc[metadata.index],
+    n_genes_metadata.loc[metadata.index],
+    composition_metadata.loc[metadata.index]
+], axis=1)
+
+print("ADATA PREPROCESSED: ")
+print(adata)
+
 adata.write(par["output"], compression=par["output_compression"])
+metadata.to_csv(OUTPUT_METADATA_PATH)
