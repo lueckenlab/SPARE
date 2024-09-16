@@ -53,16 +53,8 @@ SAMPLES_METADATA_COLS = par["samples_metadata_cols"]
 OUTPUT_BASE_NAME = par["output_base_name"]
 METADATA_PATH = par["metadata_path"]
 
-# # if running within Viash (because arguments are passed as JSON strings)
-# if isinstance(par["benchmark_schema"], str):
-#     BENCHMARK_SCHEMA = json.loads(par["benchmark_schema"])
-#     COLS_WITH_TASKS = json.loads(par["cols_with_tasks"])
-# else:
-#     # Running manually the script
-#     BENCHMARK_SCHEMA = par["benchmark_schema"]
-#     COLS_WITH_TASKS = par["cols_with_tasks"]
 
-# Load JSON from files - NEWLY ADDED
+# Load schema from JSON files
 with open(par["benchmark_schema_file"], 'r') as f:
     BENCHMARK_SCHEMA = json.load(f)
 
@@ -71,14 +63,15 @@ with open(par["cols_with_tasks_file"], 'r') as f:
 
 adata = sc.read_h5ad(ADATA_PATH)
 
-print("____________________ADATA FIRST")
+print("____________________ADATA at START:")
 print(adata)
-print("____________________ADATA FIRST")
 
-# Extract metadata
-# pat_instance = pr.tl.TotalPseudobulk(sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY)
-# pat_instance.prepare_anndata(adata, sample_size_threshold=0, cluster_size_threshold=0)
-# metadata = pat_instance._extract_metadata(SAMPLES_METADATA_COLS)
+representations_methods = [ key.replace("_distances", "") for key in adata.uns.keys() if key.endswith("_distances") ]
+print("Representation Methods:", representations_methods) 
+print("Keys in adata.uns:", list(adata.uns.keys())) 
+
+#just to make sure it comes from our script 
+# representations_methods = [ method for method in representations_methods if f"{method}_samples" in adata.uns and f"{method}_UMAP" in adata.uns ]
 
 metadata = pd.read_csv(METADATA_PATH, index_col=0)
 
