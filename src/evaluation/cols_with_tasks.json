@@ -1,0 +1,10 @@
+{
+    "Annotation_major_subset_CD4": "regression",
+    "Institute": "classification",
+    "Pool_ID": "classification",
+    "Death28": "classification",
+    "Outcome": "ranking",
+    "Source": "classification",
+    "n_cells": "regression",
+    "median_n_genes_by_counts": "regression"
+}
