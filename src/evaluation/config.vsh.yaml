@@ -40,6 +40,11 @@ functionality:
       type: string
       default: evaluation_results
       required: false
+    - name: --metadata_path
+      type: file
+      example: combat_preprocessed_metadata.csv
+      direction: input
+      required: true
   
   resources:
     - type: python_script
