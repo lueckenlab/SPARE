@@ -66,6 +66,11 @@ print("____________________metadata columns")
 print(metadata.columns)
 print("____________________metadata columns\n")
 
+figures_dir = "figures"
+tables_dir = "tables"
+os.makedirs(figures_dir, exist_ok=True)
+os.makedirs(tables_dir, exist_ok=True)
+
 
 # Align Representations
 def align_representations(adata, meta_adata, samples, methods, cols_of_interest):
@@ -90,7 +95,7 @@ def align_representations(adata, meta_adata, samples, methods, cols_of_interest)
             fig = ep.pl.umap(meta_adata, color=[f"{method}_leiden"] + cols_of_interest, return_fig=True)
             fig.suptitle(method, fontsize=20)
             
-            fig.savefig(f"{OUTPUT_BASE_NAME}_{method}_UMAP.png")
+            fig.savefig(os.path.join(figures_dir, f"{OUTPUT_BASE_NAME}_{method}_UMAP.png"))
             
         except Exception as e:  
             print(f"An error occurred with method {method}: {e}\n") 
@@ -165,7 +170,8 @@ def plot_knn_results(knn_results, output_base_name):
         plt.xlim(0, 1.05)
         plt.title("KNN-score", fontsize=24)
         
-        plt.savefig(f"{output_base_name}_knn_score.png")
+        plt.savefig(os.path.join(figures_dir, f"{output_base_name}_knn_score.png"))
+
     else: 
         print("No results to plot.\n")
 
@@ -224,7 +230,8 @@ def plot_results_table(knn_results, benchmark_schema, output_base_name):
             Table(knn_results_wide[cols_order].sort_values("total", ascending=False),
                   column_definitions=tuple(col_defs), ax=ax)
 
-            plt.savefig(f"{output_base_name}_results_table.png")
+            plt.savefig(os.path.join(tables_dir, f"{output_base_name}_results_table.png"))
+
         else:
             print("Cannot plot results table because 'total' could not be calculated.\n")
     else:
@@ -237,4 +244,4 @@ plot_knn_results(knn_results, OUTPUT_BASE_NAME)
 plot_results_table(knn_results, BENCHMARK_SCHEMA, OUTPUT_BASE_NAME)
 
 # Save knn results to file
-knn_results.to_csv(f"{OUTPUT_BASE_NAME}_knn_results.csv", index=False)
+knn_results.to_csv(os.path.join(tables_dir, f"{OUTPUT_BASE_NAME}_knn_results.csv"), index=False)
