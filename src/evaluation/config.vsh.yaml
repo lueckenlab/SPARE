@@ -15,6 +15,20 @@ functionality:
       type: string
       example: Annotation_major_subset
       required: true
+    - name: --samples_metadata_cols
+      type: string
+      example: ["Source", "Outcome", "Death28", "Institute", "Pool_ID"]
+      multiple: true
+      multiple_sep: ","
+      required: true
+    - name: --benchmark_schema
+      type: string
+      example: '{"technical":["Institute","Pool_ID","n_cells","median_QC_ngenes"],"clinical":["Death28","Outcome","Source"],"biological":["Annotation_major_subset_CD4"]}'
+      required: true
+    - name: --cols_with_tasks
+      type: string
+      example: '{"Annotation_major_subset_CD4":"regression","Institute":"classification","Pool_ID":"classification","n_cells":"regression","median_QC_ngenes":"regression","Death28":"classification","Outcome":"ranking","Source":"classification"}'
+      required: true
     - name: --output_compression
       description: The compression format of the output file
       type: string
