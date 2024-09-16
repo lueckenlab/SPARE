@@ -23,22 +23,6 @@ par = {
     "output_compression": "gzip",
     "sample_key":"scRNASeq_sample_ID",
     "metadata_path": "../../data/combat_metadata_200.csv",
-    # "benchmark_schema" : {
-    # "technical": ["Institute", "Pool_ID"],
-    # # "technical": ["Institute", "Pool_ID", "n_cells", "median_QC_ngenes"],
-    # "clinical": ["Death28", "Outcome", "Source"],
-    # # "biological": ["Annotation_major_subset_CD4"],
-    # },
-    # "cols_with_tasks" : {
-    #     # "Annotation_major_subset_CD4": "regression",
-    #     "Institute": "classification",
-    #     "Pool_ID": "classification",
-    #     # "n_cells": "regression",
-    #     # "median_QC_ngenes": "regression",
-    #     "Death28": "classification",
-    #     "Outcome": "ranking",
-    #     "Source": "classification",
-    # },
     "benchmark_schema_file": "benchmark_schema.json",
     "cols_with_tasks_file": "cols_with_tasks.json", 
     "samples_metadata_cols": ["Source", "Outcome", "Death28", "Institute", "Pool_ID"],
@@ -68,20 +52,14 @@ print(adata)
 
 representations_methods = [ key.replace("_distances", "") for key in adata.uns.keys() if key.endswith("_distances") ]
 print("Representation Methods:", representations_methods) 
-print("Keys in adata.uns:", list(adata.uns.keys())) 
 
 #just to make sure it comes from our script 
 # representations_methods = [ method for method in representations_methods if f"{method}_samples" in adata.uns and f"{method}_UMAP" in adata.uns ]
 
 metadata = pd.read_csv(METADATA_PATH, index_col=0)
 
-print("____________________metadata ")
+print("____________________metadata: ")
 print(metadata)
-print("____________________metadata ")
-
-print("____________________metadata columns")
-print(metadata.columns)
-print("____________________metadata columns\n")
 
 figures_dir = "figures"
 tables_dir = "tables"
@@ -120,19 +98,13 @@ def align_representations(adata, meta_adata, samples, methods, cols_of_interest)
     return meta_adata
 
 # Get common samples across methods
-representations_methods = ["pseudobulk_pca"]
 combat_samples = list(set(adata.uns[f"{method}_samples"]) for method in representations_methods)
 combat_samples = list(set.intersection(*combat_samples))
-print("Common Combat Samples:\n", combat_samples)
-
 # Align metadata with representations
 combat_meta_adata = ep.io.df_to_anndata(metadata.loc[combat_samples])
 combat_meta_adata = ep.pp.encode(combat_meta_adata, autodetect=True)
 combat_meta_adata = align_representations(adata=adata, meta_adata=combat_meta_adata, samples=combat_samples, methods=representations_methods, cols_of_interest=SAMPLES_METADATA_COLS)
 
-print("__________________________combat_meta_adata FIRST")
-print(combat_meta_adata)
-print("__________________________combat_meta_adata FIRST\n")
 
 # Evaluate Representations
 def evaluate_representations(combat_meta_adata, methods, benchmark_schema, cols_with_tasks):
@@ -143,12 +115,11 @@ def evaluate_representations(combat_meta_adata, methods, benchmark_schema, cols_
             for col in benchmark_schema[covariate_type]:
                 task = cols_with_tasks[col]
                 print(f"Evaluating Method: {method}, Covariate: {col}, Task: {task}\n") 
-                 #later on printing should be done via proper logging               
+                 # TODO: later on printing should be done via proper logging               
                 try:
                     result = pr.tl.evaluate_representation(
                         distances=combat_meta_adata.obsm[f"{method}_distances"],
                         target=metadata[col],
-                        # target=metadata.get(col),
                         method="knn",
                         task=task,
                     )
