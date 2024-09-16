@@ -70,26 +70,31 @@ print("____________________metadata columns\n")
 # Align Representations
 def align_representations(adata, meta_adata, samples, methods, cols_of_interest):
     for method in methods:
-        representation_samples = adata.uns[f"{method}_samples"].tolist()
-        samples_order = [representation_samples.index(sample) for sample in samples if sample in representation_samples]
-                    
-        if not (adata.uns[f"{method}_samples"][samples_order] == samples).all():  
-            print(f"Warning: Order of samples is not correct for method {method}.\n")  
-            continue 
-        
-        assert (adata.uns[f"{method}_samples"][samples_order] == samples).all(), "Order of samples is not correct"
+        try:
+            representation_samples = adata.uns[f"{method}_samples"].tolist()
+            samples_order = [representation_samples.index(sample) for sample in samples if sample in representation_samples]
+                        
+            if not (adata.uns[f"{method}_samples"][samples_order] == samples).all():  
+                print(f"Warning: Order of samples is not correct for method {method}.\n")  
+                continue 
+            
+            assert (adata.uns[f"{method}_samples"][samples_order] == samples).all(), "Order of samples is not correct"
 
-        meta_adata.obsm[f"{method}_UMAP"] = adata.uns[f"{method}_UMAP"][samples_order]
-        meta_adata.obsm["umap"] = meta_adata.obsm[f"{method}_UMAP"]
-        meta_adata.obsm[f"{method}_distances"] = adata.uns[f"{method}_distances"][samples_order][:, samples_order]
+            meta_adata.obsm[f"{method}_UMAP"] = adata.uns[f"{method}_UMAP"][samples_order]
+            meta_adata.obsm["umap"] = meta_adata.obsm[f"{method}_UMAP"]
+            meta_adata.obsm[f"{method}_distances"] = adata.uns[f"{method}_distances"][samples_order][:, samples_order]
 
-        ep.pp.neighbors(meta_adata, use_rep=f"{method}_distances", key_added=f"{method}_neighbors", metric="precomputed")
-        ep.tl.leiden(meta_adata, key_added=f"{method}_leiden", neighbors_key=f"{method}_neighbors")
+            ep.pp.neighbors(meta_adata, use_rep=f"{method}_distances", key_added=f"{method}_neighbors", metric="precomputed")
+            ep.tl.leiden(meta_adata, key_added=f"{method}_leiden", neighbors_key=f"{method}_neighbors")
 
-        fig = ep.pl.umap(meta_adata, color=[f"{method}_leiden"] + cols_of_interest, return_fig=True)
-        fig.suptitle(method, fontsize=20)
-        
-        fig.savefig(f"{OUTPUT_BASE_NAME}_{method}_UMAP.png")
+            fig = ep.pl.umap(meta_adata, color=[f"{method}_leiden"] + cols_of_interest, return_fig=True)
+            fig.suptitle(method, fontsize=20)
+            
+            fig.savefig(f"{OUTPUT_BASE_NAME}_{method}_UMAP.png")
+            
+        except Exception as e:  
+            print(f"An error occurred with method {method}: {e}\n") 
+            continue  
     return meta_adata
 
 # Get common samples across methods
