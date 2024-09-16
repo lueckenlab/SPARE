@@ -1,0 +1,43 @@
+functionality:
+  name: evaluation
+  description: "evaluate the obtained patient representation..."
+  arguments: 
+    - name: --input
+      type: file
+      example: combat_represent.h5ad
+      direction: input
+      required: true
+    - name: --sample_key
+      type: string
+      example: "scRNASeq_sample_ID"
+      required: true
+    - name: --cell_type_key
+      type: string
+      example: Annotation_major_subset
+      required: true
+    - name: --output_compression
+      description: The compression format of the output file
+      type: string
+      example: gzip
+      required: false
+    - name: --output_base_name
+      type: string
+      default: evaluation_results
+      required: false
+  
+  resources:
+    - type: python_script
+      path: script.py
+  test_resources:
+    - type: python_script
+      path: test.py
+    - type: file
+      path: "../../data/synthetic_represent.h5ad"
+
+platforms:
+  - type: native
+
+  # - type: docker
+  #   image: patient_representation_img
+  
+  - type: nextflow
