@@ -4,6 +4,7 @@ from subprocess import run
 import numpy as np
 import sys
 import patient_representation as pr
+import pandas as pd 
 
 ## VIASH START
 meta = {
@@ -15,6 +16,9 @@ sys.path.append(meta['resources_dir'])
 
 input_file = f"{meta['resources_dir']}/synthetic_processed.h5ad"
 output_file = f"{meta['resources_dir']}/synthetic_represent.h5ad"
+metadata_file = f"{meta['resources_dir']}/synthetic_metadata.csv"
+
+print("synthetic processed ADATA:\n")
 print(input_file)
 
 
@@ -39,14 +43,10 @@ def represented_data():
 
 @pytest.fixture(scope="module")
 def prepare_data(represented_data):
-    adata_represent = represented_data
-
-    # Prepare data
-    pat_instance = pr.tl.TotalPseudobulk(sample_key="patient", cells_type_key="cell_type")
-    pat_instance.prepare_anndata(adata_represent, sample_size_threshold=0, cluster_size_threshold=0)
-    metadata = pat_instance._extract_metadata(["outcome", "patient"])
-    
+    # Load metadata from CSV file instead of extracting from adata
+    metadata = pd.read_csv(metadata_file, index_col=0)
     return metadata
+
 
 def test_representation_keys(represented_data):
     adata_represent = represented_data
