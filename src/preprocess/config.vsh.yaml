@@ -12,9 +12,19 @@ functionality:
       example: combat.h5ad
       direction: input
       required: true
+    - name: --sample_key
+      type: string
+      example: "scRNASeq_sample_ID"
+      required: true
     - name: --batch_covariates
       type: string
       example: ["scRNASeq_sample_ID","Pool_ID"]
+      multiple: true
+      multiple_sep: ","
+      required: true
+    - name: --samples_metadata_cols
+      type: string
+      example: ["Source", "Outcome", "Death28", "Institute", "Pool_ID"]
       multiple: true
       multiple_sep: ","
       required: true
@@ -31,6 +41,11 @@ functionality:
       type: string
       example: gzip
       required: false
+    - name: --output_metadata
+      type: file
+      example: combat_preprocessed_metadata.csv
+      direction: output
+      required: true
     
   resources:
     - type: python_script
