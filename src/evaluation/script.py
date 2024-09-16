@@ -23,6 +23,22 @@ par = {
     "output_compression": "gzip",
     "sample_key":"scRNASeq_sample_ID",
     "metadata_path": "../../data/combat_metadata_200.csv",
+    # "benchmark_schema" : {
+    # "technical": ["Institute", "Pool_ID"],
+    # # "technical": ["Institute", "Pool_ID", "n_cells", "median_QC_ngenes"],
+    # "clinical": ["Death28", "Outcome", "Source"],
+    # # "biological": ["Annotation_major_subset_CD4"],
+    # },
+    # "cols_with_tasks" : {
+    #     # "Annotation_major_subset_CD4": "regression",
+    #     "Institute": "classification",
+    #     "Pool_ID": "classification",
+    #     # "n_cells": "regression",
+    #     # "median_QC_ngenes": "regression",
+    #     "Death28": "classification",
+    #     "Outcome": "ranking",
+    #     "Source": "classification",
+    # },
     "benchmark_schema_file": "benchmark_schema.json",
     "cols_with_tasks_file": "cols_with_tasks.json", 
     "samples_metadata_cols": ["Source", "Outcome", "Death28", "Institute", "Pool_ID"],
@@ -37,15 +53,13 @@ SAMPLES_METADATA_COLS = par["samples_metadata_cols"]
 OUTPUT_BASE_NAME = par["output_base_name"]
 METADATA_PATH = par["metadata_path"]
 
-# if running within Viash (because arguments are passed as JSON strings)
-if isinstance(par["benchmark_schema"], str):
-    BENCHMARK_SCHEMA = json.loads(par["benchmark_schema"])
-    COLS_WITH_TASKS = json.loads(par["cols_with_tasks"])
-else:
-    # Running manually the script
-    BENCHMARK_SCHEMA = par["benchmark_schema"]
-    COLS_WITH_TASKS = par["cols_with_tasks"]
 
+# Load schema from JSON files
+with open(par["benchmark_schema_file"], 'r') as f:
+    BENCHMARK_SCHEMA = json.load(f)
+
+with open(par["cols_with_tasks_file"], 'r') as f:
+    COLS_WITH_TASKS = json.load(f)
 
 adata = sc.read_h5ad(ADATA_PATH)
 
