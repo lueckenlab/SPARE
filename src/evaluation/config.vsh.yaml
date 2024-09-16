@@ -21,13 +21,15 @@ functionality:
       multiple: true
       multiple_sep: ","
       required: true
-    - name: --benchmark_schema
-      type: string
-      example: '{"technical":["Institute","Pool_ID","n_cells","median_QC_ngenes"],"clinical":["Death28","Outcome","Source"],"biological":["Annotation_major_subset_CD4"]}'
+    - name: --benchmark_schema_file 
+      type: file 
+      example: "benchmark_schema.json" 
+      direction: input 
       required: true
-    - name: --cols_with_tasks
-      type: string
-      example: '{"Annotation_major_subset_CD4":"regression","Institute":"classification","Pool_ID":"classification","n_cells":"regression","median_QC_ngenes":"regression","Death28":"classification","Outcome":"ranking","Source":"classification"}'
+    - name: --cols_with_tasks_file
+      type: file
+      example: "cols_with_tasks.json"
+      direction: input
       required: true
     - name: --output_compression
       description: The compression format of the output file
