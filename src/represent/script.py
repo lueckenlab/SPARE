@@ -20,7 +20,8 @@ par = {
     "output": "data/combat_represent.h5ad",
     "cell_type_key":"Annotation_major_subset",
     "sample_key":"scRNASeq_sample_ID",
-    "batch_covariates":["scRNASeq_sample_ID","Pool_ID"],
+    "batch_covariates":["scRNASeq_sample_ID","Pool_ID","Institute"],
+    "celltype_pseudobulk_sample_size_threshold": "0",
     "output_compression": "gzip",
 }
 ## VIASH END
@@ -63,7 +64,7 @@ def get_representation(adata, method_class, method_name, **kwargs):
         print("Preparing adata")
         if isinstance(method_instance, pr.tl.CellTypePseudobulk):
             # Set stricter thresholds for sample and cluster size
-            method_instance.prepare_anndata(adata, sample_size_threshold=par["celltype_pseudobulk_sample_size_threshold"], cluster_size_threshold=0)
+            method_instance.prepare_anndata(adata, sample_size_threshold=int(par["celltype_pseudobulk_sample_size_threshold"]), cluster_size_threshold=0)
         else:
             method_instance.prepare_anndata(adata, sample_size_threshold=0, cluster_size_threshold=0)
         
@@ -89,7 +90,6 @@ CELL_TYPE_KEY = par["cell_type_key"]
 SAMPLE_KEY = par["sample_key"]
 BATCH_COVARIATES = par["batch_covariates"]
 OUTPUT_NAME = os.path.splitext(os.path.basename(RESULT_PATH))[0]
-
 
 adata = sc.read(ADATA_PATH)
 print("AT START: ")
@@ -205,7 +205,7 @@ print(adata)
 #         n_obs=cells_per_sample
 #     #     fraction=0.1
 #     )
-#     print("Subset size:", adata_subset.shape)
+#     print("Subset size:", adata_subset.shape) 
 #     print("Saving")
 #     adata_subset.write(f"{OUTPUT_NAME}_{cells_per_sample}_cells_per_sample.h5ad")
 #     print("Trying to run PhEMD")
