@@ -53,8 +53,16 @@ SAMPLES_METADATA_COLS = par["samples_metadata_cols"]
 OUTPUT_BASE_NAME = par["output_base_name"]
 METADATA_PATH = par["metadata_path"]
 
+# # if running within Viash (because arguments are passed as JSON strings)
+# if isinstance(par["benchmark_schema"], str):
+#     BENCHMARK_SCHEMA = json.loads(par["benchmark_schema"])
+#     COLS_WITH_TASKS = json.loads(par["cols_with_tasks"])
+# else:
+#     # Running manually the script
+#     BENCHMARK_SCHEMA = par["benchmark_schema"]
+#     COLS_WITH_TASKS = par["cols_with_tasks"]
 
-# Load schema from JSON files
+# Load JSON from files - NEWLY ADDED
 with open(par["benchmark_schema_file"], 'r') as f:
     BENCHMARK_SCHEMA = json.load(f)
 
@@ -68,9 +76,11 @@ print(adata)
 print("____________________ADATA FIRST")
 
 # Extract metadata
-pat_instance = pr.tl.TotalPseudobulk(sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY)
-pat_instance.prepare_anndata(adata, sample_size_threshold=0, cluster_size_threshold=0)
-metadata = pat_instance._extract_metadata(SAMPLES_METADATA_COLS)
+# pat_instance = pr.tl.TotalPseudobulk(sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY)
+# pat_instance.prepare_anndata(adata, sample_size_threshold=0, cluster_size_threshold=0)
+# metadata = pat_instance._extract_metadata(SAMPLES_METADATA_COLS)
+
+metadata = pd.read_csv(METADATA_PATH, index_col=0)
 
 print("____________________metadata ")
 print(metadata)
