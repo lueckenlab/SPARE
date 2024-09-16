@@ -121,16 +121,22 @@ def evaluate_representations(combat_meta_adata, methods, benchmark_schema, cols_
             for col in benchmark_schema[covariate_type]:
                 task = cols_with_tasks[col]
                 print(f"Evaluating Method: {method}, Covariate: {col}, Task: {task}\n") 
-                                
-                result = pr.tl.evaluate_representation(
-                    distances=combat_meta_adata.obsm[f"{method}_distances"],
-                    target=metadata[col],
-                    method="knn",
-                    task=task,
-                )
-                if result is None:
-                    print(f"No result for method {method}, covariate {col}.\n") 
-                    continue 
+                 #later on printing should be done via proper logging               
+                try:
+                    result = pr.tl.evaluate_representation(
+                        distances=combat_meta_adata.obsm[f"{method}_distances"],
+                        target=metadata[col],
+                        # target=metadata.get(col),
+                        method="knn",
+                        task=task,
+                    )
+                    if result is None:
+                        print(f"No result for method {method}, covariate {col}.\n") 
+                        continue 
+                except Exception as e:
+                    print(f"Method: {method}, Col: {col}, Task: {task}, Error: {e}\n")
+                    traceback.print_exc()
+                    continue  
 
                 result["representation"] = method
                 result["covariate"] = col
@@ -164,17 +170,20 @@ def plot_knn_results(knn_results, output_base_name):
         print("No results to plot.\n")
 
 def plot_results_table(knn_results, benchmark_schema, output_base_name):
-    if not knn_results.empty: 
+    if not knn_results.empty:
         knn_results_wide = knn_results.pivot(index="representation", columns="covariate", values="score")
         cols_order = ["total"]
+
         for covariate_type in benchmark_schema:
             type_cols = benchmark_schema[covariate_type]
-            if all(col in knn_results_wide.columns for col in type_cols):  
-                knn_results_wide[covariate_type] = knn_results_wide[type_cols].mean(axis=1) 
+            # Check if all required columns are in the DataFrame before adding them to cols_order
+            if all(col in knn_results_wide.columns for col in type_cols):
+                knn_results_wide[covariate_type] = knn_results_wide[type_cols].mean(axis=1)
                 cols_order.extend(type_cols)
-            else:  
-                print(f"Warning: Missing columns in {covariate_type}")  
-            cols_order.append(covariate_type)
+                cols_order.append(covariate_type)
+            else:
+                missing_cols = [col for col in type_cols if col not in knn_results_wide.columns]
+                print(f"Warning: Missing columns {missing_cols} in {covariate_type}\n")
 
         cmap = LinearSegmentedColormap.from_list(
             name="bugw", colors=["#FF9693", "#f2fbd2", "#c9ecb4", "#93d3ab", "#35b0ab"], N=256
@@ -204,16 +213,22 @@ def plot_results_table(knn_results, benchmark_schema, output_base_name):
                 ))
 
         clin_weight = 2 / 3
-        if "clinical" in knn_results_wide.columns and "technical" in knn_results_wide.columns: 
+        if "clinical" in knn_results_wide.columns and "technical" in knn_results_wide.columns:
             knn_results_wide["total"] = clin_weight * knn_results_wide["clinical"] + (1 - clin_weight) * knn_results_wide["technical"]
 
-        fig, ax = plt.subplots(figsize=(18, 6))
-        Table(knn_results_wide[cols_order].sort_values("total", ascending=False),
-              column_definitions=tuple(col_defs), ax=ax)
+        # Ensure cols_order only contains columns that exist in knn_results_wide
+        cols_order = [col for col in cols_order if col in knn_results_wide.columns]
 
-        plt.savefig(f"{output_base_name}_results_table.png")
-    else: 
-        print("No results to plot.")
+        if "total" in knn_results_wide.columns:  # Only proceed if "total" was calculated
+            fig, ax = plt.subplots(figsize=(22, 10))
+            Table(knn_results_wide[cols_order].sort_values("total", ascending=False),
+                  column_definitions=tuple(col_defs), ax=ax)
+
+            plt.savefig(f"{output_base_name}_results_table.png")
+        else:
+            print("Cannot plot results table because 'total' could not be calculated.\n")
+    else:
+        print("No results to plot.\n")
 
 
 
