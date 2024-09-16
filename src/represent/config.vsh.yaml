@@ -44,6 +44,8 @@ functionality:
       path: test.py
     - type: file
       path: "../../data/synthetic_processed.h5ad"
+    - type: file
+      path: "../../data/synthetic_metadata.csv" 
 
 platforms:
   - type: native
