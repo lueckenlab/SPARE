@@ -159,9 +159,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# Don't upload data
-data/*
-
 # temporary files
 temp
 
@@ -178,6 +175,12 @@ target
 bin
 output
 
-experiments.ipynb
+experiments*.ipynb
 
+# Don't upload data
+data/**
+
+# Exceptions
+!data/**/
+!data/**/README*
 !data/synthetic_processed.h5ad
