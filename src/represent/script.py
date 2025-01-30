@@ -63,10 +63,9 @@ def get_representation(adata, method_class, method_name, **kwargs):
 
         print("Preparing adata")
         if isinstance(method_instance, pr.tl.CellTypePseudobulk):
-            # Set stricter thresholds for sample and cluster size
-            method_instance.prepare_anndata(adata, sample_size_threshold=int(par["celltype_pseudobulk_sample_size_threshold"]), cluster_size_threshold=0)
-        else:
-            method_instance.prepare_anndata(adata, sample_size_threshold=0, cluster_size_threshold=0)
+            adata = pr.pp.filter_small_samples(adata, sample_key=par["sample_key"], sample_size_threshold=int(par["celltype_pseudobulk_sample_size_threshold"]))
+        
+        method_instance.prepare_anndata(adata)
         
         print("Calculating distances")
         method_instance.calculate_distance_matrix(force=True)
