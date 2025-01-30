@@ -26,28 +26,6 @@ par = {
 }
 ## VIASH END
 
-#combat
-# par = {
-#     "input": "data/combat_processed.h5ad",
-#     "output": "data/combat_represent.h5ad",
-#     "cell_type_key":"Annotation_major_subset",
-#     "sample_key":"scRNASeq_sample_ID",
-#     "patient_state_key":"Outcome",
-#     "batch_covariates":["scRNASeq_sample_ID","Pool_ID"],
-#     "output_compression": "gzip",
-# }
-
-#onek1k
-# par = {
-#     "input": "data/onek1k_processed.h5ad",
-#     "output": "data/onek1k_represent.h5ad",
-#     "cell_type_key":"cell_type",
-#     "sample_key":"donor_id",
-#     "patient_state_key":"sex",
-#     "batch_covariates":["donor_id","pool_number"],
-#     "output_compression": "gzip",
-# }
-
 def save_results(adata, method, method_name):
     method.embed(method="UMAP") 
     adata.uns[method_name + "_" + "distances"] = method.adata.uns[method.DISTANCES_UNS_KEY]
@@ -160,58 +138,6 @@ for method_class, method_name, kwargs in methods:
     adata = get_representation(adata, method_class, method_name, sample_key=SAMPLE_KEY, cell_group_key=CELL_TYPE_KEY, **kwargs)
 
 print(adata)
-# print("Saving layers for GloScope")
-
-# for layer, feature_name in [("X_pca", "PC"), ("X_scVI_Pool_ID", "scvi"), ("X_scANVI_Pool_ID", "scanvi"), ("X_scpoli", "scpoli")]:
-#     print("Working with layer", layer)
-#     try: 
-#         pd.DataFrame(
-#             adata.obsm[layer],
-#             index=adata.obs_names,
-#             columns=[f"{feature_name}{i}" for i in range(adata.obsm[layer].shape[1])]
-#         ).to_csv(f"../data/gloscope_input/combat_{layer}.csv")
-#     except Exception as e:
-#         print("Failed", e)
-
-# print("Saving samples")
-# pd.DataFrame(
-#     adata.obs[SAMPLE_KEY]
-# ).to_csv("../data/gloscope_input/combat_samples.csv", index=False)
-
-#TODO: fix error on PhEMD
-
-# Traceback (most recent call last):
-#   File "/ictstr01/home/icb/moghareh.dehkordi/patpy/pipeline/src/represent/./run_no_scpoli.py", line 50, in get_representation
-#     method_instance.calculate_distance_matrix(force=True)
-#   File "/ictstr01/home/icb/moghareh.dehkordi/patpy/patient_representation_1_23/src/patient_representation/tl/basic.py", line 1407, in calculate_distance_matrix
-#     distances = phemd(
-#   File "/ictstr01/home/icb/moghareh.dehkordi/patpy/patient_representation_1_23/src/patient_representation/tl/basic.py", line 91, in phemd
-#     [
-#   File "/ictstr01/home/icb/moghareh.dehkordi/patpy/patient_representation_1_23/src/patient_representation/tl/basic.py", line 92, in <listcomp>
-#     np.average(
-#   File "<__array_function__ internals>", line 200, in average
-#   File "/home/icb/moghareh.dehkordi/miniconda3/envs/pat1.23/lib/python3.10/site-packages/numpy/lib/function_base.py", line 538, in average
-#     if wgt.shape[0] != a.shape[axis]:
-# IndexError: tuple index out of range
-
-#run PhEMD
-# for cells_per_sample in (200, 500, 700):
-#     print("Subsetting cells, trying", cells_per_sample, "cells per sample")
-#     adata_subset = pr.pp.subsample(
-#         adata,
-#         obs_category_col=SAMPLE_KEY,
-#         min_samples_per_category=cells_per_sample,
-#         n_obs=cells_per_sample
-#     #     fraction=0.1
-#     )
-#     print("Subset size:", adata_subset.shape) 
-#     print("Saving")
-#     adata_subset.write(f"{OUTPUT_NAME}_{cells_per_sample}_cells_per_sample.h5ad")
-#     print("Trying to run PhEMD")
-#     adata_subset = get_representation(adata_subset, pr.tl.PhEMD, f"phemd_{cells_per_sample}", sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY)
-#     print("Calculated representation, saving")
-#     adata_subset.write(f"{OUTPUT_NAME}_{cells_per_sample}_cells_per_sample.h5ad")
-
 print("Done")
 
 
