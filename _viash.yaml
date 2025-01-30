@@ -1,5 +1,9 @@
 viash_version: 0.9.1
 
+name: sample_representation_benchmark
+organization: luecken_lab
+version: dev
+
 source: src
 target: target
 
