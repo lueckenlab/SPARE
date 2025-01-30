@@ -1,4 +1,4 @@
-name: representation
+name: sample_representation
 description: "get patient representation..."
 arguments: 
   - name: --output
