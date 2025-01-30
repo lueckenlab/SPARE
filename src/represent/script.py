@@ -62,7 +62,7 @@ def get_representation(adata, method_class, method_name, **kwargs):
         method_instance = method_class(**kwargs)
 
         print("Preparing adata")
-        if isinstance(method_instance, pr.tl.CellTypePseudobulk):
+        if isinstance(method_instance, pr.tl.GroupedPseudobulk):
             adata = pr.pp.filter_small_samples(adata, sample_key=par["sample_key"], sample_size_threshold=int(par["celltype_pseudobulk_sample_size_threshold"]))
         
         method_instance.prepare_anndata(adata)
@@ -97,10 +97,10 @@ print(adata)
 # Run scPoli manually to save its cell representation
 try:
     print("Setting up scPoli")
-    scpoli = pr.tl.SCPoli(sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY, layer="X_raw_counts")
+    scpoli = pr.tl.SCPoli(sample_key=SAMPLE_KEY, cell_group_key=CELL_TYPE_KEY, layer="X_raw_counts")
 
     print("Preparing adata")
-    scpoli.prepare_anndata(adata, sample_size_threshold=0, cluster_size_threshold=0, optimize_adata=False)
+    scpoli.prepare_anndata(adata, optimize_adata=False)
 
     print("Calculating distances")
     scpoli.calculate_distance_matrix(force=True)
@@ -130,12 +130,12 @@ base_layers = [
 ]
 methods = [
     (pr.tl.RandomVector, "random_vec", {}),
-    (pr.tl.CellTypesComposition, "composition", {})
+    (pr.tl.CellGroupComposition, "composition", {})
 ]
 for layer, method_name_suffix in base_layers:
     methods.extend([
-        (pr.tl.CellTypePseudobulk, f"ct_pseudobulk_{method_name_suffix}", {"layer": layer}),
-        (pr.tl.TotalPseudobulk, f"pseudobulk_{method_name_suffix}", {"layer": layer}),
+        (pr.tl.GroupedPseudobulk, f"ct_pseudobulk_{method_name_suffix}", {"layer": layer}),
+        (pr.tl.Pseudobulk, f"pseudobulk_{method_name_suffix}", {"layer": layer}),
     ])
     if layer != "X_raw_counts":
         methods.append((pr.tl.PILOT, f"pilot_{method_name_suffix}", {"patient_state_col": SAMPLE_KEY, "layer": layer}))
@@ -147,8 +147,8 @@ for covariate in BATCH_COVARIATES:
     for model in scvi_tools_models:
         layer_name = f"X_{model}_{covariate}"
         methods.extend([
-            (pr.tl.TotalPseudobulk, f"pseudobulk_{model}_{covariate}", {"layer": layer_name}),
-            (pr.tl.CellTypePseudobulk, f"ct_pseudobulk_{model}_{covariate}", {"layer": layer_name}),
+            (pr.tl.Pseudobulk, f"pseudobulk_{model}_{covariate}", {"layer": layer_name}),
+            (pr.tl.GroupedPseudobulk, f"ct_pseudobulk_{model}_{covariate}", {"layer": layer_name}),
             (pr.tl.WassersteinTSNE, f"wasserstein_{model}_{covariate}", {"replicate_key": CELL_TYPE_KEY, "layer": layer_name}),
             (pr.tl.PILOT, f"pilot_{model}_{covariate}", {"patient_state_col": SAMPLE_KEY, "layer": layer_name})
         ])
@@ -157,7 +157,7 @@ methods.sort(key=lambda x: (x[0].__name__, x[1]))
 print("METHODS: ", methods)
 
 for method_class, method_name, kwargs in methods:
-    adata = get_representation(adata, method_class, method_name, sample_key=SAMPLE_KEY, cells_type_key=CELL_TYPE_KEY, **kwargs)
+    adata = get_representation(adata, method_class, method_name, sample_key=SAMPLE_KEY, cell_group_key=CELL_TYPE_KEY, **kwargs)
 
 print(adata)
 # print("Saving layers for GloScope")
