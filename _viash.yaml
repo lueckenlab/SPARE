@@ -7,6 +7,6 @@ version: dev
 source: src
 target: target
 
-config_mods: |
-  .functionality.version := '0.2.3'
-  .platforms[.type == 'nextflow'].directives.tag := '$id'
+# config_mods: |
+#   .functionality.version := '0.2.3'
+#   .platforms[.type == 'nextflow'].directives.tag := '$id'
