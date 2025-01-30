@@ -1,63 +1,60 @@
-functionality:
-  name: preprocess
-  description: "preprocess..."
-  arguments: 
-    - name: --output
-      type: file
-      example: combat_processed.h5ad
-      direction: output
-      required: true
-    - name: --input
-      type: file
-      example: combat.h5ad
-      direction: input
-      required: true
-    - name: --sample_key
-      type: string
-      example: "scRNASeq_sample_ID"
-      required: true
-    - name: --batch_covariates
-      type: string
-      example: ["scRNASeq_sample_ID","Pool_ID"]
-      multiple: true
-      multiple_sep: ","
-      required: true
-    - name: --samples_metadata_cols
-      type: string
-      example: ["Source", "Outcome", "Death28", "Institute", "Pool_ID"]
-      multiple: true
-      multiple_sep: ","
-      required: true
-    - name: --batch_effect_covariate
-      type: string
-      example: "Pool_ID"
-      required: true
-    - name: --cell_type_key
-      type: string
-      example: Annotation_major_subset
-      required: true
-    - name: --output_compression
-      description: The compression format of the output file
-      type: string
-      example: gzip
-      required: false
-    - name: --output_metadata
-      type: file
-      example: combat_preprocessed_metadata.csv
-      direction: output
-      required: true
-    
-  resources:
-    - type: python_script
-      path: script.py
-  test_resources:
-    - type: python_script
-      path: test.py
+name: preprocess
+description: "preprocess..."
+arguments: 
+  - name: --output
+    type: file
+    example: combat_processed.h5ad
+    direction: output
+    required: true
+  - name: --input
+    type: file
+    example: combat.h5ad
+    direction: input
+    required: true
+  - name: --sample_key
+    type: string
+    example: "scRNASeq_sample_ID"
+    required: true
+  - name: --batch_covariates
+    type: string
+    example: ["scRNASeq_sample_ID","Pool_ID"]
+    multiple: true
+    multiple_sep: ","
+    required: true
+  - name: --samples_metadata_cols
+    type: string
+    example: ["Source", "Outcome", "Death28", "Institute", "Pool_ID"]
+    multiple: true
+    multiple_sep: ","
+    required: true
+  - name: --batch_effect_covariate
+    type: string
+    example: "Pool_ID"
+    required: true
+  - name: --cell_type_key
+    type: string
+    example: Annotation_major_subset
+    required: true
+  - name: --output_compression
+    description: The compression format of the output file
+    type: string
+    example: gzip
+    required: false
+  - name: --output_metadata
+    type: file
+    example: combat_preprocessed_metadata.csv
+    direction: output
+    required: true
+  
+resources:
+  - type: python_script
+    path: script.py
+test_resources:
+  - type: python_script
+    path: test.py
 
-platforms:
+engines:
   - type: native
-
-  # - type: docker
-  #   image: patient_representation_img
-
+runners:
+  - type: executable
   - type: nextflow

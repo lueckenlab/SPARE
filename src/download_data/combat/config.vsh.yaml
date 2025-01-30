@@ -1,41 +1,38 @@
-functionality:
-  name: download_combat
-  description: |
-    Download the dataset from the publication "A blood atlas of COVID-19 defines hallmarks of disease severity and specificity".
-    Perform the dataset-specific preprocessing steps.
-    Dataset properties:
-    - PBMC data from COVID-19 patients, healthy donors, and patients with other infections
-    - 140 donors
-    - ~800,000 cells
-    - Multiomic data (in the benchmark, we focus on single-cell data)
-    - Different conditions, and outcomes
-    - 2 institutes where the data was generated, and several pools
-  arguments:
-    - name: --output
-      description: The path of the output file
-      type: file
-      example: combat.h5ad
-      default: data/combat.h5ad
-      direction: output
-    - name: --max_chunks
-      description: The maximum number of chunks to download. Used for test purposes
-      type: integer
-      example: 5
-      required: false
-    - name: --output_compression
-      description: The compression format of the output file
-      type: string
-      example: gzip
-      required: false
-      
-  resources:
-    - type: python_script
-      path: script.py
+name: download_combat
+description: |
+  Download the dataset from the publication "A blood atlas of COVID-19 defines hallmarks of disease severity and specificity".
+  Perform the dataset-specific preprocessing steps.
+  Dataset properties:
+  - PBMC data from COVID-19 patients, healthy donors, and patients with other infections
+  - 140 donors
+  - ~800,000 cells
+  - Multiomic data (in the benchmark, we focus on single-cell data)
+  - Different conditions, and outcomes
+  - 2 institutes where the data was generated, and several pools
+arguments:
+  - name: --output
+    description: The path of the output file
+    type: file
+    example: combat.h5ad
+    default: data/combat.h5ad
+    direction: output
+  - name: --max_chunks
+    description: The maximum number of chunks to download. Used for test purposes
+    type: integer
+    example: 5
+    required: false
+  - name: --output_compression
+    description: The compression format of the output file
+    type: string
+    example: gzip
+    required: false
+    
+resources:
+  - type: python_script
+    path: script.py
 
-platforms:
+engines:
   - type: native
-
-  # - type: docker
-  #   image: "bash:4.0"
-
+runners:
+  - type: executable
   - type: nextflow
