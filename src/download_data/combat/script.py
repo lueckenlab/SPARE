@@ -65,7 +65,7 @@ adata = adata[adata.obs["Annotation_major_subset"] != "nan"]
 
 # Extract raw counts that are needed by some methods
 print("Moving raw counts to obsm and layers")
-adata.layers["raw"] = adata.layers["raw"][:, is_rna_expression]
+# adata.layers["raw"] = adata.layers["raw"][:, is_rna_expression]
 print("adata.layers['raw'].shape", adata.layers["raw"].shape)
 
 adata.X = adata.layers["raw"].copy()
