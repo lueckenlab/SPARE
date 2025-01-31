@@ -61,7 +61,7 @@ adata = adata[:, is_rna_expression].copy()
 
 # Remove cells with no label
 print("Removing cells with no label")
-adata = adata[adata.obs["Annotation_major_subset"] != "nan"]
+adata = adata[adata.obs["Annotation_major_subset"] != "nan"].copy()
 
 # Extract raw counts that are needed by some methods
 print("Moving raw counts to obsm and layers")
