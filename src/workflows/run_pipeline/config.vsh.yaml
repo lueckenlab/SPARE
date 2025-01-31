@@ -1,0 +1,34 @@
+name: run_pipeline
+description: |
+  An example pipeline and project template.
+
+  Multiple TSV files can be input, each with a 'column' identifier that
+  should be extracted. All extracted columns are then collated again.
+arguments:
+  - type: file
+    name: --output
+    description: The path of the output file
+    direction: output
+
+resources:
+  - type: nextflow_script
+    path: main.nf
+    entrypoint: run_wf
+
+dependencies: 
+#   # - name: download_all
+#   #   repository: local
+  - name: download_combat
+    repository: local
+  - name: download_stephenson
+    repository: local
+#   - name: preprocess
+#     repository: local
+#   - name: sample_representation
+#     repository: local
+
+repositories:
+  - name: local
+    type: local
+runners:
+  - type: nextflow
