@@ -16,7 +16,7 @@ par = {
 
 # TODO: check out downloading combat from cellxgene LATER
 COMBAT_URL = "https://zenodo.org/record/6120249/files/COMBAT-CITESeq-DATA.h5ad"
-IFN_1_SIGNATURE_PATH = "data/ifn_1_score.tsv"
+IFN_1_SIGNATURE_PATH = "../../../data/ifn_1_score.tsv"
 
 def download_file(url, filename, max_chunks=None, block_size = 131072):
     with requests.get(url, stream=True) as response:
@@ -39,7 +39,6 @@ if not download_dir.exists():
     download_dir.mkdir(parents=True)
 
 download_file(COMBAT_URL, par["output"], max_chunks=par["max_chunks"])
-
 
 # Read IFN 1 signature genes
 column_names = ("Gene/product", "gene_name", "Gene/product name", "Annotation qualifier",
