@@ -22,6 +22,8 @@ arguments:
 resources:
   - type: python_script
     path: script.py
+  - type: file
+    path: ../../../data/ifn_1_score.tsv
 
 engines:
   - type: native
