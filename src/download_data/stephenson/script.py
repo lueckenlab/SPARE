@@ -16,15 +16,6 @@ par = {
 ## VIASH END
 
 STEPHENSON_URL = "https://datasets.cellxgene.cziscience.com/9a305865-e7b0-4e8a-bbbf-0b63287e85fd.h5ad"
-IFN_1_SIGNATURE_PATH = "../../../data/ifn_1_score.tsv"
-
-column_names = ("Gene/product", "gene_name", "Gene/product name", "Annotation qualifier",
-                "GO class (direct)", "Annotation extension", "Contributor",
-                "Organism", "Evidence", "Evidence with", "PANTHER family",
-                "Type", "Isoform", "Reference", "Date")
-ifn_1_signature = pd.read_csv(IFN_1_SIGNATURE_PATH, sep="\t", names=column_names)
-ifn_1_signature_genes = ifn_1_signature["gene_name"].unique()
-print("Prepared ", len(ifn_1_signature_genes), "genes for calculating IFN1 signature")
 
 def download_file(url, filename, max_chunks=None, block_size = 131072):
     with requests.get(url, stream=True) as response:
@@ -152,9 +143,6 @@ del adata.raw
 
 adata.layers["X_raw_counts"] = adata.X.copy()
 print("adata.obsm['X_raw_counts'].shape", adata.obsm["X_raw_counts"].shape)
-
-print("Calculating IFN1 signature")
-sc.tl.score_genes(adata, ifn_1_signature_genes, score_name="ifn_1_score")
 
 #TODO: rest of the dataset specefic preprocessing
 print(adata)
