@@ -145,7 +145,7 @@ adata.obs.loc[
     "Days_from_onset"
 ] = np.nan
 
-adata = adata[adata.obs['Status'] != 'LPS']
+adata = adata[adata.obs['Status'] != 'LPS'].copy()
 # adata = adata[adata.obs['Site'] != 'Sanger'] ## Sanger has 74913 cells
 
 del adata.raw
