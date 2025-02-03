@@ -142,7 +142,7 @@ adata = adata[adata.obs['Status'] != 'LPS'].copy()
 del adata.raw
 
 adata.layers["X_raw_counts"] = adata.X.copy()
-print("adata.obsm['X_raw_counts'].shape", adata.obsm["X_raw_counts"].shape)
+print("adata.obsm['X_raw_counts'].shape", adata.layers["X_raw_counts"].shape)
 
 #TODO: rest of the dataset specefic preprocessing
 print(adata)
