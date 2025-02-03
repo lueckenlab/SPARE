@@ -10,13 +10,13 @@ workflow run_wf {
     dummy_file.text = ""  // Create an empty file
 
     combat_ch = Channel.fromList([
-      ["combat", [input: dummy_file]]  // Format: [id, [input: file]]
+      ["run", [input: dummy_file]]  // Changed ID to "run" to match input channel
     ]) | download_combat.run(
       fromState: [ output_dir: "data" ]
     )
 
     stephenson_ch = Channel.fromList([
-      ["stephenson", [input: dummy_file]]  // Format: [id, [input: file]]
+      ["run", [input: dummy_file]]  // Changed ID to "run" to match input channel
     ]) | download_stephenson.run(
       fromState: [ output_dir: "data" ]
     )
