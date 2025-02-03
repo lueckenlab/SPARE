@@ -12,13 +12,15 @@ workflow run_wf {
     combat_ch = Channel.fromList([
       ["run", [input: dummy_file]]  // Changed ID to "run" to match input channel
     ]) | download_combat.run(
-      fromState: [ output_dir: "data" ]
+      fromState: [ output_dir: "data" ],
+      withLabel: "veryhighmem"  // This will request 75GB memory
     )
 
     stephenson_ch = Channel.fromList([
       ["run", [input: dummy_file]]  // Changed ID to "run" to match input channel
     ]) | download_stephenson.run(
-      fromState: [ output_dir: "data" ]
+      fromState: [ output_dir: "data" ],
+      withLabel: "veryhighmem"  // This will request 75GB memory
     )
 
     // Combine both outputs
