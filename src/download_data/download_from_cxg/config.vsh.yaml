@@ -1,0 +1,33 @@
+name: download_from_cxg
+description: |
+  Download a dataset from cellxgene using its dataset ID.
+  The component handles retrieving the S3 location and downloading the file with progress tracking.
+  Supports downloading partial files for testing purposes using max_chunks parameter.
+arguments:
+  - name: --input
+    description: The cellxgene dataset ID
+    type: string
+    example: "3faad104-2ab8-4434-816d-474d8d2641db"
+    direction: input
+    required: true
+  - name: --output
+    description: The path where to save the downloaded file
+    type: file
+    example: "output.h5ad"
+    direction: output
+    required: true
+  - name: --max_chunks
+    description: The maximum number of chunks to download (1MB each). Used for test purposes
+    type: integer
+    example: 5
+    required: false
+    
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+runners:
+  - type: executable
+  - type: nextflow 
