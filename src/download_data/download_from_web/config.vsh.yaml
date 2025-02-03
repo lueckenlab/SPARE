@@ -1,0 +1,32 @@
+name: download_from_web
+description: |
+  Download a file from a web URL with progress tracking.
+  Supports downloading partial files for testing purposes using max_chunks parameter.
+arguments:
+  - name: --input
+    description: The URL to download the file from
+    type: string
+    example: "https://example.com/file.h5ad"
+    direction: input
+    required: true
+  - name: --output
+    description: The path where to save the downloaded file
+    type: file
+    example: "output.h5ad"
+    direction: output
+    required: true
+  - name: --max_chunks
+    description: The maximum number of chunks to download (128KB each). Used for test purposes
+    type: integer
+    example: 5
+    required: false
+    
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+runners:
+  - type: executable
+  - type: nextflow 
