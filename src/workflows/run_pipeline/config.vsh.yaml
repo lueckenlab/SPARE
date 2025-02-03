@@ -9,6 +9,7 @@ arguments:
     name: --output_dir
     description: The path of the output directory
     direction: output
+    default: "data/"
 
 resources:
   - type: nextflow_script
