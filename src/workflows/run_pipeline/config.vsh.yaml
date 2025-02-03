@@ -6,8 +6,8 @@ description: |
   should be extracted. All extracted columns are then collated again.
 arguments:
   - type: file
-    name: --output
-    description: The path of the output file
+    name: --output_dir
+    description: The path of the output directory
     direction: output
 
 resources:

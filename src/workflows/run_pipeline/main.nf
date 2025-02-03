@@ -12,20 +12,16 @@ workflow run_wf {
     combat_ch = Channel.fromList([
       ["run", [input: dummy_file]]
     ]) | download_combat.run(
-      fromState: [ output: "data/combat/combat.h5ad" ]
-    )
+      fromState: [ output: "${params.output_dir}/combat/combat.h5ad" ]
+    ) | view { "COMBAT channel contains: $it" }
 
     stephenson_ch = Channel.fromList([
       ["run", [input: dummy_file]]
     ]) | download_stephenson.run(
-      fromState: [ output: "data/stephenson/stephenson.h5ad" ]
-    )
-
-    // Combine both outputs
-    output_ch = combat_ch.mix(stephenson_ch)
-
-    output_ch | view { "Output channel contains: $it" }
+      fromState: [ output: "${params.output_dir}/stephenson/stephenson.h5ad" ]
+    ) | view { "Stephenson channel contains: $it" }
 
   emit:
-    output_ch
+    combat_ch
+    stephenson_ch
 }
