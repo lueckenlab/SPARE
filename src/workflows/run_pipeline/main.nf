@@ -12,13 +12,13 @@ workflow run_wf {
     combat_ch = Channel.fromList([
       ["run", [input: dummy_file]]
     ]) | download_combat.run(
-      fromState: [ output_dir: "data" ]
+      fromState: [ output: "data/combat/combat.h5ad" ]
     )
 
     stephenson_ch = Channel.fromList([
       ["run", [input: dummy_file]]
     ]) | download_stephenson.run(
-      fromState: [ output_dir: "data" ]
+      fromState: [ output: "data/stephenson/stephenson.h5ad" ]
     )
 
     // Combine both outputs
