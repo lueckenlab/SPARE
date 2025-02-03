@@ -9,19 +9,27 @@ workflow run_wf {
     dummy_file = file("${projectDir}/NO_FILE")
     dummy_file.text = ""  // Create an empty file
 
-    combat_ch = Channel.fromList([
-      ["run", [
-        input: dummy_file,
-        output: "${params.output_dir}/combat/combat.h5ad"
-      ]]
-    ]) | download_combat.run() | view { "COMBAT channel contains: $it" }
+    // Create input channels for each download component
+    combat_input = Channel.fromList([
+      ["run", [input: dummy_file]]
+    ])
 
-    stephenson_ch = Channel.fromList([
-      ["run", [
-        input: dummy_file,
-        output: "${params.output_dir}/stephenson/stephenson.h5ad"
-      ]]
-    ]) | download_stephenson.run() | view { "Stephenson channel contains: $it" }
+    stephenson_input = Channel.fromList([
+      ["run", [input: dummy_file]]
+    ])
+
+    // Run the download components with proper input channels
+    combat_ch = combat_input | 
+      download_combat.run(
+        fromState: [ output: "${params.output_dir}/combat/combat.h5ad" ]
+      ) | 
+      view { "COMBAT channel contains: $it" }
+
+    stephenson_ch = stephenson_input | 
+      download_stephenson.run(
+        fromState: [ output: "${params.output_dir}/stephenson/stephenson.h5ad" ]
+      ) | 
+      view { "Stephenson channel contains: $it" }
 
   emit:
     combat_ch
