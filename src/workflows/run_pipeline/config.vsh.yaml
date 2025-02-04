@@ -1,32 +1,24 @@
 name: run_pipeline
 description: |
-  An example pipeline and project template.
-
-  Multiple TSV files can be input, each with a 'column' identifier that
-  should be extracted. All extracted columns are then collated again.
+  A pipeline to run the benchmark
 arguments:
   - type: file
     name: --output_dir
     description: The path of the output directory
     direction: output
     default: "data/"
-
 resources:
   - type: nextflow_script
     path: main.nf
     entrypoint: run_wf
 
 dependencies: 
-#   # - name: download_all
-#   #   repository: local
-  - name: download_combat
+  - name: download_from_web
     repository: local
-  - name: download_stephenson
+  - name: download_from_cxg
     repository: local
-#   - name: preprocess
-#     repository: local
-#   - name: sample_representation
-#     repository: local
+  - name: clean_combat
+    repository: local
 
 repositories:
   - name: local

@@ -3,35 +3,66 @@ workflow run_wf {
     input_ch
 
   main:
-    input_ch | view { "Input channel contains: $it" }
+    // ["hlca", [ input: "9f222629-9e39-47d0-b83f-e08d610c7479", source: "cxg", max_chunks: params.max_chunks ] ],
+    // ["stephenson", [ input: "c7775e88-49bf-4ba2-a03b-93f00447c958", source: "cxg", max_chunks: params.max_chunks ] ],
+    // ["onek1k", [ input: "3faad104-2ab8-4434-816d-474d8d2641db", source: "cxg", max_chunks: params.max_chunks ] ],
 
-    // Create a dummy input file. Otherwise the pipeline doesn't run even though the input is not required for "download" components
-    dummy_file = file("${projectDir}/NO_FILE")
-    dummy_file.text = ""  // Create an empty file
+    combat_ch = 
 
-    // Create input channels for each download component
-    combat_input = Channel.fromList([
-      ["run", [input: dummy_file]]
-    ])
+      // Create a channel with two events
+      // Each event contains a string (an identifier) and a file (input)
+      Channel.fromList([
+          ["combat", [ input: "https://zenodo.org/record/6120249/files/COMBAT-CITESeq-DATA.h5ad", source: "web", max_chunks: params.max_chunks ] ],
+        ])
 
-    stephenson_input = Channel.fromList([
-      ["run", [input: dummy_file]]
-    ])
-
-    // Run the download components with proper input channels
-    combat_ch = combat_input | 
-      download_combat.run(
-        fromState: [ output: "${params.output_dir}/combat/combat.h5ad" ]
-      ) | 
-      view { "COMBAT channel contains: $it" }
-
-    stephenson_ch = stephenson_input | 
-      download_stephenson.run(
-        fromState: [ output: "${params.output_dir}/stephenson/stephenson.h5ad" ]
-      ) | 
-      view { "Stephenson channel contains: $it" }
+        // View channel contents
+        | view { tup -> "Input: $tup" }
+        | download_from_web.run(
+          fromState: { id, state ->
+            def stateMapping = [
+              "input": state.input,
+              "output": "${id}/${id}.h5ad",
+              "max_chunks": state.max_chunks,
+            ]
+            return stateMapping
+          },
+          toState: { id, output, state ->
+            output
+          }
+        )
+        | clean_combat.run(
+          fromState: { id, state ->
+            def stateMapping = [
+              "input": state.input,
+              "output": "${id}/${id}_cleaned.h5ad",
+            ]
+            return stateMapping
+          },
+          toState: { id, output, state ->
+            output
+          }
+        )
+        
+        // download_from_cxg.run(
+        //   runIf: { id, state ->
+        //     state.source == "cxg"
+        //   },
+        //   fromState: { id, state ->
+        //     def stateMapping = [
+        //       "input": state.input,
+        //       "output": "${id}/${id}.h5ad",
+        //       "max_chunks": state.max_chunks,
+        //     ]
+        //     return stateMapping
+        //   },
+        //   toState: { id, output, state ->
+        //     output
+        //   }
+        // )
+        // // View channel contents
+        // | view { tup -> "Output: $tup" }
 
   emit:
     combat_ch
-    stephenson_ch
+      | map{ id, state -> [ "run", state ] }
 }
