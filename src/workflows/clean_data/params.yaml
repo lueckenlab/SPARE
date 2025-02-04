@@ -1,16 +1,16 @@
 - id: combat
-  input: data/combat/combat.h5ad
-  output: data/combat/combat_cleaned.h5ad
+  input: ../../../data/combat/combat.h5ad
+  output: combat/combat_cleaned.h5ad
   output_compression: gzip
 - id: hlca
-  input: data/hlca/hlca.h5ad
-  output: data/hlca/hlca_cleaned.h5ad
+  input: ../../../data/hlca/hlca.h5ad
+  output: hlca/hlca_cleaned.h5ad
   output_compression: gzip
 - id: stephenson
-  input: data/stephenson/stephenson.h5ad
-  output: data/stephenson/stephenson_cleaned.h5ad
+  input: ../../../data/stephenson/stephenson.h5ad
+  output: stephenson/stephenson_cleaned.h5ad
   output_compression: gzip
 - id: onek1k
-  input: data/onek1k/onek1k.h5ad
-  output: data/onek1k/onek1k_cleaned.h5ad
+  input: ../../../data/onek1k/onek1k.h5ad
+  output: onek1k/onek1k_cleaned.h5ad
   output_compression: gzip
