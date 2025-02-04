@@ -18,30 +18,19 @@ workflow run_wf {
         // View channel contents
         | view { tup -> "Input: $tup" }
         | download_from_web.run(
-          fromState: { id, state ->
-            def stateMapping = [
-              "input": state.input,
-              "output": "${id}/${id}.h5ad",
-              "max_chunks": state.max_chunks,
-            ]
-            return stateMapping
-          },
-          toState: { id, output, state ->
-            output
-          }
+            fromState: [ input: "input" ],
+            toState: [ raw_dataset: "output" ]
         )
         | clean_combat.run(
-          fromState: { id, state ->
-            def stateMapping = [
-              "input": state.input,
-              "output": "${id}/${id}_cleaned.h5ad",
-            ]
-            return stateMapping
-          },
+          fromState: [ input: "raw_dataset" ],
+          toState: [ cleaned_dataset: "output" ]
+        )
+        // TODO: add every dataset, process, represent, evaluate, then merge in one benchmarking table and return it here
           toState: { id, output, state ->
             output
           }
         )
+        // TODO: add every dataset, process, represent, evaluate, then merge in one benchmarking table and return it here
         
         // download_from_cxg.run(
         //   runIf: { id, state ->
