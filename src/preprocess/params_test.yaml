@@ -4,6 +4,7 @@
   output_metadata: combat/combat_metadata.csv
   output_compression: gzip
   cell_type_key: Annotation_major_subset
+  sample_size_threshold: 10
   sample_key: scRNASeq_sample_ID
   batch_covariates: scRNASeq_sample_ID,Pool_ID
   batch_key: Pool_ID
@@ -14,6 +15,7 @@
   output_metadata: hlca/hlca_metadata.csv
   output_compression: gzip
   cell_type_key: cell_type
+  sample_size_threshold: 10
   sample_key: donor_id
   batch_covariates: donor_id,dataset
   batch_key: dataset
@@ -24,6 +26,7 @@
   output_metadata: stephenson/stephenson_metadata.csv
   output_compression: gzip
   cell_type_key: cell_type
+  sample_size_threshold: 10
   sample_key: sample_id
   batch_covariates: sample_id,Site
   batch_key: Site
@@ -34,6 +37,7 @@
   output_metadata: onek1k/onek1k_metadata.csv
   output_compression: gzip
   cell_type_key: cell_type
+  sample_size_threshold: 10
   sample_key: donor_id
   batch_covariates: donor_id,pool_number
   batch_key: pool_number
