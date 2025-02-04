@@ -1,4 +1,4 @@
-name: download_combat
+name: clean_combat
 description: |
   Perform the dataset-specific preprocessing steps.
   Dataset properties:

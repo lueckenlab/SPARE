@@ -1,4 +1,4 @@
-name: download_hlca
+name: clean_hlca
 # TODO: description for hlca
 description: Dataset specific preprocessing steps.
 arguments:

@@ -1,4 +1,4 @@
-name: download_stephenson
+name: clean_stephenson
 # TODO: description for stephenson
 description: Dataset specific preprocessing steps.
 arguments:
