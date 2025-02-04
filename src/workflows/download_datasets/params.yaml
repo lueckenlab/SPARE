@@ -1,0 +1,16 @@
+- id: combat
+  input: https://zenodo.org/record/6120249/files/COMBAT-CITESeq-DATA.h5ad
+  source: web
+  output: combat/combat.h5ad
+- id: hlca
+  input: 9f222629-9e39-47d0-b83f-e08d610c7479
+  source: cxg
+  output: hlca/hlca.h5ad
+- id: stephenson
+  input: c7775e88-49bf-4ba2-a03b-93f00447c958
+  source: cxg
+  output: stephenson/stephenson.h5ad
+- id: onek1k
+  input: 3faad104-2ab8-4434-816d-474d8d2641db
+  source: cxg
+  output: onek1k/onek1k.h5ad

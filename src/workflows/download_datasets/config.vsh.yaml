@@ -2,6 +2,17 @@ name: download_datasets
 description: |
   Download all datasets used in the benchmark
 arguments:
+  - type: string
+    name: --input
+    description: Link to the dataset to download
+    direction: input
+    required: true
+  - type: string
+    name: --source
+    description: Where to download the dataset from, web or cxg (cellxgene)
+    direction: input
+    required: true
+    choices: [ "web", "cxg" ]
   - type: file
     name: --output
     description: The path of the output file

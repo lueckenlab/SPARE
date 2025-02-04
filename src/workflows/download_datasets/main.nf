@@ -5,16 +5,7 @@ workflow run_wf {
   main:
 
     output_ch = 
-
-      // Create a channel with two events
-      // Each event contains a string (an identifier) and a file (input)
-      Channel.fromList([
-          ["combat", [ input: "https://zenodo.org/record/6120249/files/COMBAT-CITESeq-DATA.h5ad", source: "web", max_chunks: params.max_chunks ] ],
-          ["hlca", [ input: "9f222629-9e39-47d0-b83f-e08d610c7479", source: "cxg", max_chunks: params.max_chunks ] ],
-          ["stephenson", [ input: "c7775e88-49bf-4ba2-a03b-93f00447c958", source: "cxg", max_chunks: params.max_chunks ] ],
-          ["onek1k", [ input: "3faad104-2ab8-4434-816d-474d8d2641db", source: "cxg", max_chunks: params.max_chunks ] ],
-        ])
-
+      input_ch
         // View channel contents
         | view { tup -> "Input: $tup" }
         | download_from_web.run(
@@ -24,7 +15,7 @@ workflow run_wf {
           fromState: { id, state ->
             def stateMapping = [
               "input": state.input,
-              "output": "${id}/${id}.h5ad",
+              "output": state.output,
               "max_chunks": state.max_chunks,
             ]
             return stateMapping
@@ -40,7 +31,7 @@ workflow run_wf {
           fromState: { id, state ->
             def stateMapping = [
               "input": state.input,
-              "output": "${id}/${id}.h5ad",
+              "output": state.output,
               "max_chunks": state.max_chunks,
             ]
             return stateMapping
@@ -54,5 +45,4 @@ workflow run_wf {
 
   emit:
     output_ch
-      | map{ id, state -> [ "run", state ] }
 }
