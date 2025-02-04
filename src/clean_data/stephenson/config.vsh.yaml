@@ -1,18 +1,19 @@
 name: download_stephenson
 # TODO: description for stephenson
-description: "download stephenson..."
+description: Dataset specific preprocessing steps.
 arguments:
+  - name: --input
+    description: The path of the input file
+    type: file
+    example: data/stephenson.h5ad
+    required: true
+    direction: input
   - name: --output
     description: The path of the output file
     type: file
-    example: stephenson.h5ad
-    default: data/stephenson.h5ad
+    example: data/stephenson_cleaned.h5ad
+    default: data/stephenson_cleaned.h5ad
     direction: output
-  - name: --max_chunks
-    description: The maximum number of chunks to download. Used for test purposes
-    type: integer
-    example: 5
-    required: false
   - name: --output_compression
     description: The compression format of the output file
     type: string
