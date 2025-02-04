@@ -22,7 +22,7 @@ arguments:
     name: --max_chunks
     description: The maximum number of chunks to download (128KB each). Used for test purposes
     direction: input
-    default: 5
+    required: false
 
 resources:
   - type: nextflow_script
