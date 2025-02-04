@@ -11,14 +11,14 @@ arguments:
   - name: --output
     description: The path of the output file
     type: file
-  example: hlca.h5ad
+     example: hlca.h5ad
     default: data/hlca_cleaned.h5ad
     direction: output
   - name: --output_compression
-  description: The compression format of the output file
-  type: string
-  example: gzip
-  required: false
+    description: The compression format of the output file
+    type: string
+    example: gzip
+    required: false
     
 resources:
   - type: python_script
