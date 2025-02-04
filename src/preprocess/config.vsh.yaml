@@ -1,5 +1,14 @@
 name: preprocess
-description: "preprocess..."
+description: Preprocess the data in the same way for every dataset.
+  - Normalize the data
+  - Log-transform the data
+  - Select HVGs
+  - Run PCA
+  - Run Harmony on PCA embeddings
+  - Run scVI and scANVI
+  - Calculate QC metrics on cell and sample level
+  - Extract sample-level metadata
+  - Save processed data and metadata
 arguments: 
   - name: --output
     type: file
@@ -15,22 +24,24 @@ arguments:
     type: string
     example: "scRNASeq_sample_ID"
     required: true
-  - name: --batch_covariates
-    type: string
-    example: ["scRNASeq_sample_ID","Pool_ID"]
-    multiple: true
-    multiple_sep: ","
-    required: true
   - name: --samples_metadata_cols
     type: string
     example: ["Source", "Outcome", "Death28", "Institute", "Pool_ID"]
     multiple: true
     multiple_sep: ","
     required: true
-  - name: --batch_effect_covariate
+  - name: --batch_key
+    description: The batch key to use for HVG selection
     type: string
     example: "Pool_ID"
     required: true
+  - name: --batch_covariates
+    description: The covariates to use for batch effect correction with Harmony, scVI, and scANVI
+    type: string
+    example: ["scRNASeq_sample_ID","Pool_ID"]
+    multiple: true
+    multiple_sep: ","
+    required: false
   - name: --cell_type_key
     type: string
     example: Annotation_major_subset

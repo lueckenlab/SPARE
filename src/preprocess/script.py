@@ -4,7 +4,6 @@ import scanpy as sc
 import scvi
 import pandas as pd
 import patient_representation as pr
-from patient_representation.pp import is_count_data
 import numpy as np
 import os
 import matplotlib.pyplot as plt
@@ -20,7 +19,7 @@ par = {
     "sample_key":"scRNASeq_sample_ID",
     "batch_covariates":["scRNASeq_sample_ID","Pool_ID","Institute"],
     "samples_metadata_cols":["Source", "Outcome", "Death28", "Institute", "Pool_ID"],
-    "batch_effect_covariate":"Pool_ID",
+    "batch_key":"Pool_ID",
     "output_compression": "gzip",
     "output_metadata": "data/combat_metadata_200.csv",
 }
@@ -66,14 +65,9 @@ par = {
 #     "output_compression": "gzip",
 # }
 
-
-ADATA_PATH = par["input"]
 CELL_TYPE_KEY = par["cell_type_key"]
-BATCH_COVARIATES = par["batch_covariates"]
-BATCH_EFFECT = par["batch_effect_covariate"]
+BATCH_KEY = par["batch_key"]  # Used for HVG selection and integration
 SAMPLE_KEY = par["sample_key"]
-SAMPLE_METADATA_COLS = par["samples_metadata_cols"]
-OUTPUT_METADATA_PATH = par["output_metadata"]
 
 figures_directory = os.path.join(os.path.dirname(par["output"]), "figures")
 
@@ -81,7 +75,7 @@ if not os.path.exists(figures_directory):
     os.makedirs(figures_directory)
 
 print("Reading data")
-adata = sc.read_h5ad(ADATA_PATH)
+adata = sc.read_h5ad(par["input"])
 
 print("Normalizing data")
 sc.pp.normalize_total(adata, target_sum=1e4)
@@ -90,7 +84,7 @@ sc.pp.log1p(adata)
 
 # Find highly-variable genes
 print("Subsetting HVG")
-sc.pp.highly_variable_genes(adata, flavor="seurat_v3",span=0.5, n_top_genes=3000, layer="X_raw_counts", batch_key=BATCH_EFFECT)
+sc.pp.highly_variable_genes(adata, flavor="seurat_v3",span=0.5, n_top_genes=3000, layer="X_raw_counts", batch_key=BATCH_KEY)
 adata = adata[:, adata.var.highly_variable].copy()
 
 
@@ -100,16 +94,13 @@ print("adata.layers['X_raw_counts'].shape", adata.layers["X_raw_counts"].shape)
 print("Running PCA")
 sc.tl.pca(adata)
 
-print("Running Harmony on PCA embeddings")
-sc.external.pp.harmony_integrate(adata, basis='X_pca', key=BATCH_EFFECT, adjusted_basis='X_harmony')
-
 def plot_loss(history, loss_keys, title, filenames, counter):
     plt.figure(figsize=(10, 5))
     for loss_key, filename in zip(loss_keys, filenames):
         if loss_key in history:
-            plt.plot(history[loss_key], label=f'{loss_key} (Train)')
-            plt.xlabel('Epoch')
-            plt.ylabel('Loss')
+            plt.plot(history[loss_key], label=f"{loss_key} (Train)")
+            plt.xlabel("Epoch")
+            plt.ylabel("Loss")
             plt.title(title)
             plt.legend()
             filename_with_counter = f"{counter}_{filename}"
@@ -120,7 +111,10 @@ def plot_loss(history, loss_keys, title, filenames, counter):
     return counter
 
 counter = 1
-for batch_key in BATCH_COVARIATES:
+for batch_key in par["batch_covariates"]:
+    print("Running Harmony on PCA embeddings")
+    sc.external.pp.harmony_integrate(adata, basis="X_pca", key=batch_key, adjusted_basis=f"X_harmony_{batch_key}")
+
     print(f"Obtain scVI and scanVI for batch key: {batch_key}")
     # Run scVI
     scvi.model.SCVI.setup_anndata(adata, layer="X_raw_counts", batch_key=batch_key)
@@ -130,10 +124,13 @@ for batch_key in BATCH_COVARIATES:
     adata.obsm[embedding_name_scVI] = vae.get_latent_representation()
     print(f"Embedding stored: {embedding_name_scVI}")
 
-    counter = plot_loss(vae.history, 
-        ['reconstruction_loss_train', 'train_loss_epoch', 'elbo_train'], 
-        f'Training Loss Metrics for scVI ({batch_key})', 
-        [f'reconstruction_loss_scVI_{batch_key}.png', f'train_loss_epoch_scVI_{batch_key}.png', f'elbo_train_scVI_{batch_key}.png'], counter)
+    counter = plot_loss(
+        history=vae.history, 
+        loss_keys=["reconstruction_loss_train", "train_loss_epoch", "elbo_train"], 
+        title=f"Training Loss Metrics for scVI ({batch_key})", 
+        filenames=[f"reconstruction_loss_scVI_{batch_key}.png", f"train_loss_epoch_scVI_{batch_key}.png", f"elbo_train_scVI_{batch_key}.png"],
+        counter=counter
+    )
 
     # Run scANVI
     lvae = scvi.model.SCANVI.from_scvi_model(
@@ -147,13 +144,13 @@ for batch_key in BATCH_COVARIATES:
     adata.obsm[embedding_name_scANVI] = lvae.get_latent_representation()
     print(f"Embedding stored: {embedding_name_scANVI}")
 
-    counter = plot_loss(vae.history, 
-    ['reconstruction_loss_train', 'train_loss_epoch', 'elbo_train'], 
-    f'Training Loss Metrics for scANVI ({batch_key})', 
-    [f'reconstruction_loss_scANVI_{batch_key}.png', f'train_loss_epoch_scANVI_{batch_key}.png', f'elbo_train_scANVI_{batch_key}.png'], counter)
-
-
-
+    counter = plot_loss(
+        history=lvae.history, 
+        loss_keys=["reconstruction_loss_train", "train_loss_epoch", "elbo_train"], 
+        title=f"Training Loss Metrics for scANVI ({batch_key})", 
+        filenames=[f"reconstruction_loss_scANVI_{batch_key}.png", f"train_loss_epoch_scANVI_{batch_key}.png", f"elbo_train_scANVI_{batch_key}.png"],
+        counter=counter
+    )
 
 ## QC metrics:
 
@@ -161,10 +158,6 @@ for batch_key in BATCH_COVARIATES:
 adata.var["mt"] = adata.var_names.str.startswith("MT-")
 # ribosomal genes
 adata.var["ribo"] = adata.var_names.str.startswith(("RPS", "RPL"))
-
-##commented out, because its blood cells specefic
-# hemoglobin genes.
-# adata.var["hb"] = adata.var_names.str.contains(("^HB[^(P)]"))
 
 sc.pp.calculate_qc_metrics(
     adata, qc_vars=["mt", "ribo"], inplace=True, log1p=True
@@ -174,7 +167,7 @@ cell_qc_metadata = pr.pp.calculate_cell_qc_metrics(adata, sample_key=SAMPLE_KEY,
 n_genes_metadata = pr.pp.calculate_n_cells_per_sample(adata, SAMPLE_KEY)
 composition_metadata = pr.pp.calculate_compositional_metrics(adata, SAMPLE_KEY, [CELL_TYPE_KEY], normalize_to=100)
 
-metadata = pr.pp.extract_metadata(adata,SAMPLE_KEY,SAMPLE_METADATA_COLS)
+metadata = pr.pp.extract_metadata(adata, SAMPLE_KEY, par["samples_metadata_cols"])
 metadata = pd.concat([
     metadata,
     cell_qc_metadata.loc[metadata.index],
@@ -186,4 +179,4 @@ print("ADATA PREPROCESSED: ")
 print(adata)
 
 adata.write(par["output"], compression=par["output_compression"])
-metadata.to_csv(OUTPUT_METADATA_PATH)
+metadata.to_csv(par["output_metadata"])

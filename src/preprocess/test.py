@@ -68,8 +68,8 @@ def test_preprocess_script(synthetic_data):
         "--input", input_file,
         "--output", output_file,
         "--cell_type_key", "cell_type",
-        "--batch_covariates=patient",
-        "--batch_effect_covariate", "patient",
+        "--batch_covariates", "patient",
+        "--batch_key", "patient",
     ]
     result = run(cmd_args, check=True)
 
