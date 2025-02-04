@@ -23,7 +23,7 @@ ifn_1_signature_genes = ifn_1_signature["gene_name"].unique()
 print("Prepared ", len(ifn_1_signature_genes), "genes for calculating IFN1 signature")
 
 print("Reading data")
-adata = sc.read_h5ad(par["output"])
+adata = sc.read_h5ad(par["input"])
 
 # COMBAT data is multimodal i.e. it contains protein expression as well
 # We will leave it behind for now and focus only on the RNA expression data
