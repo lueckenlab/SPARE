@@ -54,7 +54,6 @@ arguments:
   - name: --output_metadata
     type: file
     example: combat_preprocessed_metadata.csv
-    direction: output
     required: true
   
 resources:
