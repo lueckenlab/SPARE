@@ -26,46 +26,6 @@ par = {
 }
 ## VIASH END
 
-#combat
-# par = {
-#     "input": "data/combat.h5ad",
-#     "output": "data/combat_processed.h5ad",
-#     "cell_type_key":"Annotation_major_subset",
-#     "batch_covariates":["scRNASeq_sample_ID","Pool_ID"],
-#     "batch_effect_covariate":"Pool_ID",
-#     "output_compression": "gzip",
-# }
-
-#onek1k
-# par = {
-#     "input": "data/onek1k.h5ad",
-#     "output": "data/onek1k_processed.h5ad",
-#     "cell_type_key":"cell_type",
-#     "batch_covariates":["donor_id","pool_number"],
-#     "batch_effect_covariate":"pool_number",
-#     "output_compression": "gzip",
-# }
-
-#hlca
-# par = {
-#     "input": "data/hlca.h5ad",
-#     "output": "data/hlca_processed.h5ad",
-#     "cell_type_key":"cell_type",
-#     "batch_covariates":["donor_id","dataset"],
-#     "batch_effect_covariate":"dataset",
-#     "output_compression": "gzip",
-# }
-
-#stephenson
-# par = {
-#     "input": "data/stephenson.h5ad",
-#     "output": "data/stephenson_processed.h5ad",
-#     "cell_type_key":"cell_type",
-#     "batch_covariates":["sample_id","Site"],
-#     "batch_effect_covariate":"Site",
-#     "output_compression": "gzip",
-# }
-
 CELL_TYPE_KEY = par["cell_type_key"]
 BATCH_KEY = par["batch_key"]  # Used for HVG selection and integration
 SAMPLE_KEY = par["sample_key"]
