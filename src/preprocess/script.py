@@ -21,6 +21,7 @@ par = {
     "samples_metadata_cols":["Source", "Outcome", "Death28", "Institute", "Pool_ID"],
     "batch_key":"Pool_ID",
     "output_compression": "gzip",
+    "sample_size_threshold": 100,
     "output_metadata": "data/combat_metadata_200.csv",
 }
 ## VIASH END
@@ -76,6 +77,9 @@ if not os.path.exists(figures_directory):
 
 print("Reading data")
 adata = sc.read_h5ad(par["input"])
+
+print("Filtering small samples")
+adata = pr.pp.filter_small_samples(adata, sample_key=SAMPLE_KEY, sample_size_threshold=par["sample_size_threshold"])
 
 print("Normalizing data")
 sc.pp.normalize_total(adata, target_sum=1e4)

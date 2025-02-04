@@ -46,6 +46,11 @@ arguments:
     type: string
     example: Annotation_major_subset
     required: true
+  - name: --sample_size_threshold
+    description: The minimum number of cells a sample needs to have to be included in the analysis
+    type: int
+    default: 100
+    required: false
   - name: --output_compression
     description: The compression format of the output file
     type: string
