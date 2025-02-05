@@ -184,3 +184,9 @@ data/**
 !data/**/
 !data/**/README*
 !data/synthetic_processed.h5ad
+
+resources_test
+
+# Nextflow reports
+*execution_report.html
+*timeline.html
