@@ -135,6 +135,7 @@ adata.obsm["X_scpoli"] = scpoli.model.get_latent(
     mean=True
 )
 
+print("Calculating QC metrics")
 # mitochondrial genes
 adata.var["mt"] = adata.var_names.str.startswith("MT-")
 # ribosomal genes
@@ -148,6 +149,7 @@ cell_qc_metadata = pr.pp.calculate_cell_qc_metrics(adata, sample_key=SAMPLE_KEY,
 n_genes_metadata = pr.pp.calculate_n_cells_per_sample(adata, SAMPLE_KEY)
 composition_metadata = pr.pp.calculate_compositional_metrics(adata, SAMPLE_KEY, [CELL_TYPE_KEY], normalize_to=100)
 
+print("Extracting metadata")
 metadata = pr.pp.extract_metadata(adata, SAMPLE_KEY, par["samples_metadata_cols"])
 metadata = pd.concat([
     metadata,
