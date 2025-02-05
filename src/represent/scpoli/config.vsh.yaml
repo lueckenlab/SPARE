@@ -1,4 +1,4 @@
-name: represent_scpoli
+name: scpoli
 description: >
   Run scPoli on the data to get sample representations. If scPoli was already run
   on the preprocessing step, representations will be taken from .uns["scpoli_distances"]
