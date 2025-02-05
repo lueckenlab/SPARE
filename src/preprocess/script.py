@@ -76,8 +76,8 @@ def plot_loss(history, loss_keys, title, filenames, counter):
 
 counter = 1
 for batch_key in par["batch_covariates"]:
-    print("Running Harmony on PCA embeddings")
-    sc.external.pp.harmony_integrate(adata, basis="X_pca", key=batch_key, adjusted_basis=f"X_harmony_{batch_key}")
+    # print("Running Harmony on PCA embeddings")
+    # sc.external.pp.harmony_integrate(adata, basis="X_pca", key=batch_key, adjusted_basis=f"X_harmony_{batch_key}")
 
     print(f"Obtain scVI and scanVI for batch key: {batch_key}")
     # Run scVI
