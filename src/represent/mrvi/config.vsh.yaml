@@ -1,0 +1,52 @@
+name: represent_mrvi
+description: >
+  Run MrVI on the data to get cell and sample representations
+
+arguments:
+  - type: file
+    name: --input
+    description: Path to the input data
+    direction: input
+    required: true
+    example: "combat_processed.h5ad"
+
+  - type: file
+    name: --output
+    description: Path to save the MrVI sample representations
+    direction: output
+    required: true
+    example: "combat_mrvi.csv"
+
+  - type: string
+    name: --sample_key
+    description: Column name containing sample identifiers
+    required: true
+    example: "scRNASeq_sample_ID"
+
+  - type: string
+    name: --cell_type_key
+    description: Column name containing cell type annotations
+    required: true
+    example: "Annotation_major_subset"
+
+  - type: integer
+    name: --max_epochs
+    description: The maximum number of epochs to train the model
+    required: false
+    default: 100
+  
+  - type: boolean_true
+    name: --use_gpu
+    description: Whether to use a GPU for training
+    required: false
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+
+runners:
+  - type: executable
+  - type: nextflow
