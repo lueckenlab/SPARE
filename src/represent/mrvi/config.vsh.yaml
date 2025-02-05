@@ -38,7 +38,6 @@ arguments:
   - type: boolean_true
     name: --use_gpu
     description: Whether to use a GPU for training
-    required: false
 
 resources:
   - type: python_script
