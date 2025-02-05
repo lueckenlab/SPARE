@@ -23,7 +23,7 @@ adata = sc.read(par["input"])
 
 representation_method = pr.tl.MrVI(
     sample_key=par["sample_key"],
-    cells_type_key=par["cell_type_key"],
+    cell_group_key=par["cell_type_key"],
     layer="X_raw_counts",
     max_epochs=par["max_epochs"],
     accelerator="gpu" if par["use_gpu"] else "auto",

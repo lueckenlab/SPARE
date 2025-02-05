@@ -30,7 +30,7 @@ else:
     print("Running scPoli")
     representation_method = pr.tl.SCPoli(
         sample_key=par["sample_key"],
-        cells_type_key=par["cell_type_key"],
+        cell_group_key=par["cell_type_key"],
         layer="X_raw_counts",
         n_epochs=par["max_epochs"],
     )
