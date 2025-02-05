@@ -116,7 +116,24 @@ for batch_key in par["batch_covariates"]:
         counter=counter
     )
 
-## QC metrics:
+print("Running scPoli")
+scpoli = pr.tl.SCPoli(sample_key=SAMPLE_KEY, cell_group_key=CELL_TYPE_KEY, layer="X_raw_counts")
+
+print("Preparing adata")
+scpoli.prepare_anndata(adata, optimize_adata=False)
+
+print("Calculating distances")
+scpoli_distances = scpoli.calculate_distance_matrix(force=True)
+
+print("Saving scPoli distances")
+adata.uns["scpoli_distances"] = scpoli_distances
+adata.uns["scpolis_samples"] = scpoli.samples
+
+print("Saving scPoli cell representation")
+adata.obsm["X_scpoli"] = scpoli.model.get_latent(
+    scpoli.adata,
+    mean=True
+)
 
 # mitochondrial genes
 adata.var["mt"] = adata.var_names.str.startswith("MT-")
