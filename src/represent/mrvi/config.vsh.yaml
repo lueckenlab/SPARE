@@ -1,6 +1,6 @@
 name: represent_mrvi
 description: >
-  Run MrVI on the data to get cell and sample representations
+  Run MrVI on the data to get sample representations
 
 arguments:
   - type: file
