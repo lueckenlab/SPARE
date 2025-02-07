@@ -13,7 +13,7 @@ par = {
     "input": "data/combat_processed.h5ad",
     "output": "data/combat_pseudobulk_pca.h5ad",
     "sample_key":"scRNASeq_sample_ID",
-    "cell_group_key": "Annotation_major_subset",
+    "cell_type_key": "Annotation_major_subset",
     "layer": "X_pca",
     "aggregation": "mean",
     "distance_metric": "euclidean",
@@ -28,7 +28,7 @@ print(adata)
 print("Setting up th representation method")
 representation_method = pr.tl.Pseudobulk(
     sample_key=par["sample_key"],
-    cell_group_key=par["cell_group_key"],
+    cell_group_key=par["cell_type_key"],
     layer=par["layer"]
 )
 

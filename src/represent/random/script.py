@@ -13,7 +13,7 @@ par = {
     "input": "data/combat_processed.h5ad",
     "output": "data/combat_pseudobulk_pca.h5ad",
     "sample_key":"scRNASeq_sample_ID",
-    "cell_group_key": "Annotation_major_subset",
+    "cell_type_key": "Annotation_major_subset",
 }
 ## VIASH END
 
@@ -25,7 +25,7 @@ print(adata)
 print("Setting up th representation method")
 representation_method = pr.tl.RandomVector(
     sample_key=par["sample_key"],
-    cell_group_key=par["cell_group_key"],
+    cell_group_key=par["cell_type_key"],
 )
 
 print("Preparing the anndata object")

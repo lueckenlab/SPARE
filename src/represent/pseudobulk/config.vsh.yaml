@@ -24,8 +24,8 @@ arguments:
     example: "scRNASeq_sample_ID"
 
   - type: string
-    name: --cell_group_key
-    description: Column name containing cell group identifiers
+    name: --cell_type_key
+    description: Column name containing cell type identifiers
     required: true
     example: "Annotation_major_subset"
 
