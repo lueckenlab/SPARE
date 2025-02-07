@@ -1,4 +1,4 @@
-name: pseudobulk
+name: random_vector
 description: >
   Create random vectors for each sample as a negative baseline
 
