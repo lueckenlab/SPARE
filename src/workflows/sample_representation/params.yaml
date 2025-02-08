@@ -1,0 +1,14 @@
+pseudobulk:
+  pca_euclidean:
+    layer: "X_pca"
+    distance: "euclidean"
+  scvi_cosine:
+    layer: "X_scvi"
+    distance: "cosine"
+random_vector:
+  dimensionality_30:
+    latent_dim: 30
+    seed: 42
+  dimensionality_10:
+    latent_dim: 10
+    seed: 42

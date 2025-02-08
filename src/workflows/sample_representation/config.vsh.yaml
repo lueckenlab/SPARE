@@ -1,0 +1,67 @@
+name: sample_representation
+description: |
+  Run sample representation methods, aggregate results in anndata object
+arguments:
+  - type: file
+    name: --input
+    description: Path to the dataset to run the methods on
+    direction: input
+    required: true
+    example: "data/combat/combat_processed.h5ad"
+  
+  - type: file
+    name: --metadata_path
+    description: Path to YAML file containing metadata
+    direction: input
+    required: true
+    example: "data/combat/metadata.csv"
+  
+  - type: string
+    name: --cell_type_key
+    description: The key in the input data .obs that contains the cell type information
+    required: true
+    example: "cell_type"
+
+  - type: string
+    name: --sample_key
+    description: The key in the input data .obs that contains the sample information
+    required: true
+    example: "scRNASeq_sample_ID"
+    
+  - type: file
+    name: --output
+    description: The path of the output file with sample representations
+    direction: output
+    required: true
+    example: "data/combat/combat_representations.h5ad"
+    
+  - type: file
+    name: --method_params
+    description: Path to YAML file containing method parameters
+    direction: input
+    required: true
+    example: "method_params.yaml"
+
+resources:
+  - type: nextflow_script
+    path: main.nf
+    entrypoint: run_wf
+
+dependencies: 
+  - name: aggregate_representations
+    repository: local
+  - name: mrvi
+    repository: local
+  - name: pseudobulk
+    repository: local
+  - name: random_vector
+    repository: local
+  - name: scpoli
+    repository: local
+
+repositories:
+  - name: local
+    type: local
+    
+runners:
+  - type: nextflow
