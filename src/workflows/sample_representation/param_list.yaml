@@ -1,0 +1,21 @@
+- id: combat
+  input: ../../../data/combat/combat_subsampled.h5ad
+  output: combat/combat_representations.h5ad
+  cell_type_key: Annotation_major_subset
+  sample_key: scRNASeq_sample_ID
+  metadata_path: ../../../data/combat/combat_metadata.csv
+  obs_columns: Age,Sex,BMI,Hospitalstay,PreExistingHeartDisease,PreExistingLungDisease,PreExistingKidneyDisease,PreExistingDiabetes,PreExistingHypertension,PreExistingImmunocompromised,Smoking,Requiredvasoactive,Respiratorysupport,SARSCoV2PCR,TimeSinceOnset
+
+
+# - id: hlca
+#   input: ../../../data/hlca/hlca.h5ad
+#   output: hlca/hlca_representations.h5ad
+#   output_compression: gzip
+# - id: stephenson
+#   input: ../../../data/stephenson/stephenson.h5ad
+#   output: stephenson/stephenson_cleaned.h5ad
+#   output_compression: gzip
+# - id: onek1k
+#   input: ../../../data/onek1k/onek1k.h5ad
+#   output: onek1k/onek1k_cleaned.h5ad
+#   output_compression: gzip
