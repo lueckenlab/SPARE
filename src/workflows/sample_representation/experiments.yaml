@@ -20,8 +20,8 @@ random_vector:
     latent_dim: 10
     seed: 42
 mrvi:
-  mrvi:
+  epochs_100:
     max_epochs: 100
 scpoli:
-  scpoli_sample_embeddings:
+  sample_embeddings:
     max_epochs: 50
