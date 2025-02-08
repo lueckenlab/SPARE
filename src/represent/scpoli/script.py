@@ -22,10 +22,10 @@ print("Reading adata")
 adata = sc.read(par["input"])
 
 print("Running scPoli")
-if "scpoli_distances" in adata.uns and "scpolis_samples" in adata.uns:
+if "scpoli_distances" in adata.uns and "scpoli_samples" in adata.uns:
     print("Using existing scPoli distances")
     distances = adata.uns["scpoli_distances"]
-    samples = adata.uns["scpolis_samples"]
+    samples = adata.uns["scpoli_samples"]
 else:
     print("Running scPoli")
     representation_method = pr.tl.SCPoli(
