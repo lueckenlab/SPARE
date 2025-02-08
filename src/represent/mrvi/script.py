@@ -26,7 +26,6 @@ representation_method = pr.tl.MrVI(
     cell_group_key=par["cell_type_key"],
     layer="X_raw_counts",
     max_epochs=par["max_epochs"],
-    accelerator="gpu" if par["use_gpu"] else "auto",
 )
 representation_method.prepare_anndata(adata)
 distances = representation_method.calculate_distance_matrix(force=True)
