@@ -67,7 +67,7 @@ workflow run_wf {
                         metadata_path: state.metadata_path,
                         cell_type_key: state.cell_type_key,
                         sample_key: state.sample_key,
-                        output: state.output.replace(".h5ad", "_${methodName}_${experimentName}.csv"),
+                        output: "${methodName}_${experimentName}.csv",
                     ]
                     
                     // Add experiment-specific parameters
