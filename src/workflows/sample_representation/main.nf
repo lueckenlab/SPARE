@@ -3,6 +3,7 @@ methods = [
     random_vector,
     mrvi,
     scpoli,
+    grouped_pseudobulk,
 ]
 
 workflow run_wf {

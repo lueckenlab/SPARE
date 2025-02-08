@@ -65,6 +65,8 @@ dependencies:
     repository: local
   - name: scpoli
     repository: local
+  - name: grouped_pseudobulk
+    repository: local
 
 repositories:
   - name: local
