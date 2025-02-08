@@ -2,8 +2,8 @@ pseudobulk:
   pca_euclidean:
     layer: "X_pca"
     distance: "euclidean"
-  scvi_cosine:
-    layer: "X_scvi"
+  scvi_sample_id_cosine:
+    layer: "X_scANVI_scRNASeq_sample_ID"
     distance: "cosine"
 random_vector:
   dimensionality_30:
