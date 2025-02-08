@@ -67,6 +67,8 @@ dependencies:
     repository: local
   - name: grouped_pseudobulk
     repository: local
+  - name: pilot
+    repository: local
 
 repositories:
   - name: local

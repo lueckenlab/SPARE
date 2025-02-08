@@ -4,6 +4,7 @@ methods = [
     mrvi,
     scpoli,
     grouped_pseudobulk,
+    pilot,
 ]
 
 workflow run_wf {

@@ -25,3 +25,8 @@ mrvi:
 scpoli:
   sample_embeddings:
     max_epochs: 50
+pilot:
+  pca:
+    layer: "X_pca"
+  scvi_sample_id:
+    layer: "X_scANVI_scRNASeq_sample_ID"
