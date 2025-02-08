@@ -5,6 +5,7 @@ methods = [
     scpoli,
     grouped_pseudobulk,
     pilot,
+    mofa,
 ]
 
 workflow run_wf {

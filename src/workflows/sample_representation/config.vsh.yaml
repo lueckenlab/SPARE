@@ -69,6 +69,8 @@ dependencies:
     repository: local
   - name: pilot
     repository: local
+  - name: mofa
+    repository: local
 
 repositories:
   - name: local

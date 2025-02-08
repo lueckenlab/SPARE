@@ -30,3 +30,8 @@ pilot:
     layer: "X_pca"
   scvi_sample_id:
     layer: "X_scANVI_scRNASeq_sample_ID"
+mofa:
+  pca:
+    layer: "X_pca"
+  scvi_sample_id:
+    layer: "X_scANVI_scRNASeq_sample_ID"
