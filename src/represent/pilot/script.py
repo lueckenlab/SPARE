@@ -38,9 +38,7 @@ representation_method.prepare_anndata(adata)
 
 print("Calculating the distance matrix")
 distances = representation_method.calculate_distance_matrix(
-    force=True,
-    aggregate=par["aggregation"],
-    dist=par["distance_metric"]
+    force=True
 )
 
 print("Saving results")
