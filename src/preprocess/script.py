@@ -127,7 +127,7 @@ scpoli_distances = scpoli.calculate_distance_matrix(force=True)
 
 print("Saving scPoli distances")
 adata.uns["scpoli_distances"] = scpoli_distances
-adata.uns["scpolis_samples"] = scpoli.samples
+adata.uns["scpoli_samples"] = scpoli.samples
 
 print("Saving scPoli cell representation")
 adata.obsm["X_scpoli"] = scpoli.model.get_latent(
