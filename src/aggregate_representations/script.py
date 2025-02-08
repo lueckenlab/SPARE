@@ -3,7 +3,7 @@ import random
 import ehrapy as ep
 import pandas as pd
 import numpy as np
-
+from pathlib import Path
 random.seed(42)
 np.random.seed(42)
 
@@ -71,7 +71,7 @@ for representation in par["input"]:
         meta_adata = meta_adata[samples, :]
 
     # Remove the file extension
-    representation_name = representation[:representation.rfind(".")]
+    representation_name = Path(representation).stem
 
     # It makes more sense to put distances to the obsp, but pp.neighbors expects it to be in obsm
     # So we put full distances matrix in obsm, and obsp will contain only the distances for nearest neighbors 
