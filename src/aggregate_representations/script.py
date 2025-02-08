@@ -59,6 +59,8 @@ meta_adata.obsm["ehrapy_umap"] = meta_adata.obsm["X_umap"]
 samples = list(meta_adata.obs_names)
 print(f"Samples in metadata: {len(samples)}")
 
+meta_adata.uns["sample_representations"] = ["ehrapy"]
+
 for representation in par["input"]:
     print(f"Processing representation {representation}")
     representation_df = pd.read_csv(representation, index_col=0)
@@ -91,6 +93,8 @@ for representation in par["input"]:
     print("Calculating UMAP")
     ep.tl.umap(meta_adata, neighbors_key=f"{representation_name}_neighbors")
     meta_adata.obsm[f"{representation_name}_umap"] = meta_adata.obsm["X_umap"]
+
+    meta_adata.uns["sample_representations"].append(representation_name)
 
 print("Resulting AnnData")
 print(meta_adata)
