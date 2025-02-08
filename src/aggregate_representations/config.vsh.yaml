@@ -17,7 +17,7 @@ arguments:
     required: true
     multiple: true
     multiple_sep: ","
-    example: ["combat_pseudobulk_pca_representation.csv", "combat_random_representation.csv", "combat_mrvi_representation.csv"]
+    example: ["combat_pseudobulk_pca_representation.csv", "combat_random_vector.csv", "combat_mrvi_representation.csv"]
 
   - type: file
     name: --metadata_path
