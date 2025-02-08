@@ -1,135 +1,123 @@
-def methodMap = [
-    pseudobulk: pseudobulk,
-    random_vector: random_vector
+methods = [
+    pseudobulk, 
+    random_vector,
 ]
-
-def runTriplets() {
-    workflow runTripletsWf {
-        take: input_ch
-        main:
-            method_ch = input_ch.flatMap { id, state ->
-                state.triplets.collect { triplet ->
-                    def method_name = triplet.method.config.name
-                    def experiment_name = triplet.id.tokenize('.')[-1]
-                    [ 
-                        "${id}.${method_name}.${experiment_name}",
-                        triplet.state,
-                        [ 
-                            output: triplet.state.output,
-                            aggregated_output: triplet.state.aggregated_output,
-                            metadata_path: triplet.state.metadata_path,
-                            _meta: [join_id: id]
-                        ],
-                        triplet.method
-                    ]
-                }
-            }
-            
-            // Use flatMap to handle method execution channels
-            output_ch = method_ch.flatMap { id, state, orig_state, method ->
-                println "Running method: ${method.config?.name} with ID: ${id}"
-                
-                // Execute the method and get its OUTPUT CHANNEL
-                def result_ch = method.run(
-                    auto: [simplifyInput: false, simplifyOutput: false],
-                    args: state
-                )
-                
-                // Transform the method's output into the required format
-                result_ch.map { method_output ->
-                    [ 
-                        orig_state._meta.join_id, 
-                        [ 
-                            output: method_output.output, // Use actual output from method
-                            aggregated_output: orig_state.aggregated_output,
-                            metadata_path: orig_state.metadata_path,
-                            _meta: orig_state._meta
-                        ] 
-                    ]
-                }
-            }
-            | groupTuple()
-            | map { id, states ->
-                [ 
-                    id, 
-                    [ 
-                        output: states.collect { it.output },
-                        aggregated_output: states[0].aggregated_output,
-                        metadata_path: states[0].metadata_path,
-                        _meta: [join_id: id]
-                    ] 
-                ]
-            }
-            
-        emit:
-            output_ch
-    }
-    return runTripletsWf
-}
 
 workflow run_wf {
     take:
         input_ch
 
     main:
-        output_ch = input_ch
+        // First expand the experiments
+        expanded_ch = input_ch
             | view { id, state -> 
                 "\n[Initial Input] ID: $id\nState: $state" 
             }
-            
-            // Read method parameters and convert to triplets
             | map { id, state ->
-                def method_params_file = file(state.method_params)
-                def method_params = method_params_file.exists() ? readYaml(method_params_file) : [:]
-                
-                // Convert nested map to list of triplets [method_name, experiment_name, params]
-                def method_triplets = []
-                method_params.each { method_name, experiments ->
-                    // Get the method component from our map
-                    def method = methodMap[method_name]
-                    if (!method) {
-                        error "Method $method_name not found in available methods"
-                    }
-                    
-                    experiments.each { experiment_name, params ->
-                        method_triplets << [
-                            method: method,
-                            id: id,
-                            state: [input: state.input] + params + [
-                                output: state.output.replace('.h5ad', "_${method_name}_${experiment_name}.csv"),
-                                aggregated_output: state.output,
-                                sample_key: state.sample_key,
-                                cell_type_key: state.cell_type_key,
-                                metadata_path: state.metadata_path
-                            ]
-                        ]
-                    }
-                }
-                
-                [id, state + [triplets: method_triplets]]
-            }
-            | view { id, state -> 
-                "\n[After Reading Files] ID: $id\nTriplets: ${state.triplets}" 
-            }
-            // Add metadata
-            | map { id, state ->
-                [id, state + ["_meta": [join_id: id]]]
+                def experiments = readYaml(state.method_params)
+                [id, state + ["_meta": [join_id: id], "experiments": experiments]]
             }
             | view { id, state -> 
                 "\n[After Adding Metadata] ID: $id\nMeta: ${state._meta}" 
             }
-            // Run all triplets
-            | runTriplets()
+            | flatMap { id, state ->
+                def runs = []
+                methods.each { method ->
+                    def methodExperiments = state.experiments[method.config.name]
+                    methodExperiments.each { experimentName, params ->
+                        // Store original ID in metadata for later grouping
+                        def new_state = state + [
+                            "current_method": method.config.name,
+                            "current_experiment": experimentName,
+                            "current_params": params,
+                            "_meta": state._meta + [original_id: id]
+                        ]
+                        // Convert GString to plain String using toString()
+                        def run_id = "${id}.${method.config.name}.${experimentName}".toString()
+                        runs << [
+                            run_id,
+                            new_state
+                        ]
+                    }
+                }
+                return runs
+            }
             | view { id, state -> 
-                "\n[Final Output] ID: $id\nOutput: ${state.output}, state: ${state}" 
+                "\n[Expanded Experiments] ID: $id\nMethod: ${state.current_method}\nExperiment: ${state.current_experiment}" 
+            }
+
+        // Run methods on expanded experiments
+        method_outputs_ch = expanded_ch
+            | runEach(
+                components: methods,
+                // Only run a method if it matches the current experiment's method
+                filter: { id, state, comp ->
+                    comp.config.name == state.current_method
+                },
+                id: { id, state, comp ->
+                    id.toString() // Ensure we return a plain String
+                },
+                fromState: { id, state, comp ->
+                    def methodName = state.current_method
+                    def experimentName = state.current_experiment
+                    def experimentParams = state.current_params
+                    
+                    def new_args = [
+                        input: state.input,
+                        metadata_path: state.metadata_path,
+                        cell_type_key: state.cell_type_key,
+                        sample_key: state.sample_key,
+                        output: state.output.replace(".h5ad", "_${methodName}_${experimentName}.csv"),
+                    ]
+                    
+                    // Add experiment-specific parameters
+                    new_args.putAll(experimentParams)
+                    
+                    return new_args
+                },
+                toState: { id, output, state, comp ->
+                    state + [
+                        method_id: "${state.current_method}_${state.current_experiment}".toString(),
+                        method_output: output.output
+                    ]
+                }
+            )
+            | view { id, state -> 
+                "\n[Method Output] ID: $id\nOutput: ${state.method_output}" 
+            }
+
+        // Group and aggregate results
+        output_ch = method_outputs_ch
+            | map { id, state -> 
+                // Extract original ID for grouping
+                [state._meta.original_id.toString(), [id, state]]
+            }
+            | groupTuple()
+            | map { original_id, grouped_outputs ->
+                def first_state = grouped_outputs[0][1]
+                [
+                    original_id,
+                    [
+                        method_outputs: grouped_outputs.collect { it[1].method_output },
+                        output: first_state.output,
+                        metadata_path: first_state.metadata_path,
+                        cell_type_key: first_state.cell_type_key,
+                        obs_columns: first_state.obs_columns,
+                        _meta: [join_id: original_id]
+                    ]
+                ]
+            }
+            | view { id, state -> 
+                "\n[Grouped Outputs] ID: $id\nOutputs: ${state.method_outputs}" 
             }
             | aggregate_representations.run(
                 fromState: { id, state ->
                     [
-                        input: state.output,  // Individual method output CSV
-                        output: state.aggregated_output,  // Final aggregated h5ad
+                        input: state.method_outputs,
+                        output: state.output,
                         metadata_path: state.metadata_path,
-                        cell_type_key: state.cell_type_key
+                        cell_type_key: state.cell_type_key,                      
+                        obs_columns: state.obs_columns
                     ]
                 }
             )
