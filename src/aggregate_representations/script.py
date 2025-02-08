@@ -67,13 +67,15 @@ for representation in par["input"]:
     samples = [sample for sample in samples if sample in representation_df.index]
     representation_df = representation_df.loc[samples][samples]
     print(f"Current number of samples: {len(samples)}")
+    if len(samples) < meta_adata.n_obs:
+        meta_adata = meta_adata[samples, :]
 
     # Remove the file extension
     representation_name = representation[:representation.rfind(".")]
 
     # It makes more sense to put distances to the obsp, but pp.neighbors expects it to be in obsm
     # So we put full distances matrix in obsm, and obsp will contain only the distances for nearest neighbors 
-    meta_adata.obsm[f"{representation_name}_distances"] = representation_df.loc[meta_adata.obs_names][meta_adata.obs_names]
+    meta_adata.obsm[f"{representation_name}_distances"] = representation_df.loc[samples][samples]
     
     print("Putting neighbors to obsp")
     ep.pp.neighbors(
