@@ -92,4 +92,6 @@ for representation in par["input"]:
     ep.tl.umap(meta_adata, neighbors_key=f"{representation_name}_neighbors")
     meta_adata.obsm[f"{representation_name}_umap"] = meta_adata.obsm["X_umap"]
 
+print("Resulting AnnData")
+print(meta_adata)
 meta_adata.write_h5ad(par["output"])
