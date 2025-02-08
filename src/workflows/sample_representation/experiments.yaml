@@ -12,3 +12,9 @@ random_vector:
   dimensionality_10:
     latent_dim: 10
     seed: 42
+mrvi:
+  mrvi:
+    max_epochs: 100
+scpoli:
+  scpoli_sample_embeddings:
+    max_epochs: 50

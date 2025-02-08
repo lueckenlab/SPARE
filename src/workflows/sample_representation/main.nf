@@ -1,6 +1,8 @@
 methods = [
     pseudobulk, 
     random_vector,
+    mrvi,
+    scpoli,
 ]
 
 workflow run_wf {
