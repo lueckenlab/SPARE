@@ -27,6 +27,13 @@ arguments:
     description: The key in the input data .obs that contains the sample information
     required: true
     example: "scRNASeq_sample_ID"
+
+  - type: string
+    name: --obs_columns
+    multiple: true
+    description: Columns in the metadata file that should be used to create metadata-based sample representation
+    required: false
+    example: "Age,Sex,BMI,HospitalstaySARSCoV2PCR,TimeSinceOnset"
     
   - type: file
     name: --output
