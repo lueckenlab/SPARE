@@ -56,7 +56,7 @@ print("Calculating metadata-based UMAP")
 ep.tl.umap(meta_adata, neighbors_key="ehrapy_neighbors")
 meta_adata.obsm["ehrapy_umap"] = meta_adata.obsm["X_umap"]
 
-samples = meta_adata.index.tolist()
+samples = list(meta_adata.obs_names)
 print(f"Samples in metadata: {len(samples)}")
 
 for representation in par["input"]:
@@ -67,7 +67,7 @@ for representation in par["input"]:
     samples = [sample for sample in samples if sample in representation_df.index]
     representation_df = representation_df.loc[samples][samples]
     print(f"Current number of samples: {len(samples)}")
-    
+
     # Remove the file extension
     representation_name = representation[:representation.rfind(".")]
 
