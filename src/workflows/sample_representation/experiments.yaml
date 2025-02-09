@@ -3,14 +3,14 @@ pseudobulk:
     layer: "X_pca"
     distance: "euclidean"
   scvi_sample_id_cosine:
-    layer: "X_scANVI_scRNASeq_sample_ID"
+    layer: "X_scANVI_sample"
     distance: "cosine"
 grouped_pseudobulk:
   pca_euclidean:
     layer: "X_pca"
     distance: "euclidean"
   scvi_sample_id_cosine:
-    layer: "X_scANVI_scRNASeq_sample_ID"
+    layer: "X_scANVI_sample"
     distance: "cosine"
 random_vector:
   dimensionality_30:
@@ -29,9 +29,9 @@ pilot:
   pca:
     layer: "X_pca"
   scvi_sample_id:
-    layer: "X_scANVI_scRNASeq_sample_ID"
+    layer: "X_scANVI_sample"
 mofa:
   pca:
     layer: "X_pca"
   scvi_sample_id:
-    layer: "X_scANVI_scRNASeq_sample_ID"
+    layer: "X_scANVI_sample"
