@@ -28,7 +28,7 @@ print(adata)
 print("Setting up th representation method")
 representation_method = pr.tl.PILOT(
     sample_key=par["sample_key"],
-    cells_type_key=par["cell_type_key"],  # TODO: update interface to use cell_group_key
+    cell_group_key=par["cell_type_key"],
     layer=par["layer"]
 )
 
