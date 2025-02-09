@@ -22,3 +22,6 @@ pilot:
 mofa:
   pca:
     layer: "X_pca"
+gloscope:
+  scpoli:
+    layer: "X_scpoli"

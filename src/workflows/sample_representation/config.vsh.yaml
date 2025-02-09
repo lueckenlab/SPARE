@@ -71,6 +71,8 @@ dependencies:
     repository: local
   - name: mofa
     repository: local
+  - name: gloscope
+    repository: local
 
 repositories:
   - name: local

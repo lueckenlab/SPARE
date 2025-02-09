@@ -1,0 +1,54 @@
+name: gloscope
+description: >
+  Apply GloScope sample representation method
+
+arguments:
+  - type: file
+    name: --input
+    description: Path to the input data
+    direction: input
+    required: true
+    example: "combat_processed.h5ad"
+
+  - type: file
+    name: --output
+    description: Path to save the sample representations
+    direction: output
+    required: true
+    example: "combat_pseudobulk_pca.h5ad"
+
+  - type: string
+    name: --sample_key
+    description: Column name containing sample identifiers
+    required: true
+    example: "scRNASeq_sample_ID"
+
+  - type: string
+    name: --cell_type_key
+    description: Column name containing cell type identifiers
+    required: true
+    example: "Annotation_major_subset"
+
+  - type: string
+    name: --layer
+    description: Layer to use for aggregating cell data
+    required: true
+    example: "X_pca"
+
+  - type: integer 
+    name: --n_workers
+    description: Number of workers to use for parallel processing
+    required: false
+    default: 1
+
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+
+runners:
+  - type: executable
+  - type: nextflow

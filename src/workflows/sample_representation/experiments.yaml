@@ -111,3 +111,16 @@ mofa:
     layer: "X_scANVI_sample"
   scanvi_batch:
     layer: "X_scANVI_batch"
+gloscope:
+  pca:
+    layer: "X_pca"
+  scpoli:
+    layer: "X_scpoli"
+  scvi_sample_id:
+    layer: "X_scVI_sample"
+  scvi_batch:
+    layer: "X_scVI_batch"
+  scanvi_sample_id:
+    layer: "X_scANVI_sample"
+  scanvi_batch:
+    layer: "X_scANVI_batch"

@@ -6,6 +6,7 @@ methods = [
     grouped_pseudobulk,
     pilot,
     mofa,
+    gloscope,
 ]
 
 workflow run_wf {
