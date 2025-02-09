@@ -102,7 +102,7 @@ mofa:
   pca:
     layer: "X_pca"
   scpoli:
-    layer: "X_scpoli
+    layer: "X_scpoli"
   scvi_sample_id:
     layer: "X_scVI_sample"
   scvi_batch:
