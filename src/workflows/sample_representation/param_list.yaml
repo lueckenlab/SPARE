@@ -1,5 +1,5 @@
 - id: combat
-  input: ../../../data/combat/combat_subsampled.h5ad
+  input: ../../../data/combat/combat_processed.h5ad
   output: combat/combat_representations.h5ad
   cell_type_key: Annotation_major_subset
   sample_key: scRNASeq_sample_ID
@@ -7,26 +7,26 @@
   obs_columns: Age,Sex,BMI,Hospitalstay,PreExistingHeartDisease,PreExistingLungDisease,PreExistingKidneyDisease,PreExistingDiabetes,PreExistingHypertension,PreExistingImmunocompromised,Smoking,Requiredvasoactive,Respiratorysupport,SARSCoV2PCR,TimeSinceOnset
 
 - id: stephenson
-  input: ../../../data/stephenson/stephenson_subsampled.h5ad
+  input: ../../../data/stephenson/stephenson_processed.h5ad
   output: stephenson/stephenson_representations.h5ad
-  metadata_path: stephenson/stephenson_metadata.csv
+  metadata_path: ../../../data/stephenson/stephenson_metadata.csv
   cell_type_key: cell_type
   sample_key: sample_id
   obs_columns: Swab_result,Smoker,Days_from_onset,sex,development_stage
 
 - id: onek1k
-  input: ../../../data/onek1k/onek1k_subsampled.h5ad
-  output: combat/onek1k_representations.h5ad
-  metadata_path: onek1k/onek1k_metadata.csv
+  input: ../../../data/onek1k/onek1k_processed.h5ad
+  output: onek1k/onek1k_representations.h5ad
+  metadata_path: ../../../data/onek1k/onek1k_metadata.csv
   cell_type_key: cell_type
   sample_key: donor_id
   obs_columns: age,sex
 
 
 - id: hlca
-  input: ../../../data/hlca/hlca_subsampled.h5ad
-  output: combat/hlca_representations.h5ad
-  metadata_path: hlca/hlca_metadata.csv
+  input: ../../../data/hlca/hlca_processed.h5ad
+  output: hlca/hlca_representations.h5ad
+  metadata_path: ../../../data/hlca/hlca_metadata.csv
   cell_type_key: cell_type
   sample_key: donor_id
   obs_columns: BMI,age_or_mean_of_age_range,age_range,anatomical_region_ccf_score,smoking_status,sex,tissue,self_reported_ethnicity,development_stage
