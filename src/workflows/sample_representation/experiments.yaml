@@ -5,6 +5,12 @@ pseudobulk:
   pca_cosine:
     layer: "X_pca"
     distance: "cosine"
+  scpoli_euclidean:
+    layer: "X_scpoli"
+    distance: "euclidean"
+  scpoli_cosine:
+    layer: "X_scpoli"
+    distance: "cosine"
   scvi_sample_id_euclidean:
     layer: "X_scVI_sample"
     distance: "euclidean"
@@ -35,6 +41,12 @@ grouped_pseudobulk:
     distance: "euclidean"
   pca_cosine:
     layer: "X_pca"
+    distance: "cosine"
+  scpoli_euclidean:
+    layer: "X_scpoli"
+    distance: "euclidean"
+  scpoli_cosine:
+    layer: "X_scpoli"
     distance: "cosine"
   scvi_sample_id_euclidean:
     layer: "X_scVI_sample"
@@ -76,6 +88,8 @@ scpoli:
 pilot:
   pca:
     layer: "X_pca"
+  scpoli:
+    layer: "X_scpoli"
   scvi_sample_id:
     layer: "X_scVI_sample"
   scvi_batch:
@@ -87,6 +101,8 @@ pilot:
 mofa:
   pca:
     layer: "X_pca"
+  scpoli:
+    layer: "X_scpoli
   scvi_sample_id:
     layer: "X_scVI_sample"
   scvi_batch:
