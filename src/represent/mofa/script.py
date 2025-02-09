@@ -26,7 +26,7 @@ adata = sc.read(par["input"])
 print(adata)
 
 print("Setting up th representation method")
-representation_method = pr.tl.PILOT(
+representation_method = pr.tl.MOFA(
     sample_key=par["sample_key"],
     cell_group_key=par["cell_type_key"],
     layer=par["layer"]
