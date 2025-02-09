@@ -69,10 +69,10 @@ random_vector:
     seed: 42
 mrvi:
   epochs_100:
-    max_epochs: 1
+    max_epochs: 100
 scpoli:
   sample_embeddings:
-    max_epochs: 1
+    max_epochs: 50
 pilot:
   pca:
     layer: "X_pca"
