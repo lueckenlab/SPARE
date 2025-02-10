@@ -27,7 +27,7 @@ print(adata)
 
 if par["n_components"] is not None:
     print(f"Subsetting the {par['layer']} layer to {par['n_components']} components")
-    adata.layers[par["layer"]] = adata.layers[par["layer"]][:, :par["n_components"]]
+    adata.obsm[par["layer"]] = adata.obsm[par["layer"]][:, :par["n_components"]]
 
 print("Setting up the representation method")
 representation_method = pr.tl.GloScope(
