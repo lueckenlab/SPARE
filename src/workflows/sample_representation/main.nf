@@ -7,6 +7,7 @@ methods = [
     pilot,
     mofa,
     gloscope,
+    cell_group_composition,
 ]
 
 workflow run_wf {

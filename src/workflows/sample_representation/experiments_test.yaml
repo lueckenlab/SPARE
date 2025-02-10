@@ -10,6 +10,9 @@ random_vector:
   dimensionality_30:
     latent_dim: 30
     seed: 42
+cell_group_composition:
+  euclidean:
+    distance: "euclidean"
 mrvi:
   epochs_100:
     max_epochs: 1
