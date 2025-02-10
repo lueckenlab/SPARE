@@ -15,8 +15,6 @@ par = {
     "sample_key":"scRNASeq_sample_ID",
     "cell_type_key": "Annotation_major_subset",
     "layer": "X_pca",
-    "aggregation": "mean",
-    "distance_metric": "euclidean",
 }
 ## VIASH END
 
