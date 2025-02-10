@@ -41,6 +41,13 @@ arguments:
     required: false
     default: 1
 
+  - type: integer
+    name: --n_components
+    description: |
+      Number of components to subset the embedding layer to. 
+      Significant speed-up when set to a lower number, but not applicable for all methods.
+    required: false
+    example: 10
 
 resources:
   - type: python_script

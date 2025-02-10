@@ -120,6 +120,7 @@ gloscope:
   pca:
     layer: "X_pca"
     n_workers: 32
+    n_components: 10
   scpoli:
     layer: "X_scpoli"
     n_workers: 32

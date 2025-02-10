@@ -14,7 +14,9 @@ par = {
     "output": "data/combat_pseudobulk_pca.h5ad",
     "sample_key":"scRNASeq_sample_ID",
     "cell_type_key": "Annotation_major_subset",
+    "layer": "X_pca",
     "n_workers": 1,
+    "n_components": 10,
 }
 ## VIASH END
 
@@ -22,6 +24,10 @@ print("Reading adata")
 adata = sc.read(par["input"])
 
 print(adata)
+
+if par["n_components"] is not None:
+    print(f"Subsetting the {par['layer']} layer to {par['n_components']} components")
+    adata.layers[par["layer"]] = adata.layers[par["layer"]][:, :par["n_components"]]
 
 print("Setting up the representation method")
 representation_method = pr.tl.GloScope(
