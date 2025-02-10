@@ -80,3 +80,5 @@ repositories:
     
 runners:
   - type: nextflow
+    directives:
+      label: [veryhighmem, highcpu]
