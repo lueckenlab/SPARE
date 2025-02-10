@@ -25,3 +25,4 @@ mofa:
 gloscope:
   scpoli:
     layer: "X_scpoli"
+    n_workers: 8

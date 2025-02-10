@@ -114,13 +114,19 @@ mofa:
 gloscope:
   pca:
     layer: "X_pca"
+    n_workers: 32
   scpoli:
     layer: "X_scpoli"
+    n_workers: 32
   scvi_sample_id:
     layer: "X_scVI_sample"
+    n_workers: 32
   scvi_batch:
     layer: "X_scVI_batch"
+    n_workers: 32
   scanvi_sample_id:
     layer: "X_scANVI_sample"
+    n_workers: 32
   scanvi_batch:
     layer: "X_scANVI_batch"
+    n_workers: 32
