@@ -1,4 +1,14 @@
 pseudobulk:
+  counts_mean_euclidean:
+    layer: "X_raw_counts"
+    aggregation: "mean"
+  counts_mean_cosine:
+    layer: "X_raw_counts"
+    aggregation: "mean"
+    distance: "cosine"
+  counts_sum:
+    layer: "X_raw_counts"
+    aggregation: "sum"
   pca_euclidean:
     layer: "X_pca"
     distance: "euclidean"
@@ -104,6 +114,8 @@ pilot:
   scanvi_batch:
     layer: "X_scANVI_batch"
 mofa:
+  counts:
+    layer: "X_raw_counts"
   pca:
     layer: "X_pca"
   scpoli:
