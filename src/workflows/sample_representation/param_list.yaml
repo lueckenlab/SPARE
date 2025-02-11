@@ -30,3 +30,11 @@
   cell_type_key: cell_type
   sample_key: donor_id
   obs_columns: BMI,age_or_mean_of_age_range,age_range,anatomical_region_ccf_score,smoking_status,sex,tissue,self_reported_ethnicity,development_stage
+
+- id: copd
+  input: ../../../data/copd/COPD_processed.h5ad
+  output: copd/copd_representations.h5ad
+  metadata_path: ../../../data/copd/COPD_metadata_benchmark.csv
+  cell_type_key: cell_type_reannotated
+  sample_key: sample_id
+  obs_columns: Smoking_Status,Age,Sex,FEV1,FEV1_FVC,Bronchodilator_Use,Leukotriene_Use,Steroid_Use,Pack_Year,Smoking_History,Quit_Data
