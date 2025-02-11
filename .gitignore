@@ -190,3 +190,6 @@ resources_test
 # Nextflow reports
 *execution_report.html
 *timeline.html
+report*
+timeline*
+trace*
