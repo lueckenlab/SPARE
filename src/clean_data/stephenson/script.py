@@ -85,7 +85,7 @@ adata.obs["development_stage"] = adata.obs["development_stage"].map(decade_mappi
 adata.obs["development_stage"] = adata.obs["development_stage"].astype("int")
 
 #Change the type of Collection day and merge the data since 4 classes with only one patient
-mapping = {
+day_mapping = {
     "D0": 0,
     "D28": 28,
     "D7": 10,
@@ -94,7 +94,7 @@ mapping = {
     "D13": 10,
 }
 
-adata.obs["Collection_Day"] = adata.obs["Collection_Day"].replace(mapping).astype(int)
+adata.obs["Collection_Day"] = adata.obs["Collection_Day"].replace(day_mapping).astype(int)
 
 
 adata.obs.loc[
