@@ -1,0 +1,29 @@
+{
+    "relevant": {
+        "Source": "classification",
+        "Outcome": "ranking", 
+        "Death28": "classification", 
+        "Hospitalstay": "regression", 
+        "TimeSinceOnset": "regression"
+    },
+    "technical": {
+        "Institute": "classification", 
+        "Pool_ID": "classification", 
+        "median_n_genes_by_counts": "regression", 
+        "median_total_counts": "regression", 
+        "median_pct_counts_mt": "regression", 
+        "n_cells": "regression"
+    },
+    "contextual": {
+        "Age": "regression", 
+        "Sex": "classification", 
+        "BMI": "regression", 
+        "PreExistingHeartDisease": "classification", 
+        "PreExistingLungDisease": "classification", 
+        "PreExistingDiabetes": "classification", 
+        "PreExistingHypertension": "classification",  
+        "Smoking": "classification",
+        "Requiredvasoactive": "classification", 
+        "SARSCoV2PCR": "classification"
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "relevant": {
+        "Status": "classification",
+        "Status_on_day_collection_summary": "classification",
+        "Days_from_onset": "regression",
+        "Worst_Clinical_Status": "classification",
+        "Outcome": "classification",
+        "disease": "classification"
+    },
+    "technical": {
+        "Site": "classification",
+        "median_n_genes_by_counts": "regression",
+        "median_total_counts": "regression",
+        "median_pct_counts_mt": "regression",
+        "n_cells": "regression"
+    },
+    "contextual": {
+        "Swab_result": "classification", 
+        "Smoker": "classification",
+        "sex": "classification",
+        "development_stage": "regression"
+    }
+}
