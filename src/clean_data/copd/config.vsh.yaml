@@ -1,0 +1,30 @@
+name: clean_copd
+description: Dataset specific preprocessing steps.
+arguments:  
+  - name: --input
+    description: The path of the input file
+    type: file
+    example: data/copd.h5ad
+    required: true
+    direction: input
+  - name: --output
+    description: The path of the output file
+    type: file
+    example: data/copd_cleaned.h5ad
+    default: data/copd_cleaned.h5ad
+    direction: output
+  - name: --output_compression
+    description: The compression format of the output file
+    type: string
+    example: gzip
+    required: false
+    
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+runners:
+  - type: executable
+  - type: nextflow
