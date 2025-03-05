@@ -1,5 +1,0 @@
-{
-    "technical": ["Institute", "Pool_ID", "n_cells","median_n_genes_by_counts"],
-    "clinical": ["Death28", "Outcome", "Source"],
-    "biological": ["Annotation_major_subset_CD4"]
-}
