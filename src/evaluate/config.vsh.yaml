@@ -1,0 +1,61 @@
+name: evaluate
+description: >
+  Evaluate the obtained sample representations, save metrics and plots 
+
+arguments:
+  - type: file
+    name: --input
+    description: Path to the input AnnData file with aggregated representations
+    direction: input
+    required: true
+    example: "combat_representations.h5ad"
+
+  - type: file
+    name: --output_dir
+    description: Directory to save the visualization outputs
+    direction: output
+    required: true
+    example: "visualizations/"
+
+  - type: string
+    name: --root_sample
+    description: The root sample to use for pseudotime
+    required: true
+    example: "H00052-Ha001E-PBGa"
+
+  - type: string
+    name: --trajectory_variable
+    description: The variable to use for pseudotime metric
+    required: true
+    example: "Outcome"
+
+  - type: boolean
+    name: --inverse_trajectory
+    description: Whether the trajectory variable is inversely related to the pseudotime
+    required: false
+    default: false
+
+  - type: file
+    name: --benchmark_schema
+    description: The benchmark schema to use for the visualization
+    required: true
+    example: "data/combat/benchmark_schema.json"
+
+  - type: string
+    name: --figure_format
+    description: Format for saving figures (png, pdf, svg)
+    required: false
+    default: "png"
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+
+runners:
+  - type: executable
+  - type: nextflow
+    directives:
+      label: [singlecpu] 

@@ -1,0 +1,39 @@
+- id: combat
+  output_dir: combat/results
+  input: ../../data/combat/combat_representations.h5ad
+  benchmark_schema: ../../data/combat/benchmark_schema.json
+  root_sample: "H00052-Ha001E-PBGa"  # the youngest healthy non-smoker
+  trajectory_variable: Outcome
+  inverse_trajectory: True
+
+- id: hlca
+  input: ../../data/hlca/hlca_representations.h5ad
+  output_dir: hlca/results
+  benchmark_schema: ../../data/hlca/benchmark_schema.json
+  root_sample: "homosapiens_None_2023_None_sikkemalisa_002_d10_1101_2022_03_10_483747D322"  # Lowest score
+  trajectory_variable: anatomical_region_ccf_score
+  inverse_trajectory: False
+
+- id: stephenson
+  input: ../../data/stephenson/stephenson_representations.h5ad
+  output_dir: stephenson/results
+  benchmark_schema: ../../data/stephenson/benchmark_schema.json
+  root_sample: "MH8919226" # young healthy non-smoker
+  trajectory_variable: Status_on_day_collection_summary
+  inverse_trajectory: False
+
+- id: onek1k
+  input: ../../data/onek1k/onek1k_representations.h5ad
+  output_dir: onek1k/results
+  benchmark_schema: ../../data/onek1k/benchmark_schema.json
+  root_sample: "177_178" # 19-year-old male
+  trajectory_variable: age
+  inverse_trajectory: False
+
+- id: copd
+  input: ../../data/copd/copd_representations.h5ad
+  output_dir: copd/results
+  benchmark_schema: ../../data/copd/benchmark_schema.json
+  root_sample: "UA65_Batch1"  # Healthy 23 y/o non smoker male
+  trajectory_variable: GOLD_Stage
+  inverse_trajectory: False
