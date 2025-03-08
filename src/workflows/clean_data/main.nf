@@ -63,6 +63,19 @@ workflow run_wf {
             return stateMapping
           },
         )
+        | clean_ticatlas.run(
+          runIf: { id, state ->
+            id == "ticatlas"
+          },
+          fromState: { id, state ->
+            def stateMapping = [
+              "input": state.input,
+              "output": state.output,
+              "output_compression": state.output_compression,
+            ]
+            return stateMapping
+          },
+        )
         // View channel contents
         | view { tup -> "Output: $tup" }
 

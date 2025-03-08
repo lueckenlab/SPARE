@@ -35,6 +35,8 @@ dependencies:
     repository: local
   - name: clean_onek1k
     repository: local
+  - name: clean_ticatlas
+    repository: local
 
 repositories:
   - name: local
