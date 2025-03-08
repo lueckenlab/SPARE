@@ -14,6 +14,8 @@ print("Reading data")
 adata = sc.read_h5ad(par["input"])
 print(adata)
 
+adata.var.drop(columns=["_index"], inplace=True)  # Has a repeated information and causes error on saving
+
 print("Excluding samples with non count data")
 # Some datasets have TPMs instead of raw counts: https://github.com/Single-Cell-Genomics-Group-CNAG-CRG/Tumor-Immune-Cell-Atlas/issues/10
 NON_COUNT_DATASETS = ["breast", "lung1", "melanoma1"]  # "liver2" mentioned in the issue has raw count samples as well
