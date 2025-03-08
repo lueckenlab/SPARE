@@ -14,3 +14,7 @@
   input: ../../../data/onek1k/onek1k.h5ad
   output: onek1k/onek1k_cleaned.h5ad
   output_compression: gzip
+- id: ticatlas
+  input: ../../../data/ticatlas/TICAtlas.h5ad
+  output: ticatlas/ticatlas_cleaned.h5ad
+  output_compression: gzip
