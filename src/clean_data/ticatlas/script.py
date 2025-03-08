@@ -12,9 +12,9 @@ par = {
 
 print("Reading data")
 adata = sc.read_h5ad(par["input"])
+print(adata)
 
 print("Excluding samples with non count data")
-
 # Some datasets have TPMs instead of raw counts: https://github.com/Single-Cell-Genomics-Group-CNAG-CRG/Tumor-Immune-Cell-Atlas/issues/10
 NON_COUNT_DATASETS = ["breast", "lung1", "melanoma1"]  # "liver2" mentioned in the issue has raw count samples as well
 NON_COUNT_SAMPLES = ["LIV2_6", "LIV2_7", "LIV2_8", "LIV2_9", "LIV2_10", "LIV2_11"]
