@@ -53,6 +53,9 @@ del adata.raw
 adata.layers["X_raw_counts"] = adata.X.copy()
 print("adata.obsm['X_raw_counts'].shape", adata.layers["X_raw_counts"].shape)
 
+print("Filtering poor cells and genes")
+sc.pp.filter_cells(adata, min_genes=200)
+sc.pp.filter_genes(adata, min_cells=10)
 print(adata)
 
 print("Saving output")
