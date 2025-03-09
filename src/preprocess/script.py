@@ -46,6 +46,9 @@ sc.pp.normalize_total(adata, target_sum=1e4)
 print("Log-transforming data")
 sc.pp.log1p(adata)
 
+# Put normalized counts to have an explicit name
+adata.layers["X_log_norm_counts"] = adata.X.copy()
+
 # Find highly-variable genes
 print("Subsetting HVG")
 sc.pp.highly_variable_genes(adata, flavor="seurat_v3",span=0.5, n_top_genes=3000, layer="X_raw_counts", batch_key=BATCH_KEY)
