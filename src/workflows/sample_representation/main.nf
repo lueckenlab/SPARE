@@ -109,7 +109,7 @@ workflow run_wf {
                         output: first_state.output,
                         metadata_path: first_state.metadata_path,
                         cell_type_key: first_state.cell_type_key,
-                        obs_columns: first_state.obs_columns,
+                        accessible_metadata_columns: first_state.accessible_metadata_columns,
                         _meta: [join_id: original_id]
                     ]
                 ]
@@ -124,7 +124,7 @@ workflow run_wf {
                         output: state.output,
                         metadata_path: state.metadata_path,
                         cell_type_key: state.cell_type_key,                      
-                        obs_columns: state.obs_columns
+                        accessible_metadata_columns: state.accessible_metadata_columns
                     ]
                 }
             )

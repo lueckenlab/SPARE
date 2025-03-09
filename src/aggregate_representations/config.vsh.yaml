@@ -27,12 +27,13 @@ arguments:
     example: "combat_metadata.csv"
 
   - type: string
-    name: --obs_columns
+    name: --accessible_metadata_columns
     description: |
-      Columns in the metadata file to be used as obs variables in the aggregated anndata object.
-      These are the columns that should not be used to compare samples and only be used for 
-      the analysis. For example, different batches or clinics, but not patient states.
-      For more info, refet to ehrapy documentation: 
+      Columns in the metadata file to be used for building sample representation from clinical metadata.
+      These are the features of samples, which are not difficult to measure. They are used to provide
+      a baseline representation and evaluate information gain from single-cell data.
+      For more info on how they are used, refer to ehrapy documentation. `obs_columns` for ehrapy
+      are all the columns not listed in this parameter:
       https://ehrapy.readthedocs.io/en/latest/tutorials/notebooks/ehrapy_introduction.html
     required: false
     multiple: true

@@ -29,7 +29,7 @@ arguments:
     example: "scRNASeq_sample_ID"
 
   - type: string
-    name: --obs_columns
+    name: --accessible_metadata_columns
     multiple: true
     description: Columns in the metadata file that should be used to create metadata-based sample representation
     required: false

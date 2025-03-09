@@ -12,7 +12,7 @@ par = {
     "input": ["combat_pca.csv", "combat_random.csv"],
     "output": "data/combat/combat_representations.h5ad",
     "metadata_path":"data/combat/combat_metadata.csv",
-    "obs_columns":["Source", "Outcome", "Death28", "Institute", "Pool_ID"],
+    "accessible_metadata_columns":["Age", "Sex", "BMI", "Hospitalstay", "SARSCoV2PCR", "TimeSinceOnset"],
     "cell_type_key": "Annotation_major_subset",
 }
 ## VIASH END
@@ -20,13 +20,11 @@ par = {
 print("Reading metadata")
 metadata = pd.read_csv(par["metadata_path"], index_col=0)
 
-obs_only_columns = par["obs_columns"]
-if par["cell_type_key"]:
-    obs_only_columns += metadata.columns[metadata.columns.str.startswith(par["cell_type_key"])].tolist()
+obs_only_columns = metadata.columns.drop(par["accessible_metadata_columns"])
 
 print("Converting to AnnData")
 meta_adata = ep.ad.df_to_anndata(
-    metadata.drop(columns=obs_only_columns),  # Setting `columns_obs_only` causes a weird error
+    metadata[par["accessible_metadata_columns"]],  # Setting `columns_obs_only` causes a weird error
 )
 meta_adata.obs = metadata[obs_only_columns]
 
