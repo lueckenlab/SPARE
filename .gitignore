@@ -159,5 +159,37 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# temporary files
+temp
+
+# Nextflow
+work/
+.nextflow*
+
+# Mac OS
+.DS_Store
+
+# Viash
+.viash_log*
+target
+bin
+output
+
+experiments*.ipynb
+
 # Don't upload data
-data/
+data/**
+
+# Exceptions
+!data/**/
+!data/**/README*
+!data/synthetic_processed.h5ad
+
+resources_test
+
+# Nextflow reports
+*execution_report.html
+*timeline.html
+report*
+timeline*
+trace*

@@ -1,0 +1,27 @@
+name: run_pipeline
+description: |
+  A pipeline to run the benchmark
+arguments:
+  - type: file
+    name: --output_dir
+    description: The path of the output directory
+    direction: output
+    default: "data/"
+resources:
+  - type: nextflow_script
+    path: main.nf
+    entrypoint: run_wf
+
+dependencies: 
+  - name: download_from_web
+    repository: local
+  - name: download_from_cxg
+    repository: local
+  - name: clean_combat
+    repository: local
+
+repositories:
+  - name: local
+    type: local
+runners:
+  - type: nextflow

@@ -1,0 +1,97 @@
+name: preprocess
+description: >
+  Preprocess the data in the same way for every dataset.
+  
+  Steps:
+    - Normalize the data
+    - Log-transform the data
+    - Select HVGs
+    - Run PCA
+    - Run Harmony on PCA embeddings
+    - Run scVI and scANVI
+    - Calculate QC metrics on cell and sample level
+    - Extract sample-level metadata
+    - Save processed data and metadata
+
+arguments:
+  - type: file
+    name: --output
+    description: Path to save the preprocessed data
+    direction: output
+    required: true
+    example: "combat_processed.h5ad"
+
+  - type: file
+    name: --input
+    description: Path to the input data
+    direction: input
+    required: true
+    example: "combat.h5ad"
+
+  - type: string
+    name: --sample_key
+    description: Column name containing sample identifiers
+    required: true
+    example: "scRNASeq_sample_ID"
+
+  - type: string
+    name: --samples_metadata_cols
+    description: Columns to extract as sample-level metadata
+    multiple: true
+    multiple_sep: ","
+    required: true
+    example: ["Source", "Outcome", "Death28", "Institute", "Pool_ID"]
+
+  - type: string
+    name: --batch_key
+    description: The batch key to use for HVG selection
+    required: true
+    example: "Pool_ID"
+
+  - type: string
+    name: --batch_covariates
+    description: The covariates to use for batch effect correction with Harmony, scVI, and scANVI
+    multiple: true
+    multiple_sep: ","
+    required: false
+    example: ["scRNASeq_sample_ID", "Pool_ID"]
+
+  - type: string
+    name: --cell_type_key
+    description: Column name containing cell type annotations
+    required: true
+    example: "Annotation_major_subset"
+
+  - type: integer
+    name: --sample_size_threshold
+    description: The minimum number of cells a sample needs to have to be included in the analysis
+    required: false
+    default: 100
+
+  - type: string
+    name: --output_compression
+    description: The compression format of the output file
+    required: false
+    example: "gzip"
+
+  - type: file
+    name: --output_metadata
+    description: Path to save the sample-level metadata
+    required: true
+    example: "combat_preprocessed_metadata.h5ad"
+    direction: output
+
+resources:
+  - type: python_script
+    path: script.py
+
+test_resources:
+  - type: python_script
+    path: test.py
+
+engines:
+  - type: native
+
+runners:
+  - type: executable
+  - type: nextflow

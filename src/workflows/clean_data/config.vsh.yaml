@@ -1,0 +1,45 @@
+name: clean_data
+description: |
+  Perform dataset-specific preprocessing for the benchmark. For example,
+  clean the data from unannotated cells or convert some columns to a better format.
+arguments:
+  - type: file
+    name: --input
+    description: Path to the dataset to clean
+    direction: input
+    required: true
+    example: "data/combat/combat.h5ad"
+  - type: file
+    name: --output
+    description: The path of the output file
+    direction: output
+    required: true
+    example: "data/combat/combat_clean.h5ad"
+  - type: string
+    name: --output_compression
+    description: The compression to use for the output file
+    required: false
+    example: "gzip"
+    default: "gzip"
+resources:
+  - type: nextflow_script
+    path: main.nf
+    entrypoint: run_wf
+
+dependencies: 
+  - name: clean_combat
+    repository: local
+  - name: clean_stephenson
+    repository: local
+  - name: clean_hlca
+    repository: local
+  - name: clean_onek1k
+    repository: local
+  - name: clean_ticatlas
+    repository: local
+
+repositories:
+  - name: local
+    type: local
+runners:
+  - type: nextflow

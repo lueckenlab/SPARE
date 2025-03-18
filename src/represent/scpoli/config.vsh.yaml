@@ -1,0 +1,50 @@
+name: scpoli
+description: >
+  Run scPoli on the data to get sample representations. If scPoli was already run
+  on the preprocessing step, representations will be taken from .uns["scpoli_distances"]
+
+arguments:
+  - type: file
+    name: --input
+    description: Path to the input data
+    direction: input
+    required: true
+    example: "combat_processed.h5ad"
+
+  - type: file
+    name: --output
+    description: Path to save the scPoli sample representations
+    direction: output
+    required: true
+    example: "combat_scpoli.csv"
+
+  - type: string
+    name: --sample_key
+    description: Column name containing sample identifiers
+    required: true
+    example: "scRNASeq_sample_ID"
+
+  - type: string
+    name: --cell_type_key
+    description: Column name containing cell type annotations
+    required: true
+    example: "Annotation_major_subset"
+
+  - type: integer
+    name: --max_epochs
+    description: The maximum number of epochs to train the model
+    required: false
+    default: 50
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+
+runners:
+  - type: executable
+  - type: nextflow
+    directives:
+        label: [singlecpu]

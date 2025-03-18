@@ -1,0 +1,31 @@
+pseudobulk:
+  pca_euclidean:
+    layer: "X_pca"
+    distance: "euclidean"
+grouped_pseudobulk:
+  pca_euclidean:
+    layer: "X_pca"
+    distance: "euclidean"
+random_vector:
+  dimensionality_30:
+    latent_dim: 30
+    seed: 42
+cell_group_composition:
+  euclidean:
+    distance: "euclidean"
+mrvi:
+  epochs_100:
+    max_epochs: 1
+scpoli:
+  sample_embeddings:
+    max_epochs: 1
+pilot:
+  pca:
+    layer: "X_pca"
+mofa:
+  pca:
+    layer: "X_pca"
+gloscope:
+  scpoli:
+    layer: "X_scpoli"
+    n_workers: 8

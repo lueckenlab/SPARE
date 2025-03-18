@@ -1,0 +1,43 @@
+name: random_vector
+description: >
+  Create random vectors for each sample as a negative baseline
+
+arguments:
+  - type: file
+    name: --input
+    description: Path to the input data
+    direction: input
+    required: true
+    example: "combat_processed.h5ad"
+
+  - type: file
+    name: --output
+    description: Path to save the sample representations
+    direction: output
+    required: true
+    example: "combat_pseudobulk_pca.h5ad"
+
+  - type: string
+    name: --sample_key
+    description: Column name containing sample identifiers
+    required: true
+    example: "scRNASeq_sample_ID"
+
+  - type: string
+    name: --cell_type_key
+    description: Column name containing cell type identifiers
+    required: true
+    example: "Annotation_major_subset"
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+
+runners:
+  - type: executable
+  - type: nextflow
+    directives:
+        label: [singlecpu]

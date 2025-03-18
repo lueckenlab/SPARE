@@ -1,0 +1,150 @@
+pseudobulk:
+  counts_mean_euclidean:
+    layer: "X_raw_counts"
+    aggregation: "mean"
+  counts_mean_cosine:
+    layer: "X_raw_counts"
+    aggregation: "mean"
+    distance: "cosine"
+  counts_sum:
+    layer: "X_raw_counts"
+    aggregation: "sum"
+  pca_euclidean:
+    layer: "X_pca"
+    distance: "euclidean"
+  pca_cosine:
+    layer: "X_pca"
+    distance: "cosine"
+  scpoli_euclidean:
+    layer: "X_scpoli"
+    distance: "euclidean"
+  scpoli_cosine:
+    layer: "X_scpoli"
+    distance: "cosine"
+  scvi_sample_id_euclidean:
+    layer: "X_scVI_sample"
+    distance: "euclidean"
+  scvi_sample_id_cosine:
+    layer: "X_scVI_sample"
+    distance: "cosine"
+  scvi_batch_euclidean:
+    layer: "X_scVI_batch"
+    distance: "euclidean"
+  scvi_batch_cosine:
+    layer: "X_scVI_batch"
+    distance: "cosine"
+  scanvi_sample_id_euclidean:
+    layer: "X_scANVI_sample"
+    distance: "euclidean"
+  scanvi_sample_id_cosine:
+    layer: "X_scANVI_sample"
+    distance: "cosine"
+  scanvi_batch_euclidean:
+    layer: "X_scANVI_batch"
+    distance: "euclidean"
+  scanvi_batch_cosine:
+    layer: "X_scANVI_batch"
+    distance: "cosine"
+grouped_pseudobulk:
+  pca_euclidean:
+    layer: "X_pca"
+    distance: "euclidean"
+  pca_cosine:
+    layer: "X_pca"
+    distance: "cosine"
+  scpoli_euclidean:
+    layer: "X_scpoli"
+    distance: "euclidean"
+  scpoli_cosine:
+    layer: "X_scpoli"
+    distance: "cosine"
+  scvi_sample_id_euclidean:
+    layer: "X_scVI_sample"
+    distance: "euclidean"
+  scvi_sample_id_cosine:
+    layer: "X_scVI_sample"
+    distance: "cosine"
+  scvi_batch_euclidean:
+    layer: "X_scVI_batch"
+    distance: "euclidean"
+  scvi_batch_cosine:
+    layer: "X_scVI_batch"
+    distance: "cosine"
+  scanvi_sample_id_euclidean:
+    layer: "X_scANVI_sample"
+    distance: "euclidean"
+  scanvi_sample_id_cosine:
+    layer: "X_scANVI_sample"
+    distance: "cosine"
+  scanvi_batch_euclidean:
+    layer: "X_scANVI_batch"
+    distance: "euclidean"
+  scanvi_batch_cosine:
+    layer: "X_scANVI_batch"
+    distance: "cosine"
+random_vector:
+  dimensionality_30:
+    latent_dim: 30
+    seed: 42
+  dimensionality_10:
+    latent_dim: 10
+    seed: 42
+cell_group_composition:
+  euclidean:
+    distance: "euclidean"
+  cosine:
+    distance: "cosine"
+mrvi:
+  epochs_100:
+    max_epochs: 100
+scpoli:
+  sample_embeddings:
+    max_epochs: 50
+pilot:
+  pca:
+    layer: "X_pca"
+  scpoli:
+    layer: "X_scpoli"
+  scvi_sample_id:
+    layer: "X_scVI_sample"
+  scvi_batch:
+    layer: "X_scVI_batch"
+  scanvi_sample_id:
+    layer: "X_scANVI_sample"
+  scanvi_batch:
+    layer: "X_scANVI_batch"
+mofa:
+  counts:
+    layer: "X_raw_counts"
+  pca:
+    layer: "X_pca"
+  scpoli:
+    layer: "X_scpoli"
+  scvi_sample_id:
+    layer: "X_scVI_sample"
+  scvi_batch:
+    layer: "X_scVI_batch"
+  scanvi_sample_id:
+    layer: "X_scANVI_sample"
+  scanvi_batch:
+    layer: "X_scANVI_batch"
+gloscope:
+  pca:
+    layer: "X_pca"
+    n_workers: 32
+    n_components: 10
+  scpoli:
+    layer: "X_scpoli"
+    n_workers: 32
+  scvi_sample_id:
+    layer: "X_scVI_sample"
+    n_workers: 32
+  scvi_batch:
+    layer: "X_scVI_batch"
+    n_workers: 32
+  scanvi_sample_id:
+    layer: "X_scANVI_sample"
+    n_workers: 32
+  scanvi_batch:
+    layer: "X_scANVI_batch"
+    n_workers: 32

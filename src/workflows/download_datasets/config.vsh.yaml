@@ -1,0 +1,42 @@
+name: download_datasets
+description: |
+  Download all datasets used in the benchmark
+arguments:
+  - type: string
+    name: --input
+    description: Link to the dataset to download
+    direction: input
+    required: true
+  - type: string
+    name: --source
+    description: Where to download the dataset from, web or cxg (cellxgene)
+    direction: input
+    required: true
+    choices: [ "web", "cxg" ]
+  - type: file
+    name: --output
+    description: The path of the output file
+    direction: output
+    default: "data/dataset.h5ad"
+  - type: integer
+    name: --max_chunks
+    description: The maximum number of chunks to download (128KB each). Used for test purposes
+    direction: input
+    required: false
+
+resources:
+  - type: nextflow_script
+    path: main.nf
+    entrypoint: run_wf
+
+dependencies: 
+  - name: download_from_cxg
+    repository: local
+  - name: download_from_web
+    repository: local
+
+repositories:
+  - name: local
+    type: local
+runners:
+  - type: nextflow

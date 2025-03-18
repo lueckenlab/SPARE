@@ -1,0 +1,64 @@
+name: grouped_pseudobulk
+description: >
+  Aggregate cell data into pseudobulks per sample and cell type to get sample representations
+
+arguments:
+  - type: file
+    name: --input
+    description: Path to the input data
+    direction: input
+    required: true
+    example: "combat_processed.h5ad"
+
+  - type: file
+    name: --output
+    description: Path to save the sample representations
+    direction: output
+    required: true
+    example: "combat_pseudobulk_pca.h5ad"
+
+  - type: string
+    name: --sample_key
+    description: Column name containing sample identifiers
+    required: true
+    example: "scRNASeq_sample_ID"
+
+  - type: string
+    name: --cell_type_key
+    description: Column name containing cell type identifiers
+    required: true
+    example: "Annotation_major_subset"
+
+  - type: string
+    name: --layer
+    description: Layer to use for aggregating cell data
+    required: true
+    example: "X_pca"
+
+  - type: string
+    name: --aggregation
+    description: Aggregation method to use
+    required: false
+    default: "mean"
+    choices: ["mean", "median", "sum"]
+
+  - type: string
+    name: --distance_metric
+    description: Distance metric to use
+    required: false
+    default: "euclidean"
+    choices: ["euclidean", "cosine", "cityblock"]
+
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+
+runners:
+  - type: executable
+  - type: nextflow
+    directives:
+        label: [singlecpu]

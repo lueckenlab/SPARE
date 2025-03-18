@@ -1,0 +1,33 @@
+{
+    "relevant": {
+        "GOLD_Stage": "classification",
+        "FEV1": "regression",
+        "FEV1_FVC": "regression",
+        "Total_Emphysema": "regression",
+        "Lobe_Emphysema": "regression",
+        "%_Moderate_Centrilobular_Emphysema_(Corrected)": "regression",
+        "Emphysema_Progression_Score": "regression",
+        "Emphysema_Progression_Type": "classification",
+        "Emphysema_Progression": "classification",
+        "Emphysema": "classification"
+    },
+    "technical": {
+        "Batch": "classification", 
+        "Lobe": "classification",
+        "Lobe_Group": "classification",
+        "Cancer": "classification",
+        "Median_nFeature_RNA": "regression",
+        "Median_%mtRNA": "regression",
+        "n_cells": "regression"
+    },
+    "contextual": {
+        "Smoking_Status": "classification", 
+        "Age": "regression",
+        "Sex": "classification",
+        "Bronchodilator_Use": "classification",
+        "Leukotriene_Use": "classification",
+        "Steroid_Use": "classification",
+        "Follicle": "regression",
+        "Pack_Year": "regression"
+    }
+}

@@ -1,0 +1,67 @@
+name: aggregate_representations
+description: >
+  Aggregate representations from multiple methods into a single anndata object
+  
+arguments:
+  - type: file
+    name: --output
+    description: Path to save the aggregated representations
+    direction: output
+    required: true
+    example: "combat_representations.h5ad"
+
+  - type: file
+    name: --input
+    description: Paths to the input representation files to be aggregated
+    direction: input
+    required: true
+    multiple: true
+    multiple_sep: ","
+    example: ["combat_pseudobulk_pca_representation.csv", "combat_random_vector.csv", "combat_mrvi_representation.csv"]
+
+  - type: file
+    name: --metadata_path
+    description: Path to the sample-level metadata file
+    direction: input
+    required: true
+    example: "combat_metadata.csv"
+
+  - type: string
+    name: --accessible_metadata_columns
+    description: |
+      Columns in the metadata file to be used for building sample representation from clinical metadata.
+      These are the features of samples, which are not difficult to measure. They are used to provide
+      a baseline representation and evaluate information gain from single-cell data.
+      For more info on how they are used, refer to ehrapy documentation. `obs_columns` for ehrapy
+      are all the columns not listed in this parameter:
+      https://ehrapy.readthedocs.io/en/latest/tutorials/notebooks/ehrapy_introduction.html
+    required: false
+    multiple: true
+    multiple_sep: ","
+    example: "batch,clinic"
+
+  # TODO: put in .uns or put cell type proportions in .obsm?
+  - type: string
+    name: --cell_type_key
+    description: |
+      Cell type key in single-cell data. Used to filter out cell type proportions
+      from metadata representation. 
+    required: false
+    example: "Annotation_major_subset"
+
+resources:
+  - type: python_script
+    path: script.py
+
+test_resources:
+  - type: python_script
+    path: test.py
+
+engines:
+  - type: native
+
+runners:
+  - type: executable
+  - type: nextflow
+    directives:
+            label: [singlecpu]

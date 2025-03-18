@@ -1,0 +1,28 @@
+{
+    "relevant": {
+        "tissue": "classification",
+        "anatomical_region_ccf_score": "regression",
+        "lung_condition": "classification",
+        "disease": "classification",
+        "smoking_status": "classification"
+    },
+    "technical": {
+        "suspension_type": "classification",
+        "core_or_extension": "classification",
+        "fresh_or_frozen": "classification",
+        "sequencing_platform": "classification",
+        "subject_type": "classification",
+        "assay": "classification",
+        "median_n_genes_by_counts": "regression",
+        "median_total_counts": "regression",
+        "median_pct_counts_mt": "regression", 
+        "n_cells": "regression",
+        "development_stage": "classification"
+    },
+    "contextual": {
+        "BMI": "regression", 
+        "age_or_mean_of_age_range": "regression",
+        "sex": "classification",
+        "self_reported_ethnicity": "classification"
+    }
+}
