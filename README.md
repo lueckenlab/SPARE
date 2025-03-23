@@ -4,6 +4,24 @@ As single-cell datasets are growing, it is becoming possible to analyse differen
 
 ![Benchmark overview](./figures/1_benchmark_overview.png)
 
+For more details, please refer to the [paper](paper/LMRL_paper.pdf) or check out the [poster](paper/Poster.pdf).
+
+## Citation
+
+Please refer to the LMLR paper:
+```
+@inproceedings{
+    shitov2025benchmarking,
+    title={Benchmarking Sample Representations from Single-Cell Data: Metrics for Biologically Meaningful Embeddings},
+    author={Vladimir Shitov and Mohammad Moghareh Dehkordi and Malte D Luecken},
+    booktitle={Learning Meaningful Representations of Life (LMRL) Workshop at ICLR 2025},
+    year={2025},
+    url={https://openreview.net/forum?id=IoRv5afWtb}
+}
+```
+
+## Pipeline overview
+
 This is an overview of the current pipeline:
 
 ```mermaid
