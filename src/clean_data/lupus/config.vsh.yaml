@@ -1,0 +1,30 @@
+name: clean_lupus
+description: multiplexed scRNA-seq of 1.2 million PBMCs from adult lupus samples
+arguments:
+  - name: --input
+    description: The path of the output file
+    type: file
+    example: data/lupus.h5ad
+    default: data/lupus.h5ad
+    direction: input
+  - name: --output
+    description: The path of the output file
+    type: file
+    example: data/lupus_cleaned.h5ad
+    default: data/lupus_cleaned.h5ad
+    direction: output
+  - name: --output_compression
+    description: The compression format of the output file
+    type: string
+    example: gzip
+    required: false
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+runners:
+  - type: executable
+  - type: nextflow

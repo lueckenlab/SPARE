@@ -14,3 +14,7 @@
   input: 3faad104-2ab8-4434-816d-474d8d2641db
   source: cxg
   output: onek1k/onek1k.h5ad
+- id: lupus
+  input: 6e65a13e-2a45-4340-9442-bd2c41a01f17
+  source: cxg
+  output: lupus/lupus.h5ad
