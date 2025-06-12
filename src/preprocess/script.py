@@ -3,7 +3,7 @@ import random
 import scanpy as sc
 import scvi
 import pandas as pd
-import patient_representation as pr
+import patpy as pr
 import numpy as np
 import os
 import matplotlib.pyplot as plt
@@ -137,6 +137,17 @@ adata.obsm["X_scpoli"] = scpoli.model.get_latent(
     scpoli.adata,
     mean=True
 )
+
+print("Running scgpt, geneformer, uce, transcriptformer")
+for model_name in ["scgpt", "geneformer", "uce", "transcriptformer"]:
+    print(f"Computing {model_name} embedding via Helical")
+    adata = pr.pp.get_helical_embedding(
+        adata,
+        model=model_name,
+        batch_size=64,
+        device="cuda"
+    )
+    print(f"Stored embedding: X_{model_name}")
 
 print("Calculating QC metrics")
 # mitochondrial genes
