@@ -41,6 +41,17 @@ adata = sc.read_h5ad(par["input"])
 print("Filtering small samples")
 adata = pr.pp.filter_small_samples(adata, sample_key=SAMPLE_KEY, sample_size_threshold=par["sample_size_threshold"])
 
+print("Running scgpt, geneformer, uce, transcriptformer")
+for model_name in ["scgpt", "geneformer", "uce", "transcriptformer"]:
+    print(f"Computing {model_name} embedding via Helical")
+    adata = pr.pp.get_helical_embedding(
+        adata,
+        model=model_name,
+        batch_size=24,
+        device="cuda"
+    )
+    print(f"Stored embedding: X_{model_name}")
+
 print("Normalizing data")
 sc.pp.normalize_total(adata, target_sum=1e4)
 print("Log-transforming data")
@@ -137,17 +148,6 @@ adata.obsm["X_scpoli"] = scpoli.model.get_latent(
     scpoli.adata,
     mean=True
 )
-
-print("Running scgpt, geneformer, uce, transcriptformer")
-for model_name in ["scgpt", "geneformer", "uce", "transcriptformer"]:
-    print(f"Computing {model_name} embedding via Helical")
-    adata = pr.pp.get_helical_embedding(
-        adata,
-        model=model_name,
-        batch_size=64,
-        device="cuda"
-    )
-    print(f"Stored embedding: X_{model_name}")
 
 print("Calculating QC metrics")
 # mitochondrial genes
