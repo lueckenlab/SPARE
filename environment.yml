@@ -1,0 +1,24 @@
+# SPARE base environment. CPU-only components (preprocess, classical
+# represent/*, aggregate_representations, evaluate) run here.
+#
+# GPU-backed components (mrvi, scpoli, supervised) need their own envs
+# layered on top; see envs/ once split (task #2 in the SPARE roadmap).
+#
+# patpy is pinned to a specific commit because the latest tag (0.15.2) is
+# behind the version field (0.16.5) — the supervised module + GloScope_py
+# we depend on live past the last tag.
+
+name: spare
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - git+https://github.com/lueckenlab/patpy.git@44903dccf3d055443e1bac88c7c9a4e3d56d26f8#egg=patpy[gloscope-py-cpu,mrvi,scpoli,mixmil,pilot,wassersteintsne]
+      - scanpy
+      - scvi-tools>=1.2
+      - ehrapy
+      - anndata>=0.8
+      - viashpy
