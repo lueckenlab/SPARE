@@ -1,0 +1,30 @@
+id: ticatlas
+
+source:
+  type: web
+  url: https://zenodo.org/records/4263972/files/TICAtlas.h5ad
+
+files:
+  raw: TICAtlas.h5ad
+  cleaned: ticatlas_cleaned.h5ad
+  processed: ticatlas_processed.h5ad
+  metadata: ticatlas_metadata.csv
+  representations: ticatlas_representations.h5ad
+
+keys:
+  sample: patient
+  cell_type: lv1_annot
+  # batch / batch_covariates: not recorded for the existing
+  # ticatlas_processed.h5ad. Fill in before re-running preprocess.
+
+metadata:
+  # samples_metadata_cols: not recorded for the existing
+  # ticatlas_processed.h5ad. Fill in before re-running preprocess.
+  accessible_metadata_columns:
+    - subtype
+    - source
+    - gender
+
+preprocess:
+  sample_size_threshold: 100
+  output_compression: gzip

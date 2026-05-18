@@ -1,0 +1,72 @@
+# Canonical schema for data/<dataset>/dataset_info.yaml.
+#
+# One file per dataset. Every workflow stage reads its slice from here
+# instead of duplicating the same keys across clean_data/params.yaml,
+# preprocess/params.yaml, sample_representation/param_list.yaml, and
+# evaluate defaults.
+#
+# All file paths are relative to data/<id>/.
+
+id: combat
+
+# Where the raw dataset comes from. Only consumed by download_datasets.
+# Skip the whole `source` block for datasets shipped on disk.
+source:
+  type: web                  # one of: web, cxg, local
+  url: https://zenodo.org/record/6120249/files/COMBAT-CITESeq-DATA.h5ad
+  # cxg_id: 9f222629-9e39-47d0-b83f-e08d610c7479   # used when type=cxg
+
+# Artifacts produced by each stage. Paths are relative to data/<id>/.
+files:
+  raw: combat.h5ad                       # download → here
+  cleaned: combat_cleaned.h5ad           # clean_data → here
+  processed: combat_processed.h5ad       # preprocess → here
+  metadata: combat_metadata.csv          # preprocess → here (sample-level)
+  representations: combat_representations.h5ad  # aggregate → here
+
+# Column names in adata.obs. Used by every stage from preprocess onward.
+keys:
+  sample: scRNASeq_sample_ID
+  cell_type: Annotation_major_subset
+  batch: Pool_ID                         # used for HVG selection
+  batch_covariates: [scRNASeq_sample_ID, Pool_ID]   # passed to Harmony/scVI/scANVI
+
+# Metadata columns. Two disjoint lists:
+#   - samples_metadata_cols: everything we want to keep at sample level
+#     (preprocess extracts these into the metadata CSV).
+#   - accessible_metadata_columns: the subset that's "easily measurable"
+#     clinical features — used as the ehrapy baseline representation in
+#     aggregate_representations.
+metadata:
+  samples_metadata_cols:
+    - Source
+    - Outcome
+    - Death28
+    - Institute
+    - Pool_ID
+    - Age
+    - Sex
+    - BMI
+    - Hospitalstay
+    - SARSCoV2PCR
+    - TimeSinceOnset
+  accessible_metadata_columns:
+    - Age
+    - Sex
+    - BMI
+    - Hospitalstay
+    - SARSCoV2PCR
+    - TimeSinceOnset
+
+# Settings for the preprocess stage.
+preprocess:
+  sample_size_threshold: 100             # drop samples with fewer cells
+  output_compression: gzip
+
+# Settings for the evaluate stage.
+evaluate:
+  benchmark_schema: benchmark_schema.json   # relative to data/<id>/
+  root_sample: H00052-Ha001E-PBGa           # iroot for diffusion pseudotime
+  trajectory_variable: Outcome
+  inverse_trajectory: true
+  figure_format: png

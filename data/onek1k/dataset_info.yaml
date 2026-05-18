@@ -1,0 +1,33 @@
+id: onek1k
+
+source:
+  type: cxg
+  cxg_id: 3faad104-2ab8-4434-816d-474d8d2641db
+
+files:
+  raw: onek1k.h5ad
+  cleaned: onek1k_cleaned.h5ad
+  processed: onek1k_processed.h5ad
+  metadata: onek1k_metadata.csv
+  representations: onek1k_representations.h5ad
+
+keys:
+  sample: donor_id
+  cell_type: cell_type
+  batch: pool_number
+  batch_covariates:
+    - donor_id
+    - pool_number
+
+metadata:
+  samples_metadata_cols:
+    - pool_number
+    - age
+    - sex
+  accessible_metadata_columns:
+    - age
+    - sex
+
+preprocess:
+  sample_size_threshold: 100
+  output_compression: gzip

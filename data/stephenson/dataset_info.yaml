@@ -1,0 +1,47 @@
+id: stephenson
+
+source:
+  type: cxg
+  cxg_id: c7775e88-49bf-4ba2-a03b-93f00447c958
+
+files:
+  raw: stephenson.h5ad
+  cleaned: stephenson_cleaned.h5ad
+  processed: stephenson_processed.h5ad
+  metadata: stephenson_metadata.csv
+  representations: stephenson_representations.h5ad
+
+keys:
+  sample: sample_id
+  cell_type: cell_type
+  batch: Site
+  batch_covariates:
+    - sample_id
+    - Site
+
+metadata:
+  samples_metadata_cols:
+    - Resample
+    - Collection_Day
+    - Swab_result
+    - Status
+    - Smoker
+    - Status_on_day_collection
+    - Status_on_day_collection_summary
+    - Days_from_onset
+    - Site
+    - Worst_Clinical_Status
+    - Outcome
+    - disease
+    - sex
+    - development_stage
+  accessible_metadata_columns:
+    - Swab_result
+    - Smoker
+    - Days_from_onset
+    - sex
+    - development_stage
+
+preprocess:
+  sample_size_threshold: 100
+  output_compression: gzip

@@ -1,0 +1,55 @@
+id: hlca
+
+source:
+  type: cxg
+  cxg_id: 9f222629-9e39-47d0-b83f-e08d610c7479
+
+files:
+  raw: hlca.h5ad
+  cleaned: hlca_cleaned.h5ad
+  processed: hlca_processed.h5ad
+  metadata: hlca_metadata.csv
+  representations: hlca_representations.h5ad
+
+keys:
+  sample: donor_id
+  cell_type: cell_type
+  batch: dataset
+  batch_covariates:
+    - donor_id
+    - dataset
+
+metadata:
+  samples_metadata_cols:
+    - suspension_type
+    - BMI
+    - age_or_mean_of_age_range
+    - age_range
+    - anatomical_region_ccf_score
+    - cause_of_death
+    - core_or_extension
+    - fresh_or_frozen
+    - lung_condition
+    - sequencing_platform
+    - smoking_status
+    - subject_type
+    - assay
+    - disease
+    - sex
+    - tissue
+    - self_reported_ethnicity
+    - development_stage
+  accessible_metadata_columns:
+    - BMI
+    - age_or_mean_of_age_range
+    - age_range
+    - anatomical_region_ccf_score
+    - smoking_status
+    - sex
+    - tissue
+    - self_reported_ethnicity
+    - development_stage
+
+preprocess:
+  sample_size_threshold: 100
+  output_compression: gzip

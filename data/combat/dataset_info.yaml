@@ -1,0 +1,70 @@
+id: combat
+
+source:
+  type: web
+  url: https://zenodo.org/record/6120249/files/COMBAT-CITESeq-DATA.h5ad
+
+files:
+  raw: combat.h5ad
+  cleaned: combat_cleaned.h5ad
+  processed: combat_processed.h5ad
+  metadata: combat_metadata.csv
+  representations: combat_representations.h5ad
+
+keys:
+  sample: scRNASeq_sample_ID
+  cell_type: Annotation_major_subset
+  batch: Pool_ID
+  batch_covariates:
+    - scRNASeq_sample_ID
+    - Pool_ID
+
+metadata:
+  samples_metadata_cols:
+    - Source
+    - Outcome
+    - Death28
+    - Institute
+    - Pool_ID
+    - Age
+    - Sex
+    - BMI
+    - Hospitalstay
+    - PreExistingHeartDisease
+    - PreExistingLungDisease
+    - PreExistingKidneyDisease
+    - PreExistingDiabetes
+    - PreExistingHypertension
+    - PreExistingImmunocompromised
+    - Smoking
+    - Requiredvasoactive
+    - Respiratorysupport
+    - SARSCoV2PCR
+    - TimeSinceOnset
+  accessible_metadata_columns:
+    - Age
+    - Sex
+    - BMI
+    - Hospitalstay
+    - PreExistingHeartDisease
+    - PreExistingLungDisease
+    - PreExistingKidneyDisease
+    - PreExistingDiabetes
+    - PreExistingHypertension
+    - PreExistingImmunocompromised
+    - Smoking
+    - Requiredvasoactive
+    - Respiratorysupport
+    - SARSCoV2PCR
+    - TimeSinceOnset
+
+preprocess:
+  sample_size_threshold: 100
+  output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  root_sample: H00052-Ha001E-PBGa
+  trajectory_variable: Outcome
+  inverse_trajectory: true
+  figure_format: png
