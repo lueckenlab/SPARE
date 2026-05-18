@@ -1,82 +1,55 @@
+include { expandDatasetInfo } from "${params.rootDir}/src/workflows/utils/dataset_info.nf"
+
+def applyDatasetInfo = { id, state ->
+    if (!state.dataset_info) return [id, state]
+    def info = readYaml(state.dataset_info)
+    def expanded = expandDatasetInfo(info, state.dataset_info as String)
+    def extras = [
+        input:  expanded.raw_path,
+        output: expanded.cleaned_path,
+        output_compression: expanded.output_compression,
+    ].findAll { it.value != null }
+    return [id, extras + state.findAll { it.value != null }]
+}
+
+def cleanArgs = { id, state ->
+    [
+        input:  state.input,
+        output: state.output,
+        output_compression: state.output_compression,
+    ]
+}
+
 workflow run_wf {
   take:
     input_ch
 
   main:
 
-    output_ch = 
+    output_ch =
       input_ch
-        // View channel contents
+        | map(applyDatasetInfo)
         | view { tup -> "Input: $tup" }
         | clean_combat.run(
-          runIf: { id, state ->
-            id == "combat"
-          },
-          fromState: { id, state ->
-            def stateMapping = [
-              "input": state.input,
-              "output": state.output,
-              "output_compression": state.output_compression,
-            ]
-            return stateMapping
-          },
-          toState: { id, output, state ->
-            output
-          }
+          runIf:    { id, state -> id == "combat" },
+          fromState: cleanArgs,
         )
         | clean_stephenson.run(
-          runIf: { id, state ->
-            id == "stephenson"
-          },
-          fromState: { id, state ->
-            def stateMapping = [
-              "input": state.input,
-              "output": state.output,
-              "output_compression": state.output_compression,
-            ]
-            return stateMapping
-          },
+          runIf:    { id, state -> id == "stephenson" },
+          fromState: cleanArgs,
         )
         | clean_hlca.run(
-          runIf: { id, state ->
-            id == "hlca"
-          },
-          fromState: { id, state ->
-            def stateMapping = [
-              "input": state.input,
-              "output": state.output,
-              "output_compression": state.output_compression,
-            ]
-            return stateMapping
-          },
+          runIf:    { id, state -> id == "hlca" },
+          fromState: cleanArgs,
         )
         | clean_onek1k.run(
-          runIf: { id, state ->
-            id == "onek1k"
-          },
-          fromState: { id, state ->
-            def stateMapping = [
-              "input": state.input,
-              "output": state.output,
-              "output_compression": state.output_compression,
-            ]
-            return stateMapping
-          },
+          runIf:    { id, state -> id == "onek1k" },
+          fromState: cleanArgs,
         )
         | clean_ticatlas.run(
-          runIf: { id, state ->
-            id == "ticatlas"
-          },
-          fromState: { id, state ->
-            def stateMapping = [
-              "input": state.input,
-              "output": state.output,
-              "output_compression": state.output_compression,
-            ]
-            return stateMapping
-          },
+          runIf:    { id, state -> id == "ticatlas" },
+          fromState: cleanArgs,
         )
-        // View channel contents
         | view { tup -> "Output: $tup" }
 
   emit:

@@ -2,20 +2,28 @@ name: download_datasets
 description: |
   Download all datasets used in the benchmark
 arguments:
+  - type: file
+    name: --dataset_info
+    description: |
+      Path to dataset_info.yaml. When set, fills in --input/--source/--output
+      from info.source.{type,url,cxg_id} and info.files.raw. Individual args
+      below still win if explicitly provided.
+    direction: input
+    required: false
   - type: string
     name: --input
-    description: Link to the dataset to download
+    description: Link or CXG id of the dataset to download. Derived from dataset_info when omitted.
     direction: input
-    required: true
+    required: false
   - type: string
     name: --source
-    description: Where to download the dataset from, web or cxg (cellxgene)
+    description: Where to download from. Derived from dataset_info when omitted.
     direction: input
-    required: true
+    required: false
     choices: [ "web", "cxg" ]
   - type: file
     name: --output
-    description: The path of the output file
+    description: The path of the output file. Derived from dataset_info when omitted.
     direction: output
     default: "data/dataset.h5ad"
   - type: integer

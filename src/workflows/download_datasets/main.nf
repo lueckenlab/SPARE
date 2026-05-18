@@ -1,24 +1,36 @@
+include { expandDatasetInfo } from "${params.rootDir}/src/workflows/utils/dataset_info.nf"
+
+// If state.dataset_info is set, fill missing fields from the YAML.
+// Individual args (input/source/output) win where present.
+def applyDatasetInfo = { id, state ->
+    if (!state.dataset_info) return [id, state]
+    def info = readYaml(state.dataset_info)
+    def expanded = expandDatasetInfo(info, state.dataset_info as String)
+    def src = info.source ?: [:]
+    def extras = [
+        input:  src.url ?: src.cxg_id,
+        source: src.type,
+        output: expanded.raw_path,
+    ].findAll { it.value != null }
+    return [id, extras + state.findAll { it.value != null }]
+}
+
 workflow run_wf {
   take:
     input_ch
 
   main:
 
-    output_ch = 
+    output_ch =
       input_ch
-        // View channel contents
+        | map(applyDatasetInfo)
         | view { tup -> "Input: $tup" }
         | download_from_web.run(
           runIf: { id, state ->
-            state.source == "web"
+            state.source == "web" && !file(state.output).exists()
           },
           fromState: { id, state ->
-            def stateMapping = [
-              "input": state.input,
-              "output": state.output,
-              "max_chunks": state.max_chunks,
-            ]
-            return stateMapping
+            [input: state.input, output: state.output, max_chunks: state.max_chunks]
           },
           toState: { id, output, state ->
             output
@@ -26,21 +38,15 @@ workflow run_wf {
         )
         | download_from_cxg.run(
           runIf: { id, state ->
-            state.source == "cxg"
+            state.source == "cxg" && !file(state.output).exists()
           },
           fromState: { id, state ->
-            def stateMapping = [
-              "input": state.input,
-              "output": state.output,
-              "max_chunks": state.max_chunks,
-            ]
-            return stateMapping
+            [input: state.input, output: state.output, max_chunks: state.max_chunks]
           },
           toState: { id, output, state ->
             output
           }
         )
-        // View channel contents
         | view { tup -> "Output: $tup" }
 
   emit:

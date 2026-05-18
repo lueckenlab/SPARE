@@ -4,16 +4,25 @@ description: |
   clean the data from unannotated cells or convert some columns to a better format.
 arguments:
   - type: file
-    name: --input
-    description: Path to the dataset to clean
+    name: --dataset_info
+    description: |
+      Path to dataset_info.yaml. When set, fills in --input/--output/
+      --output_compression from info.files.{raw,cleaned} and
+      info.preprocess.output_compression. Individual args below still win
+      if explicitly provided.
     direction: input
-    required: true
+    required: false
+  - type: file
+    name: --input
+    description: Path to the dataset to clean. Derived from dataset_info when omitted.
+    direction: input
+    required: false
     example: "data/combat/combat.h5ad"
   - type: file
     name: --output
-    description: The path of the output file
+    description: The path of the output file. Derived from dataset_info when omitted.
     direction: output
-    required: true
+    required: false
     example: "data/combat/combat_clean.h5ad"
   - type: string
     name: --output_compression

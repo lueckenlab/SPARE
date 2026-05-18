@@ -3,51 +3,61 @@ description: |
   Run sample representation methods, aggregate results in anndata object
 arguments:
   - type: file
-    name: --input
-    description: Path to the dataset to run the methods on
+    name: --dataset_info
+    description: |
+      Path to dataset_info.yaml. When set, fills in --input, --metadata_path,
+      --cell_type_key, --sample_key, --accessible_metadata_columns, --output
+      from the dataset_info file. Individual args below still win if
+      explicitly provided.
     direction: input
-    required: true
+    required: false
+
+  - type: file
+    name: --input
+    description: Processed h5ad. Derived from dataset_info when omitted.
+    direction: input
+    required: false
     example: "data/combat/combat_processed.h5ad"
-  
+
   - type: file
     name: --metadata_path
-    description: Path to YAML file containing metadata
+    description: Sample-level metadata CSV. Derived from dataset_info when omitted.
     direction: input
-    required: true
+    required: false
     example: "data/combat/metadata.csv"
-  
+
   - type: string
     name: --cell_type_key
-    description: The key in the input data .obs that contains the cell type information
-    required: true
+    description: Cell type column in .obs. Derived from dataset_info when omitted.
+    required: false
     example: "cell_type"
 
   - type: string
     name: --sample_key
-    description: The key in the input data .obs that contains the sample information
-    required: true
+    description: Sample column in .obs. Derived from dataset_info when omitted.
+    required: false
     example: "scRNASeq_sample_ID"
 
   - type: string
     name: --accessible_metadata_columns
     multiple: true
-    description: Columns in the metadata file that should be used to create metadata-based sample representation
+    description: Columns used to build the metadata baseline representation. Derived from dataset_info when omitted.
     required: false
     example: "Age,Sex,BMI,HospitalstaySARSCoV2PCR,TimeSinceOnset"
-    
+
   - type: file
     name: --output
-    description: The path of the output file with sample representations
+    description: Output h5ad with aggregated sample representations. Derived from dataset_info when omitted.
     direction: output
-    required: true
+    required: false
     example: "data/combat/combat_representations.h5ad"
-    
+
   - type: file
     name: --method_params
-    description: Path to YAML file containing method parameters
+    description: YAML mapping method → experiment-name → params dict.
     direction: input
     required: true
-    example: "method_params.yaml"
+    example: "experiments.yaml"
 
 resources:
   - type: nextflow_script

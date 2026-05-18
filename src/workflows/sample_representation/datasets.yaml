@@ -1,0 +1,10 @@
+- id: combat
+  dataset_info: ../../../data/combat/dataset_info.yaml
+- id: stephenson
+  dataset_info: ../../../data/stephenson/dataset_info.yaml
+- id: hlca
+  dataset_info: ../../../data/hlca/dataset_info.yaml
+- id: onek1k
+  dataset_info: ../../../data/onek1k/dataset_info.yaml
+- id: ticatlas
+  dataset_info: ../../../data/ticatlas/dataset_info.yaml
