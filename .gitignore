@@ -183,6 +183,7 @@ data/**
 # Exceptions
 !data/**/
 !data/**/README*
+!data/**/dataset_info.yaml
 !data/synthetic_processed.h5ad
 
 resources_test
