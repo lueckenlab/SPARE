@@ -50,6 +50,10 @@ workflow run_wf {
           runIf:    { id, state -> id == "ticatlas" },
           fromState: cleanArgs,
         )
+        | clean_lupus.run(
+          runIf:    { id, state -> id == "lupus" },
+          fromState: cleanArgs,
+        )
         | view { tup -> "Output: $tup" }
 
   emit:

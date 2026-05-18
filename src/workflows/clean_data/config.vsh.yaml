@@ -46,6 +46,8 @@ dependencies:
     repository: local
   - name: clean_ticatlas
     repository: local
+  - name: clean_lupus
+    repository: local
 
 repositories:
   - name: local

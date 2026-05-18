@@ -42,3 +42,14 @@
   batch_covariates: donor_id,pool_number
   batch_key: pool_number
   samples_metadata_cols: pool_number,age,sex
+- id: lupus
+  input: ../../data/lupus/lupus_cleaned.h5ad
+  output: lupus/lupus_processed.h5ad
+  output_metadata: lupus/lupus_metadata.csv
+  output_compression: gzip
+  cell_type_key: cg_cov
+  sample_size_threshold: 10
+  sample_key: ind_cov_batch_cov
+  batch_covariates: ind_cov_batch_cov,Processing_Cohort
+  batch_key: Processing_Cohort
+  samples_metadata_cols: Processing_Cohort,Age,Sex,pop_cov

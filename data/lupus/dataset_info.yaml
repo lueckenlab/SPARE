@@ -1,0 +1,34 @@
+id: lupus
+
+source:
+  type: cxg
+  cxg_id: 6e65a13e-2a45-4340-9442-bd2c41a01f17
+
+files:
+  raw: lupus.h5ad
+  cleaned: lupus_cleaned.h5ad
+  processed: lupus_processed.h5ad
+  metadata: lupus_metadata.csv
+  representations: lupus_representations.h5ad
+
+keys:
+  sample: ind_cov_batch_cov
+  cell_type: cg_cov
+  batch: Processing_Cohort
+  batch_covariates:
+    - ind_cov_batch_cov
+    - Processing_Cohort
+
+metadata:
+  samples_metadata_cols:
+    - Processing_Cohort
+    - Age
+    - Sex
+    - pop_cov
+  # accessible_metadata_columns: not yet specified — fill in once the
+  # cleaning script merges clinical variables from the UCSF Box file
+  # (see src/clean_data/lupus/script.py).
+
+preprocess:
+  sample_size_threshold: 100
+  output_compression: gzip
