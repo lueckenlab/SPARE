@@ -14,3 +14,7 @@
   input: 3faad104-2ab8-4434-816d-474d8d2641db
   source: cxg
   output: onek1k/onek1k.h5ad
+- id: ticatlas
+  input: https://zenodo.org/records/5205544/files/TICAtlas.h5ad?download=1
+  source: web
+  output: ticatlas/ticatlas.h5ad
