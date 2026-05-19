@@ -63,6 +63,11 @@ for representation in par["input"]:
     print(f"Processing representation {representation}")
     representation_df = pd.read_csv(representation, index_col=0)
 
+    nan_frac = representation_df.isna().to_numpy().mean()
+    if nan_frac > 0.1:
+        print(f"Skipping {representation}: {nan_frac:.1%} of values are NaN")
+        continue
+
     # Remove samples that are not in the representation
     samples = [sample for sample in samples if sample in representation_df.index]
     representation_df = representation_df.loc[samples][samples]
@@ -73,8 +78,12 @@ for representation in par["input"]:
     # Remove the file extension
     representation_name = Path(representation).stem
 
+    # gloscope and similar KDE-based methods can return tiny negative distances
+    # from floating-point error; pp.neighbors(metric="precomputed") rejects them.
+    representation_df = representation_df.clip(lower=0)
+
     # It makes more sense to put distances to the obsp, but pp.neighbors expects it to be in obsm
-    # So we put full distances matrix in obsm, and obsp will contain only the distances for nearest neighbors 
+    # So we put full distances matrix in obsm, and obsp will contain only the distances for nearest neighbors
     meta_adata.obsm[f"{representation_name}_distances"] = representation_df.loc[samples][samples]
     
     print("Putting neighbors to obsp")
