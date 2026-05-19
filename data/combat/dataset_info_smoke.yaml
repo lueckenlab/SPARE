@@ -1,0 +1,40 @@
+id: combat_smoke
+
+# Smoke-test config: 10% cells x 12 donors of combat_processed.h5ad.
+# Built by scripts/subsample_combat.py for testing the refactored interface.
+
+files:
+  processed: combat_smoke_processed.h5ad
+  metadata: combat_smoke_metadata.csv
+  representations: combat_smoke_representations.h5ad
+
+keys:
+  sample: scRNASeq_sample_ID
+  cell_type: Annotation_major_subset
+  batch: Pool_ID
+  batch_covariates:
+    - scRNASeq_sample_ID
+    - Pool_ID
+
+metadata:
+  samples_metadata_cols:
+    - Source
+    - Outcome
+    - Age
+    - Sex
+    - BMI
+  accessible_metadata_columns:
+    - Age
+    - Sex
+    - BMI
+
+preprocess:
+  sample_size_threshold: 10
+  output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  root_sample: H00052-Ha001E-PBGa
+  trajectory_variable: Outcome
+  inverse_trajectory: true
+  figure_format: png

@@ -1,0 +1,18 @@
+# Minimal smoke-test experiments: only fast, CPU-only methods.
+# Heavy methods (mrvi/scpoli/gloscope/mofa/pilot) are omitted; main.nf
+# skips methods with no entry here.
+random_vector:
+  dimensionality_10:
+    latent_dim: 10
+    seed: 42
+pseudobulk:
+  pca_euclidean:
+    layer: "X_pca"
+    distance: "euclidean"
+cell_group_composition:
+  euclidean:
+    distance: "euclidean"
+grouped_pseudobulk:
+  pca_euclidean:
+    layer: "X_pca"
+    distance: "euclidean"

@@ -1,0 +1,2 @@
+- id: combat_smoke
+  dataset_info: ../../../data/combat/dataset_info_smoke.yaml
