@@ -22,8 +22,10 @@ metadata:
   # ticatlas_processed.h5ad. Fill in before re-running preprocess.
   accessible_metadata_columns:
     - subtype
-    - source
     - gender
+    # 'source' was listed in the original param_list but is not in
+    # ticatlas_metadata.csv; either re-run preprocess with
+    # samples_metadata_cols including 'source' or leave it out here.
 
 preprocess:
   sample_size_threshold: 100
