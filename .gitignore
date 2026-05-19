@@ -164,7 +164,15 @@ temp
 
 # Nextflow
 work/
+work_*/
 .nextflow*
+
+# Local working files
+claude_daily_interactive.sh
+dev.ipynb
+logs/
+output_smoke/
+output_ticatlas/
 
 # Mac OS
 .DS_Store
