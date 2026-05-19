@@ -22,9 +22,9 @@ conda activate sample_representation_benchmark
 
 mkdir -p logs output_ticatlas
 
-# Resume an earlier run if its work/ is still present.
+# Resume an earlier run if its work dir is still present.
 RESUME_FLAG=""
-if [ -d work ] && [ -f .nextflow.log ]; then
+if [ -d work_ticatlas ] && [ -f .nextflow.log ]; then
     RESUME_FLAG="-resume"
 fi
 
