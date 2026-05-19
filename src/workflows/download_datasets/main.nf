@@ -1,4 +1,4 @@
-include { expandDatasetInfo } from "${params.rootDir}/src/workflows/utils/dataset_info.nf"
+include { expandDatasetInfo } from "./dataset_info.nf"
 
 // If state.dataset_info is set, fill missing fields from the YAML.
 // Individual args (input/source/output) win where present.

@@ -1,4 +1,4 @@
-include { expandDatasetInfo } from "${params.rootDir}/src/workflows/utils/dataset_info.nf"
+include { expandDatasetInfo } from "./dataset_info.nf"
 
 methods = [
     pseudobulk,
@@ -51,6 +51,7 @@ workflow run_wf {
                 def runs = []
                 methods.each { method ->
                     def methodExperiments = state.experiments[method.config.name]
+                    if (methodExperiments == null) return
                     methodExperiments.each { experimentName, params ->
                         def new_state = state + [
                             "current_method": method.config.name,

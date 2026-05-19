@@ -36,8 +36,9 @@ resources:
   - type: nextflow_script
     path: main.nf
     entrypoint: run_wf
+  - path: ../utils/dataset_info.nf
 
-dependencies: 
+dependencies:
   - name: download_from_cxg
     repository: local
   - name: download_from_web

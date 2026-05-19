@@ -1,4 +1,4 @@
-include { expandDatasetInfo } from "${params.rootDir}/src/workflows/utils/dataset_info.nf"
+include { expandDatasetInfo } from "./dataset_info.nf"
 
 def applyDatasetInfo = { id, state ->
     if (!state.dataset_info) return [id, state]
