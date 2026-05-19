@@ -49,6 +49,10 @@ dependencies:
     repository: local
   - name: clean_lupus
     repository: local
+  - name: clean_imm_of_aging
+    repository: local
+  - name: clean_sound_life
+    repository: local
 
 repositories:
   - name: local

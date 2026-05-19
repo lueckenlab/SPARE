@@ -1,0 +1,63 @@
+id: imm_of_aging
+
+# Allen Institute for Immunology — Immunobiology of Aging cohort.
+# Ships as 7 per-cell-type h5ad files (see urls.txt). The SPARE input
+# is the concatenated build produced by patpy-vaccine-prediction/scripts/
+# concat_aifi.py and symlinked here as imm_of_aging.h5ad.
+#
+# 3,758,514 cells × 18,082 genes; 234 donors == 234 samples (one
+# visit per donor — cross-sectional aging cohort).
+source:
+  type: web
+  # Per-cell-type files via scripts/download_aifi_imm_of_aging.sbatch
+  # (urls + sizes in urls.txt). Concatenation: patpy concat_aifi.py.
+  url: https://allenimmunology.org/public/publication/download/d40dbd84-2a59-40c0-bd16-0d650d79eb8c/filesets/567c5fa4-e890-4b1f-8a4d-5a7d15a85559/
+
+files:
+  raw: imm_of_aging.h5ad
+  cleaned: imm_of_aging_cleaned.h5ad
+  processed: imm_of_aging_processed.h5ad
+  metadata: imm_of_aging_metadata.csv
+  representations: imm_of_aging_representations.h5ad
+
+keys:
+  sample: sample.sampleKitGuid
+  cell_type: AIFI_L2
+  batch: batch_id
+  batch_covariates:
+    - sample.sampleKitGuid
+    - batch_id
+
+metadata:
+  samples_metadata_cols:
+    - subject.ageAtFirstDraw
+    - subject.biologicalSex
+    - subject.cmv
+    - subject.race
+    - subject.ethnicity
+    - sample.visitName
+    - cohort.cohortGuid
+    - batch_id
+    - pool_id
+    - chip_id
+  accessible_metadata_columns:
+    # imm_of_aging has only one cohortGuid; included for parity with
+    # sound_life but it adds no signal.
+    - subject.ageAtFirstDraw
+    - subject.biologicalSex
+    - subject.cmv
+    - subject.race
+    - cohort.cohortGuid
+
+preprocess:
+  sample_size_threshold: 100
+  output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  trajectory_variable: subject.ageAtFirstDraw
+  # Youngest donor in the cohort is SF4492 (age 40); KT03165 is the
+  # alphabetically first of their two sample kits.
+  root_sample: KT03165
+  inverse_trajectory: false
+  figure_format: png

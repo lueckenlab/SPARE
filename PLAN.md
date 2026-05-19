@@ -64,8 +64,8 @@ FM components produce a single `adata.obsm["X_<fm>"]` layer; only pseudobulk con
 - [x] TICAtlas — added (`src/clean_data/ticatlas/`, `data/ticatlas/dataset_info.yaml`, full launcher in `scripts/run_ticatlas_full.sbatch`).
 - [ ] SEA-AD (Seattle Alzheimer's, brain) — public on CELLxGENE.
 - [ ] HICA (issue #10) — Human Immune Cell Atlas.
-- [ ] Immunobiology of aging (`aifi_data/imm_of_aging`) — counts in `.raw.X`, age `89+→89`. Reuse `patpy/scripts/preprocess_aifi.py`.
-- [ ] Vaccine prediction (`aifi_data/sound_life`?) — confirm cohort.
+- [x] Immunobiology of aging — added (`src/clean_data/imm_of_aging/`, `data/imm_of_aging/dataset_info.yaml`, `scripts/download_aifi_imm_of_aging.sbatch`). Concat h5ad symlinked from `aifi_data/`. 3.76M cells × 18k genes, 234 cross-sectional donors, trajectory=age. EDA in `reports/imm_of_aging_eda.html`.
+- [x] Sound Life vaccine cohort — added (`src/clean_data/sound_life/`, `data/sound_life/dataset_info.yaml`, `scripts/download_aifi_sound_life.sbatch`). 13.8M cells × 33k genes, 96 donors × 868 longitudinal samples (12 visits), trajectory=age. EDA in `reports/sound_life_eda.html`.
 - [ ] Open-PR dataset — depends on PR review.
 
 ## Phase 6 — End-to-end on all datasets

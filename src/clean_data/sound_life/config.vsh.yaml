@@ -1,0 +1,41 @@
+name: clean_sound_life
+description: |
+  Dataset-specific cleaning for the AIFI Sound Life vaccine cohort.
+
+  - Cast X from uint16 to int32 (scipy ops downstream reject uint16).
+  - Drop per-cell high-cardinality categoricals (cell_name,
+    original_barcodes) that would slow gzip writes without being
+    consumed downstream.
+  - Stash raw counts in layers["X_raw_counts"], minimal QC.
+
+  13.8M cells × 33k genes; 96 donors × 868 samples (longitudinal,
+  12 visits, 2 cohorts). Age is already int64 — no parsing needed.
+arguments:
+  - name: --input
+    description: Concatenated raw counts h5ad (uint16 CSR).
+    type: file
+    example: data/sound_life/sound_life.h5ad
+    required: true
+    direction: input
+  - name: --output
+    description: Cleaned h5ad with X cast to int32 and layers["X_raw_counts"].
+    type: file
+    default: data/sound_life/sound_life_cleaned.h5ad
+    direction: output
+  - name: --output_compression
+    description: Compression for the output h5ad. Use "gzip" for archival, leave unset for speed.
+    type: string
+    example: gzip
+    required: false
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+runners:
+  - type: executable
+  - type: nextflow
+    directives:
+      label: [veryhighmem, lowcpu]

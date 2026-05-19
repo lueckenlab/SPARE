@@ -54,6 +54,14 @@ workflow run_wf {
           runIf:    { id, state -> id == "lupus" },
           fromState: cleanArgs,
         )
+        | clean_imm_of_aging.run(
+          runIf:    { id, state -> id == "imm_of_aging" },
+          fromState: cleanArgs,
+        )
+        | clean_sound_life.run(
+          runIf:    { id, state -> id == "sound_life" },
+          fromState: cleanArgs,
+        )
         | view { tup -> "Output: $tup" }
 
   emit:

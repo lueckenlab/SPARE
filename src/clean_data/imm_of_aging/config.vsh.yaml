@@ -1,0 +1,42 @@
+name: clean_imm_of_aging
+description: |
+  Dataset-specific cleaning for the AIFI Immunobiology of Aging cohort.
+
+  - Cast X from uint16 to int32 (scipy ops downstream reject uint16).
+  - Parse subject.ageAtFirstDraw "89+" -> 89 so age is numeric and
+    usable as a trajectory variable.
+  - Drop per-cell high-cardinality categoricals (cell_name,
+    original_barcodes) that would slow gzip writes without ever being
+    consumed downstream.
+  - Stash raw counts in layers["X_raw_counts"], minimal QC.
+
+  3.76M cells × 18k genes; 234 donors == 234 samples (cross-sectional).
+arguments:
+  - name: --input
+    description: Concatenated raw counts h5ad (uint16 CSR).
+    type: file
+    example: data/imm_of_aging/imm_of_aging.h5ad
+    required: true
+    direction: input
+  - name: --output
+    description: Cleaned h5ad with X cast to int32 and layers["X_raw_counts"].
+    type: file
+    default: data/imm_of_aging/imm_of_aging_cleaned.h5ad
+    direction: output
+  - name: --output_compression
+    description: Compression for the output h5ad. Use "gzip" for archival, leave unset for speed.
+    type: string
+    example: gzip
+    required: false
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+runners:
+  - type: executable
+  - type: nextflow
+    directives:
+      label: [veryhighmem, lowcpu]

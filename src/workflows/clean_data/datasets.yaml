@@ -10,3 +10,7 @@
   dataset_info: ../../../data/ticatlas/dataset_info.yaml
 - id: lupus
   dataset_info: ../../../data/lupus/dataset_info.yaml
+- id: imm_of_aging
+  dataset_info: ../../../data/imm_of_aging/dataset_info.yaml
+- id: sound_life
+  dataset_info: ../../../data/sound_life/dataset_info.yaml

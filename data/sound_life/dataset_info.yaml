@@ -1,0 +1,65 @@
+id: sound_life
+
+# Allen Institute for Immunology — Sound Life vaccine cohort.
+# Ships as 8 per-cell-type h5ad files (see urls.txt). The SPARE input
+# is the concatenated build produced by patpy-vaccine-prediction/scripts/
+# concat_aifi.py and symlinked here as sound_life.h5ad.
+#
+# 13,789,548 cells × 33,538 genes; 96 donors × 868 samples (~9 visits
+# per donor — longitudinal vaccine response cohort, 12 visit names).
+source:
+  type: web
+  # Per-cell-type files via scripts/download_aifi_sound_life.sbatch
+  # (urls + sizes in urls.txt). Concatenation: patpy concat_aifi.py.
+  url: https://allenimmunology.org/public/publication/download/d40dbd84-2a59-40c0-bd16-0d650d79eb8c/filesets/77399aae-f785-46ae-b5ca-3ca7d5e0c879/
+
+files:
+  raw: sound_life.h5ad
+  cleaned: sound_life_cleaned.h5ad
+  processed: sound_life_processed.h5ad
+  metadata: sound_life_metadata.csv
+  representations: sound_life_representations.h5ad
+
+keys:
+  sample: sample.sampleKitGuid
+  cell_type: AIFI_L2
+  batch: batch_id
+  batch_covariates:
+    - sample.sampleKitGuid
+    - batch_id
+
+metadata:
+  samples_metadata_cols:
+    - subject.ageAtFirstDraw
+    - subject.ageGroup
+    - subject.biologicalSex
+    - subject.bmi
+    - subject.cmv
+    - subject.race
+    - subject.ethnicity
+    - sample.visitName
+    - sample.drawYear
+    - cohort.cohortGuid
+    - batch_id
+    - pool_id
+    - chip_id
+  accessible_metadata_columns:
+    - subject.ageAtFirstDraw
+    - subject.biologicalSex
+    - subject.bmi
+    - subject.cmv
+    - subject.race
+    - cohort.cohortGuid
+
+preprocess:
+  sample_size_threshold: 100
+  output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  trajectory_variable: subject.ageAtFirstDraw
+  # Youngest donor BR1057 (age 25) has 19 sample kits; KT00621 is the
+  # alphabetically first.
+  root_sample: KT00621
+  inverse_trajectory: false
+  figure_format: png
