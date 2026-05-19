@@ -22,3 +22,12 @@ dependencies:
       - ehrapy
       - anndata>=0.8
       - viashpy
+      # Pin scikit-network past 0.32 — pilotpy declares <0.32 but those
+      # versions were compiled against numpy 1.x and break on numpy 2.x
+      # with `dtype size changed, may indicate binary incompatibility`.
+      - scikit-network>=0.33.5
+      # jax 0.4.35 / jaxlib 0.4.35 require matching CUDA plugin; the
+      # 0.5.x plugins use a newer PJRT API and trip mrvi with
+      # `Unexpected PJRT_Client_Create_Args size`.
+      - jax-cuda12-pjrt==0.4.35
+      - jax-cuda12-plugin==0.4.35
