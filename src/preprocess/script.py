@@ -5,6 +5,7 @@ import scvi
 import pandas as pd
 import patient_representation as pr
 import numpy as np
+import scipy.sparse as sp
 import os
 import matplotlib.pyplot as plt
 
@@ -47,11 +48,22 @@ adata = pr.pp.filter_small_samples(adata, sample_key=SAMPLE_KEY, sample_size_thr
 # 18k-33k vars and 4-14M cells; copying the full matrix into a layer
 # blows past 400 GB). Use the X_raw_counts layer if clean_data set it,
 # otherwise read raw counts straight from .X.
+hvg_source = adata.layers["X_raw_counts"] if "X_raw_counts" in adata.layers else adata.X
+
+# Capture the per-cell library size over the FULL gene set now, before
+# we subset to HVGs. normalize_total divides each cell by its total
+# count; computing that total over all genes (not just HVGs) is the
+# standard scanpy behaviour and matches the previous pipeline ordering
+# (normalize on the full matrix, then subset). Doing it this way keeps
+# the result identical while avoiding a full-resolution normalized copy.
+full_lib_size = np.asarray(hvg_source.sum(axis=1)).ravel().astype(np.float64)
+
 hvg_layer = "X_raw_counts" if "X_raw_counts" in adata.layers else None
 print(f"Subsetting HVG (source: {hvg_layer or '.X'})")
 sc.pp.highly_variable_genes(adata, flavor="seurat_v3", span=0.5, n_top_genes=3000,
                             layer=hvg_layer, batch_key=BATCH_KEY)
-adata = adata[:, adata.var.highly_variable].copy()
+hvg_mask = adata.var["highly_variable"].to_numpy()
+adata = adata[:, hvg_mask].copy()
 print("adata.shape (post-HVG)", adata.shape)
 
 # Stash raw counts at HVG resolution (cheap, ~6x smaller than full).
@@ -59,8 +71,14 @@ if "X_raw_counts" not in adata.layers:
     adata.layers["X_raw_counts"] = adata.X.copy()
 print("adata.layers['X_raw_counts'].shape", adata.layers["X_raw_counts"].shape)
 
-print("Normalizing data")
-sc.pp.normalize_total(adata, target_sum=1e4)
+# Normalize by the FULL-gene-set library size captured above, then
+# log1p. Equivalent to sc.pp.normalize_total(target_sum=1e4) run on the
+# full matrix prior to HVG subsetting.
+print("Normalizing data (full-library size factors)")
+inv_size = np.zeros_like(full_lib_size)
+nonzero = full_lib_size > 0
+inv_size[nonzero] = 1e4 / full_lib_size[nonzero]
+adata.X = sp.diags(inv_size) @ adata.X
 print("Log-transforming data")
 sc.pp.log1p(adata)
 
