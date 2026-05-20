@@ -1,6 +1,6 @@
 import scanpy as sc
 import numpy as np
-from patient_representation.pp import is_count_data
+from patpy.pp import is_count_data
 
 ## VIASH START
 par = {

@@ -2,7 +2,7 @@ import random
 
 import scanpy as sc
 import pandas as pd
-import patient_representation as pr
+import patpy as pr
 import numpy as np
 
 random.seed(42)

@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import ehrapy as ep
 from scipy import stats
-import patient_representation as pr
+import patpy as pr
 
 
 ## VIASH START

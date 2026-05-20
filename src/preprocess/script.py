@@ -3,7 +3,7 @@ import random
 import scanpy as sc
 import scvi
 import pandas as pd
-import patient_representation as pr
+import patpy as pr
 import numpy as np
 import scipy.sparse as sp
 import os

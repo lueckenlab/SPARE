@@ -3,7 +3,7 @@ import scanpy as sc
 from subprocess import run
 import numpy as np
 import sys
-import patient_representation as pr
+import patpy as pr
 import pandas as pd 
 
 ## VIASH START
