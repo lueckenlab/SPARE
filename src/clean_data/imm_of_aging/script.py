@@ -24,7 +24,10 @@ par = {
 }
 ## VIASH END
 
-DROP_COLS = ["cell_name", "original_barcodes"]
+# Per-cell unique-string columns. Besides being unused downstream, anndata
+# stores them as variable-length HDF5 strings, which read back element-by-
+# element — on the full cohort this made preprocess's initial load take ~50min.
+DROP_COLS = ["cell_name", "original_barcodes", "barcodes"]
 AGE_COL = "subject.ageAtFirstDraw"
 
 print("Reading data")
