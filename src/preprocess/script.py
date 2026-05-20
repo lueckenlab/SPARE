@@ -41,6 +41,24 @@ adata = sc.read_h5ad(par["input"])
 print("Filtering small samples")
 adata = pr.pp.filter_small_samples(adata, sample_key=SAMPLE_KEY, sample_size_threshold=par["sample_size_threshold"])
 
+# HVG first, before any normalisation. seurat_v3 needs raw counts, and
+# doing this on the full gene set BEFORE allocating raw/log-norm layer
+# copies keeps peak memory bounded on huge datasets (AIFI cohorts have
+# 18k-33k vars and 4-14M cells; copying the full matrix into a layer
+# blows past 400 GB). Use the X_raw_counts layer if clean_data set it,
+# otherwise read raw counts straight from .X.
+hvg_layer = "X_raw_counts" if "X_raw_counts" in adata.layers else None
+print(f"Subsetting HVG (source: {hvg_layer or '.X'})")
+sc.pp.highly_variable_genes(adata, flavor="seurat_v3", span=0.5, n_top_genes=3000,
+                            layer=hvg_layer, batch_key=BATCH_KEY)
+adata = adata[:, adata.var.highly_variable].copy()
+print("adata.shape (post-HVG)", adata.shape)
+
+# Stash raw counts at HVG resolution (cheap, ~6x smaller than full).
+if "X_raw_counts" not in adata.layers:
+    adata.layers["X_raw_counts"] = adata.X.copy()
+print("adata.layers['X_raw_counts'].shape", adata.layers["X_raw_counts"].shape)
+
 print("Normalizing data")
 sc.pp.normalize_total(adata, target_sum=1e4)
 print("Log-transforming data")
@@ -48,15 +66,6 @@ sc.pp.log1p(adata)
 
 # Put normalized counts to have an explicit name
 adata.layers["X_log_norm_counts"] = adata.X.copy()
-
-# Find highly-variable genes
-print("Subsetting HVG")
-sc.pp.highly_variable_genes(adata, flavor="seurat_v3",span=0.5, n_top_genes=3000, layer="X_raw_counts", batch_key=BATCH_KEY)
-adata = adata[:, adata.var.highly_variable].copy()
-
-
-print("adata.shape", adata.shape)
-print("adata.layers['X_raw_counts'].shape", adata.layers["X_raw_counts"].shape)
 
 print("Running PCA")
 sc.tl.pca(adata)

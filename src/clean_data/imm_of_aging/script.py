@@ -5,10 +5,10 @@ Three things only:
 2. Parse `subject.ageAtFirstDraw` "89+" -> 89 so the column is numeric.
 3. Drop per-cell high-cardinality categoricals that bloat gzip writes.
 
-Then stash raw counts in `layers["X_raw_counts"]` and apply a permissive
-QC pass. The AIFI release ships pre-filtered (see patpy-vaccine-prediction
-preprocess_aifi.py for the inspection logic), so the filter is a safety
-net rather than the main QC.
+Then apply a permissive QC pass. Raw counts stay in `.X`; the
+`X_raw_counts` layer is created in src/preprocess after HVG subsetting
+where the matrix is 6x smaller (a full-resolution copy here would blow
+past 400 GB on this cohort).
 """
 import gc
 
@@ -48,9 +48,6 @@ if AGE_COL in adata.obs.columns:
     print(f"Parsed {AGE_COL} to numeric "
           f"(range [{adata.obs[AGE_COL].min()}, {adata.obs[AGE_COL].max()}], "
           f"{n_bad:,} unparseable cells)")
-
-print("Stashing raw counts in layers['X_raw_counts']")
-adata.layers["X_raw_counts"] = adata.X.copy()
 
 print("Permissive QC filter")
 sc.pp.filter_cells(adata, min_genes=200)

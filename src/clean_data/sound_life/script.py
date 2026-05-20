@@ -4,8 +4,9 @@ Two things only:
 1. Cast X from uint16 to int32 (scipy ops in src/preprocess reject uint16).
 2. Drop per-cell high-cardinality categoricals that bloat gzip writes.
 
-Then stash raw counts in `layers["X_raw_counts"]` and apply a permissive
-QC pass. The AIFI release ships pre-filtered; the filter is a safety net.
+Then apply a permissive QC pass. Raw counts stay in `.X`; the
+`X_raw_counts` layer is created in src/preprocess after HVG subsetting
+where the matrix is 6x smaller.
 """
 import gc
 
@@ -35,9 +36,6 @@ for col in DROP_COLS:
     if col in adata.obs.columns:
         print(f"Dropping high-cardinality column: {col}")
         adata.obs = adata.obs.drop(columns=col)
-
-print("Stashing raw counts in layers['X_raw_counts']")
-adata.layers["X_raw_counts"] = adata.X.copy()
 
 print("Permissive QC filter")
 sc.pp.filter_cells(adata, min_genes=200)
