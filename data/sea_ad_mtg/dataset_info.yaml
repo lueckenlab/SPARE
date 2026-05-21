@@ -1,0 +1,77 @@
+id: sea_ad_mtg
+
+# SEA-AD (Seattle Alzheimer's Disease Brain Cell Atlas), Gabitto et al.
+# 2024 — middle temporal gyrus (MTG), the atlas's reference region.
+# CELLxGENE "Whole Taxonomy - MTG" (all cell types).
+#
+# 1,378,211 nuclei x 35,483 genes, 89 donors spanning the AD continuum
+# (one sample = one donor). snRNA-seq, 10x 3' v3 + 10x multiome.
+# Shares the obs schema and cleaning component (clean_sea_ad) with
+# sea_ad_dlpfc.
+source:
+  type: cxg
+  cxg_id: c2876b1b-06d8-4d96-a56b-5304f815b99a
+  # Collection 1ca90a2d-2943-483d-b678-b809bf464c30.
+
+files:
+  raw: sea_ad_mtg.h5ad
+  cleaned: sea_ad_mtg_cleaned.h5ad
+  processed: sea_ad_mtg_processed.h5ad
+  metadata: sea_ad_mtg_metadata.csv
+  representations: sea_ad_mtg_representations.h5ad
+
+keys:
+  sample: donor_id
+  cell_type: Subclass          # 24 author labels; Class(3) too coarse, Supertype(131) too fine
+  batch: assay                 # 10x 3' v3 vs 10x multiome (only technical covariate)
+  batch_covariates:
+    - donor_id
+    - assay
+
+metadata:
+  samples_metadata_cols:
+    - disease
+    - sex
+    - Neurotypical reference
+    - Cognitive status
+    - ADNC
+    - Braak stage
+    - Thal phase
+    - CERAD score
+    - APOE4 status
+    - Age at death
+    - Years of education
+    - PMI
+    - Lewy body disease pathology
+    - LATE-NC stage
+    - Microinfarct pathology
+    - self_reported_ethnicity
+    - development_stage
+    - age
+    - adnc_score
+    - braak_score
+    - cerad_score
+    - thal_score
+  # Antemortem-knowable clinical features for the ehrapy baseline. The
+  # neuropathology scores (ADNC/Braak/CERAD/Thal) require autopsy, so they
+  # stay in .obs as evaluation targets rather than "accessible" features.
+  accessible_metadata_columns:
+    - sex
+    - Age at death
+    - APOE4 status
+    - Cognitive status
+
+preprocess:
+  sample_size_threshold: 100
+  output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  # AD neuropathologic-change continuum: Not AD(0) -> Low(1) ->
+  # Intermediate(2) -> High(3), encoded as adnc_score.
+  trajectory_variable: adnc_score
+  # root_sample: a Not-AD donor (adnc_score==0); deterministic first of
+  # the 14 Not-AD MTG donors.
+  root_sample: H18.30.001
+  inverse_trajectory: false
+  figure_format: png

@@ -66,6 +66,10 @@ workflow run_wf {
           runIf:    { id, state -> id == "myocardial_infarction" },
           fromState: cleanArgs,
         )
+        | clean_sea_ad.run(
+          runIf:    { id, state -> id in ["sea_ad_mtg", "sea_ad_dlpfc"] },
+          fromState: cleanArgs,
+        )
         | view { tup -> "Output: $tup" }
 
   emit:

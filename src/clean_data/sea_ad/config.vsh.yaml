@@ -1,0 +1,33 @@
+name: clean_sea_ad
+description: |
+  Dataset-specific cleaning for the SEA-AD (Seattle Alzheimer's Disease
+  Brain Cell Atlas) Whole Taxonomy datasets. Shared by both regions
+  (sea_ad_mtg, sea_ad_dlpfc) — they have an identical obs schema.
+arguments:
+  - name: --input
+    description: The path of the input file
+    type: file
+    example: data/sea_ad_mtg/sea_ad_mtg.h5ad
+    required: true
+    direction: input
+  - name: --output
+    description: The path of the output file
+    type: file
+    example: data/sea_ad_mtg/sea_ad_mtg_cleaned.h5ad
+    default: data/sea_ad_mtg/sea_ad_mtg_cleaned.h5ad
+    direction: output
+  - name: --output_compression
+    description: The compression format of the output file
+    type: string
+    example: gzip
+    required: false
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+runners:
+  - type: executable
+  - type: nextflow

@@ -12,3 +12,7 @@
   dataset_info: ../../../data/lupus/dataset_info.yaml
 - id: myocardial_infarction
   dataset_info: ../../../data/myocardial_infarction/dataset_info.yaml
+- id: sea_ad_mtg
+  dataset_info: ../../../data/sea_ad_mtg/dataset_info.yaml
+- id: sea_ad_dlpfc
+  dataset_info: ../../../data/sea_ad_dlpfc/dataset_info.yaml

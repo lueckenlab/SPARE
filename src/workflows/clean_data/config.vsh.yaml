@@ -55,6 +55,8 @@ dependencies:
     repository: local
   - name: clean_myocardial_infarction
     repository: local
+  - name: clean_sea_ad
+    repository: local
 
 repositories:
   - name: local
