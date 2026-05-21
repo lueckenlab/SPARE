@@ -1,0 +1,74 @@
+id: myocardial_infarction
+
+# Kuppe et al. 2022, "Spatial multi-omic map of human myocardial
+# infarction" (Nature 608, 766-777). snRNA-seq portion of the atlas,
+# also used by PILOT (Joodaki et al. 2024) for sample-level trajectory
+# analysis.
+#
+# 191,795 nuclei x 28,380 genes. Heart left ventricle, 10x 3' v3.
+# 29 snRNA samples from 20 donors across physiological zones
+# (control, remote/RZ, border/BZ, ischaemic/IZ, fibrotic/FZ).
+#
+# The representation unit is `sample` (one snRNA library per region),
+# not `donor_id`: patient_group / major_labl / disease are constant
+# within a sample but vary within a donor (e.g. P9 spans myogenic and
+# ischemic zones). Donors P2/P3/P9/P15/P16 contribute >1 sample, and
+# P9's GT/IZ region is resequenced (GT/IZ_P9 vs GT/IZ_P9_rep2) — useful
+# for the replicate-robustness evaluation.
+source:
+  type: cxg
+  cxg_id: 1c739a3e-c3f5-49d5-98e0-73975e751201
+  # Collection 8191c283-0816-424b-9b61-c3e1d6258a77.
+  # NB: the download_from_cxg component routes through cellxgene_census,
+  # whose installed build rejects the current census (SOMA encoding
+  # 1.1.0). This file was fetched from the direct discover asset URL:
+  # https://datasets.cellxgene.cziscience.com/54d24dbe-d39a-4844-bb21-07b5f4e173ad.h5ad
+
+files:
+  raw: myocardial_infarction.h5ad
+  cleaned: myocardial_infarction_cleaned.h5ad
+  processed: myocardial_infarction_processed.h5ad
+  metadata: myocardial_infarction_metadata.csv
+  representations: myocardial_infarction_representations.h5ad
+
+keys:
+  sample: sample
+  cell_type: cell_type_original          # 11 author labels (Cardiomyocyte, Fibroblast, ...)
+  batch: donor_id                        # patient grouping; no separate technical batch exists
+  batch_covariates:
+    - sample
+    - donor_id
+
+metadata:
+  samples_metadata_cols:
+    - donor_id
+    - patient_region_id
+    - patient_group
+    - major_labl
+    - disease
+    - sex
+    - development_stage
+    - age
+    - disease_progression
+  # Easily-measurable clinical features for the ehrapy baseline.
+  # patient_group / major_labl are excluded: in this study the zone
+  # assignment was refined from the molecular data, so they are not
+  # "measurable without sequencing" and stay in .obs for evaluation.
+  accessible_metadata_columns:
+    - sex
+    - age
+    - disease
+
+preprocess:
+  sample_size_threshold: 100             # smallest sample (CK161) has 581 cells; none dropped
+  output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  # Disease-progression trajectory: myogenic (0) -> ischemic (1) ->
+  # fibrotic (2), encoded as the integer `disease_progression` column.
+  trajectory_variable: disease_progression
+  # iroot: a control / myogenic sample (healthy baseline).
+  root_sample: CK158
+  inverse_trajectory: false
+  figure_format: png

@@ -62,6 +62,10 @@ workflow run_wf {
           runIf:    { id, state -> id == "sound_life" },
           fromState: cleanArgs,
         )
+        | clean_myocardial_infarction.run(
+          runIf:    { id, state -> id == "myocardial_infarction" },
+          fromState: cleanArgs,
+        )
         | view { tup -> "Output: $tup" }
 
   emit:

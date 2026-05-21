@@ -10,3 +10,5 @@
   dataset_info: ../../../data/ticatlas/dataset_info.yaml
 - id: lupus
   dataset_info: ../../../data/lupus/dataset_info.yaml
+- id: myocardial_infarction
+  dataset_info: ../../../data/myocardial_infarction/dataset_info.yaml

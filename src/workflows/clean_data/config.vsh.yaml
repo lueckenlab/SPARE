@@ -53,6 +53,8 @@ dependencies:
     repository: local
   - name: clean_sound_life
     repository: local
+  - name: clean_myocardial_infarction
+    repository: local
 
 repositories:
   - name: local

@@ -14,3 +14,5 @@
   dataset_info: ../../../data/imm_of_aging/dataset_info.yaml
 - id: sound_life
   dataset_info: ../../../data/sound_life/dataset_info.yaml
+- id: myocardial_infarction
+  dataset_info: ../../../data/myocardial_infarction/dataset_info.yaml
