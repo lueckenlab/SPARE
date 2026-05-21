@@ -1,7 +1,8 @@
 name: download_from_cxg
 description: |
-  Download a dataset from cellxgene using its dataset ID.
-  The component handles retrieving the S3 location and downloading the file with progress tracking.
+  Download a dataset from CELLxGENE Discover using its dataset ID.
+  Resolves the dataset's H5AD asset URL via the public Discover curation
+  API and streams it over HTTPS (no cellxgene_census / signed S3 access).
   Supports downloading partial files for testing purposes using max_chunks parameter.
 arguments:
   - name: --input
