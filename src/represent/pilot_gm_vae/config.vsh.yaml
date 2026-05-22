@@ -80,9 +80,16 @@ runners:
       label: [highmem, gpu]
       # This component cannot run in the base env (pilotgm's pilotpy 2.0.6 pin
       # breaks the shared stack). The Viash native engine uses whatever env is
-      # active, so under Nextflow we activate the dedicated env here. We also
-      # reset LD_LIBRARY_PATH (nextflow.config force-prepends the base env's
-      # lib) so the base env's torch/CUDA libs don't shadow this env's.
-      # See envs/README.md. NOTE: paths are hard-coded to one user's miniconda,
-      # like nextflow.config's LD_LIBRARY_PATH — both want de-hardcoding (PLAN Phase 0).
-      beforeScript: "source /home/icb/vladimir.shitov/software/miniconda3/etc/profile.d/conda.sh && conda activate pilot_gm_vae && export LD_LIBRARY_PATH=/home/icb/vladimir.shitov/software/miniconda3/envs/pilot_gm_vae/lib"
+      # active, so under Nextflow we activate the dedicated env here; the
+      # activated env supplies its own Python/torch (incl. CUDA), which is what
+      # makes the GPU run work. Verified end-to-end on combat (GM-VAE trained on
+      # GPU, inference + distances produced) via scripts/smoke_pilot_nextflow.sbatch.
+      #
+      # NOTE: we deliberately do NOT touch LD_LIBRARY_PATH here. nextflow.config's
+      # global `env { LD_LIBRARY_PATH = .../sample_representation_benchmark/lib }`
+      # block is emitted in .command.run *after* this beforeScript, so any reset
+      # here is overwritten — at task runtime the base env's lib is on the path.
+      # It is harmless in practice (torch resolves its libs via the activated
+      # env), but the global block is hard-coded to one user's miniconda and
+      # injects a `[:]` artifact; dropping/fixing it is PLAN Phase 0.
+      beforeScript: "source /home/icb/vladimir.shitov/software/miniconda3/etc/profile.d/conda.sh && conda activate pilot_gm_vae"

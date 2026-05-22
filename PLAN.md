@@ -21,8 +21,8 @@ Open GitHub issues:
   - `spare-gpu` — torch + scGPT deps (mrvi, scpoli, preprocess_scgpt).
   - `spare-uce` — UCE has conflicting deps, isolate.
   - `spare-supervised` — `patpy.tl.supervised` deps (mixmil, pulsar). Reuse `spare-gpu` if compatible.
-  - [x] `pilot_gm_vae` — isolated env for the `pilot_gm_vae` component (the pilotgm fork's `pilotpy 2.0.6` pin breaks the base stack). Lockfile: `envs/pilot_gm_vae-lock.txt`, see `envs/README.md`. Nextflow wiring done: the component's `config.vsh.yaml` carries a `beforeScript` directive that activates the env + resets `LD_LIBRARY_PATH`. This is the template for future env-isolated components (scgpt/uce/supervised).
-- [ ] Drop hard-coded `LD_LIBRARY_PATH` from `nextflow.config` (line 17 points at one user's home).
+  - [x] `pilot_gm_vae` — isolated env for the `pilot_gm_vae` component (the pilotgm fork's `pilotpy 2.0.6` pin breaks the base stack). Lockfile: `envs/pilot_gm_vae-lock.txt`, see `envs/README.md`. Nextflow wiring done: the component's `config.vsh.yaml` carries a `beforeScript` directive that activates the env. Verified end-to-end on combat (GPU train + inference + distances) via `scripts/smoke_pilot_nextflow.sbatch`. This is the template for future env-isolated components (scgpt/uce/supervised).
+- [ ] Drop hard-coded `LD_LIBRARY_PATH` from `nextflow.config` (line 17 points at one user's home). Higher priority than it looks: the global `env {}` block is emitted *after* per-component `beforeScript`, so it overwrites any per-component `LD_LIBRARY_PATH` (defeats env isolation) and injects a `[:]` Groovy artifact (the var is unset at config-eval). Currently harmless because conda-activated envs resolve their own libs, but it blocks clean per-component lib paths.
 
 ## Phase 1 — Per-dataset YAML consolidation (issue #2)
 

@@ -41,10 +41,17 @@ combat even on a V100).
 `src/represent/pilot_gm_vae/` uses the Viash `native` engine, which runs in
 whatever env is active. To make the Nextflow process use the isolated env, the
 component's `config.vsh.yaml` carries a `beforeScript` Nextflow directive that
-sources conda, activates `pilot_gm_vae`, and resets `LD_LIBRARY_PATH` to this
-env's `lib` (otherwise the base env's libs, force-prepended by
-`nextflow.config`, shadow this env's torch/CUDA). `diffusionemd` and `phemd`
-run in the base env and need no such directive.
+sources conda and activates `pilot_gm_vae`. The activated env supplies its own
+Python/torch (incl. CUDA), so the GPU run works — verified end-to-end on combat
+via `scripts/smoke_pilot_nextflow.sbatch`. `diffusionemd` and `phemd` run in the
+base env and need no such directive.
+
+`LD_LIBRARY_PATH` is *not* managed in the `beforeScript`: `nextflow.config`'s
+global `env {}` block re-exports it (to the base env's lib) in `.command.run`
+*after* the `beforeScript`, so a per-component reset would just be overwritten.
+It's harmless in practice (torch resolves its libs via the activated env), but
+that global block is hard-coded to one user's miniconda and injects a `[:]`
+artifact — dropping/fixing it is PLAN Phase 0.
 
 **This is the pattern for any future env-isolated component** (e.g. the planned
 `preprocess_scgpt` / `preprocess_uce` / `supervised` components in PLAN Phase
