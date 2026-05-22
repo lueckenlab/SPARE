@@ -1,0 +1,9 @@
+# Minimal experiments file to smoke-test the pilot_gm_vae Nextflow env-activation
+# path (beforeScript -> isolated conda env -> GPU) end-to-end before the full
+# matrix. Only pilot_gm_vae runs; low epochs since we are checking wiring, not
+# convergence. See scripts/smoke_pilot_nextflow.sbatch.
+pilot_gm_vae:
+  pca:
+    layer: "X_pca"
+    cuda: 1
+    epochs: 5
