@@ -1,6 +1,6 @@
-name: gloscope
+name: diffusionemd
 description: >
-  Apply GloScope sample representation method
+  Apply Diffusion Earth Mover's Distance (DiffusionEMD) sample representation method
 
 arguments:
   - type: file
@@ -15,7 +15,7 @@ arguments:
     description: Path to save the sample representations
     direction: output
     required: true
-    example: "combat_pseudobulk_pca.h5ad"
+    example: "combat_diffusionemd_pca.csv"
 
   - type: string
     name: --sample_key
@@ -31,23 +31,21 @@ arguments:
 
   - type: string
     name: --layer
-    description: Layer to use for aggregating cell data
+    description: Embedding in .obsm to build the kNN graph on
     required: true
     example: "X_pca"
 
-  - type: integer 
-    name: --n_workers
-    description: Number of workers to use for parallel processing
+  - type: integer
+    name: --n_neighbors
+    description: Number of neighbors for the kNN graph
     required: false
-    default: 1
+    default: 15
 
   - type: integer
-    name: --n_components
-    description: |
-      Number of components to subset the embedding layer to. 
-      Significant speed-up when set to a lower number, but not applicable for all methods.
+    name: --n_scales
+    description: Number of diffusion scales used by DiffusionCheb
     required: false
-    example: 10
+    default: 6
 
 resources:
   - type: python_script
@@ -60,4 +58,4 @@ runners:
   - type: executable
   - type: nextflow
     directives:
-      label: [veryhighmem, gpu]
+      label: [highmem, lowcpu]

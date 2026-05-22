@@ -1,0 +1,79 @@
+name: phemd
+description: >
+  Apply Phenotypic Earth Mover's Distance (PhEMD) sample representation method
+
+arguments:
+  - type: file
+    name: --input
+    description: Path to the input data
+    direction: input
+    required: true
+    example: "combat_processed.h5ad"
+
+  - type: file
+    name: --output
+    description: Path to save the sample representations
+    direction: output
+    required: true
+    example: "combat_phemd_pca.csv"
+
+  - type: string
+    name: --sample_key
+    description: Column name containing sample identifiers
+    required: true
+    example: "scRNASeq_sample_ID"
+
+  - type: string
+    name: --cell_type_key
+    description: Column name containing cell type identifiers
+    required: true
+    example: "Annotation_major_subset"
+
+  - type: string
+    name: --layer
+    description: Embedding in .obsm to run PHATE on. If omitted, .X is used.
+    required: false
+    example: "X_pca"
+
+  - type: integer
+    name: --n_clusters
+    description: Number of PHATE/KMeans clusters used to summarize cell state
+    required: false
+    default: 8
+
+  - type: double
+    name: --subset_fraction
+    description: Fraction of cells per cell type to subsample before computing PhEMD (PHATE is slow)
+    required: false
+    example: 0.1
+
+  - type: integer
+    name: --subset_n_obs
+    description: Number of cells per cell type to subsample. Ignored if --subset_fraction is set.
+    required: false
+    example: 2000
+
+  - type: integer
+    name: --subset_min_obs_per_sample
+    description: Minimum number of cells per cell type to keep when subsampling
+    required: false
+    default: 500
+
+  - type: integer
+    name: --n_jobs
+    description: Number of parallel jobs for PHATE / EMD computation
+    required: false
+    default: -1
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+
+runners:
+  - type: executable
+  - type: nextflow
+    directives:
+      label: [highmem, highcpu]

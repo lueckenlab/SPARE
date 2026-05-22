@@ -116,6 +116,8 @@ pilot:
 mofa:
   counts:
     layer: "X_raw_counts"
+  log_counts:
+    layer: "X_log_norm_counts"
   pca:
     layer: "X_pca"
   scpoli:
@@ -148,3 +150,48 @@ gloscope:
   scanvi_batch:
     layer: "X_scANVI_batch"
     n_workers: 32
+diffusionemd:
+  pca:
+    layer: "X_pca"
+  scpoli:
+    layer: "X_scpoli"
+  scvi_sample_id:
+    layer: "X_scVI_sample"
+  scvi_batch:
+    layer: "X_scVI_batch"
+  scanvi_sample_id:
+    layer: "X_scANVI_sample"
+  scanvi_batch:
+    layer: "X_scANVI_batch"
+phemd:
+  pca:
+    layer: "X_pca"
+    subset_n_obs: 2000
+  scpoli:
+    layer: "X_scpoli"
+    subset_n_obs: 2000
+  scvi_sample_id:
+    layer: "X_scVI_sample"
+    subset_n_obs: 2000
+  scvi_batch:
+    layer: "X_scVI_batch"
+    subset_n_obs: 2000
+  scanvi_sample_id:
+    layer: "X_scANVI_sample"
+    subset_n_obs: 2000
+  scanvi_batch:
+    layer: "X_scANVI_batch"
+    subset_n_obs: 2000
+pilot_gm_vae:
+  pca:
+    layer: "X_pca"
+  scpoli:
+    layer: "X_scpoli"
+  scvi_sample_id:
+    layer: "X_scVI_sample"
+  scvi_batch:
+    layer: "X_scVI_batch"
+  scanvi_sample_id:
+    layer: "X_scANVI_sample"
+  scanvi_batch:
+    layer: "X_scANVI_batch"

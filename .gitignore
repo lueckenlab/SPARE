@@ -173,6 +173,7 @@ dev.ipynb
 logs/
 output_smoke/
 output_ticatlas/
+output_*/
 
 # EDA / report artifacts (heavy, regenerable)
 reports/

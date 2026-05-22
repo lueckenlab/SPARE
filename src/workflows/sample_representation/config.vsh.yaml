@@ -86,6 +86,12 @@ dependencies:
     repository: local
   - name: cell_group_composition
     repository: local
+  - name: diffusionemd
+    repository: local
+  - name: phemd
+    repository: local
+  - name: pilot_gm_vae
+    repository: local
 
 repositories:
   - name: local

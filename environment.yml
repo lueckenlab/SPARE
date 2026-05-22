@@ -4,6 +4,10 @@
 # GPU-backed components (mrvi, scpoli, supervised) need their own envs
 # layered on top; see envs/ once split (task #2 in the SPARE roadmap).
 #
+# The pilot_gm_vae represent component also needs its own env — the pilotgm
+# fork's pilotpy 2.0.6 pin would downgrade and break this stack. See
+# envs/README.md + envs/pilot_gm_vae-lock.txt (conda env name: pilot_gm_vae).
+#
 # patpy is pinned to a specific commit because the latest tag (0.15.2) is
 # behind the version field (0.16.5) — the supervised module + GloScope_py
 # we depend on live past the last tag.

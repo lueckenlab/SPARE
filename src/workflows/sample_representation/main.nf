@@ -10,6 +10,9 @@ methods = [
     mofa,
     gloscope,
     cell_group_composition,
+    diffusionemd,
+    phemd,
+    pilot_gm_vae,
 ]
 
 // If state.dataset_info is set, fill missing fields from the YAML.

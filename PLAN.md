@@ -21,6 +21,7 @@ Open GitHub issues:
   - `spare-gpu` — torch + scGPT deps (mrvi, scpoli, preprocess_scgpt).
   - `spare-uce` — UCE has conflicting deps, isolate.
   - `spare-supervised` — `patpy.tl.supervised` deps (mixmil, pulsar). Reuse `spare-gpu` if compatible.
+  - [x] `pilot_gm_vae` — isolated env for the `pilot_gm_vae` component (the pilotgm fork's `pilotpy 2.0.6` pin breaks the base stack). Lockfile: `envs/pilot_gm_vae-lock.txt`, see `envs/README.md`. Still needs Nextflow wiring to run this component under its own env (native engine currently uses whatever env is active).
 - [ ] Drop hard-coded `LD_LIBRARY_PATH` from `nextflow.config` (line 17 points at one user's home).
 
 ## Phase 1 — Per-dataset YAML consolidation (issue #2)
@@ -62,7 +63,7 @@ FM components produce a single `adata.obsm["X_<fm>"]` layer; only pseudobulk con
 ## Phase 5 — New datasets
 
 - [x] TICAtlas — added (`src/clean_data/ticatlas/`, `data/ticatlas/dataset_info.yaml`, full launcher in `scripts/run_ticatlas_full.sbatch`).
-- [ ] SEA-AD (Seattle Alzheimer's, brain) — public on CELLxGENE.
+- [x] SEA-AD (Seattle Alzheimer's, brain) — added (MTG + DLPFC), public on CELLxGENE.
 - [ ] HICA (issue #10) — Human Immune Cell Atlas.
 - [x] Immunobiology of aging — added (`src/clean_data/imm_of_aging/`, `data/imm_of_aging/dataset_info.yaml`, `scripts/download_aifi_imm_of_aging.sbatch`). Concat h5ad symlinked from `aifi_data/`. 3.76M cells × 18k genes, 234 cross-sectional donors, trajectory=age. EDA in `reports/imm_of_aging_eda.html`.
 - [x] Sound Life vaccine cohort — added (`src/clean_data/sound_life/`, `data/sound_life/dataset_info.yaml`, `scripts/download_aifi_sound_life.sbatch`). 13.8M cells × 33k genes, 96 donors × 868 longitudinal samples (12 visits), trajectory=age. EDA in `reports/sound_life_eda.html`.

@@ -1,0 +1,80 @@
+name: pilot_gm_vae
+description: >
+  Apply PILOT-GM-VAE sample representation method (annotation-free Gaussian
+  Mixture VAE + Bures-Wasserstein distance between samples)
+
+arguments:
+  - type: file
+    name: --input
+    description: Path to the input data
+    direction: input
+    required: true
+    example: "combat_processed.h5ad"
+
+  - type: file
+    name: --output
+    description: Path to save the sample representations
+    direction: output
+    required: true
+    example: "combat_pilot_gm_vae_pca.csv"
+
+  - type: string
+    name: --sample_key
+    description: Column name containing sample identifiers
+    required: true
+    example: "scRNASeq_sample_ID"
+
+  - type: string
+    name: --cell_type_key
+    description: Column name containing cell type identifiers (accepted for workflow uniformity; unused by this method)
+    required: false
+    example: "Annotation_major_subset"
+
+  - type: string
+    name: --sample_state_col
+    description: Column in .obs giving the sample state/status. Defaults to --sample_key when omitted.
+    required: false
+    example: "Outcome"
+
+  - type: string
+    name: --layer
+    description: Embedding in .obsm to train the GM-VAE on
+    required: true
+    example: "X_pca"
+
+  - type: integer
+    name: --num_classes
+    description: Number of latent cell states in the Gaussian Mixture VAE
+    required: false
+    default: 11
+
+  - type: integer
+    name: --gaussian_size
+    description: Size of the Gaussian latent representation
+    required: false
+    default: 64
+
+  - type: integer
+    name: --epochs
+    description: Number of training epochs
+    required: false
+    default: 50
+
+  - type: integer
+    name: --cuda
+    description: Set to 1 to train on GPU, 0 for CPU
+    required: false
+    default: 0
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+
+runners:
+  - type: executable
+  - type: nextflow
+    directives:
+      label: [highmem, gpu]
