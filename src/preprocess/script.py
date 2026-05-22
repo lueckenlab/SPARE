@@ -23,6 +23,8 @@ par = {
     "batch_key":"Pool_ID",
     "output_compression": "gzip",
     "sample_size_threshold": 100,
+    "n_scanvi_epochs": 20,
+    "gradient_clip_val": None,
     "output_metadata": "data/combat_metadata_200.csv",
 }
 ## VIASH END
@@ -105,6 +107,14 @@ def plot_loss(history, loss_keys, title, filenames, counter):
     return counter
 
 counter = 1
+# Optionally clip gradient norm to stabilize scVI/scANVI against NaN
+# explosions on very large datasets. Off by default (kwargs empty), so
+# behavior is unchanged for datasets that don't set --gradient_clip_val.
+train_kwargs = {}
+if par["gradient_clip_val"] is not None:
+    train_kwargs["gradient_clip_val"] = par["gradient_clip_val"]
+    print(f"Gradient clipping enabled: gradient_clip_val={par['gradient_clip_val']}")
+
 for batch_key in par["batch_covariates"]:
     # print("Running Harmony on PCA embeddings")
     # sc.external.pp.harmony_integrate(adata, basis="X_pca", key=batch_key, adjusted_basis=f"X_harmony_{batch_key}")
@@ -113,7 +123,7 @@ for batch_key in par["batch_covariates"]:
     # Run scVI
     scvi.model.SCVI.setup_anndata(adata, layer="X_raw_counts", batch_key=batch_key)
     vae = scvi.model.SCVI(adata, n_layers=2, n_latent=30, gene_likelihood="nb")
-    vae.train()
+    vae.train(**train_kwargs)
     embedding_name_scVI = f"X_scVI_{batch_key}"
     adata.obsm[embedding_name_scVI] = vae.get_latent_representation()
     print(f"Embedding stored: {embedding_name_scVI}")
@@ -133,7 +143,7 @@ for batch_key in par["batch_covariates"]:
         labels_key=CELL_TYPE_KEY,
         unlabeled_category="nan"
     )
-    lvae.train(max_epochs=20, n_samples_per_label=100)
+    lvae.train(max_epochs=par["n_scanvi_epochs"], n_samples_per_label=100, **train_kwargs)
     embedding_name_scANVI = f"X_scANVI_{batch_key}"
     adata.obsm[embedding_name_scANVI] = lvae.get_latent_representation()
     print(f"Embedding stored: {embedding_name_scANVI}")
