@@ -38,6 +38,17 @@ combat even on a V100).
 
 ### How it's wired into the pipeline
 
-`src/represent/pilot_gm_vae/` uses the Viash `native` engine, so the Nextflow
-process must run with this env active. `diffusionemd` and `phemd` run in the
-base env. Splitting per-component envs end-to-end is Phase 0 in `PLAN.md`.
+`src/represent/pilot_gm_vae/` uses the Viash `native` engine, which runs in
+whatever env is active. To make the Nextflow process use the isolated env, the
+component's `config.vsh.yaml` carries a `beforeScript` Nextflow directive that
+sources conda, activates `pilot_gm_vae`, and resets `LD_LIBRARY_PATH` to this
+env's `lib` (otherwise the base env's libs, force-prepended by
+`nextflow.config`, shadow this env's torch/CUDA). `diffusionemd` and `phemd`
+run in the base env and need no such directive.
+
+**This is the pattern for any future env-isolated component** (e.g. the planned
+`preprocess_scgpt` / `preprocess_uce` / `supervised` components in PLAN Phase
+3-4): give it its own lockfile here and a `beforeScript` directive activating
+that env, rather than relying on the active env. The conda paths are currently
+hard-coded to one user's miniconda (like `nextflow.config`'s `LD_LIBRARY_PATH`)
+— de-hardcoding both is PLAN Phase 0.

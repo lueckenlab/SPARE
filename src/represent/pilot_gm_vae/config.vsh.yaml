@@ -78,3 +78,11 @@ runners:
   - type: nextflow
     directives:
       label: [highmem, gpu]
+      # This component cannot run in the base env (pilotgm's pilotpy 2.0.6 pin
+      # breaks the shared stack). The Viash native engine uses whatever env is
+      # active, so under Nextflow we activate the dedicated env here. We also
+      # reset LD_LIBRARY_PATH (nextflow.config force-prepends the base env's
+      # lib) so the base env's torch/CUDA libs don't shadow this env's.
+      # See envs/README.md. NOTE: paths are hard-coded to one user's miniconda,
+      # like nextflow.config's LD_LIBRARY_PATH — both want de-hardcoding (PLAN Phase 0).
+      beforeScript: "source /home/icb/vladimir.shitov/software/miniconda3/etc/profile.d/conda.sh && conda activate pilot_gm_vae && export LD_LIBRARY_PATH=/home/icb/vladimir.shitov/software/miniconda3/envs/pilot_gm_vae/lib"

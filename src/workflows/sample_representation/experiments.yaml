@@ -185,13 +185,19 @@ phemd:
 pilot_gm_vae:
   pca:
     layer: "X_pca"
+    cuda: 1
   scpoli:
     layer: "X_scpoli"
+    cuda: 1
   scvi_sample_id:
     layer: "X_scVI_sample"
+    cuda: 1
   scvi_batch:
     layer: "X_scVI_batch"
+    cuda: 1
   scanvi_sample_id:
     layer: "X_scANVI_sample"
+    cuda: 1
   scanvi_batch:
     layer: "X_scANVI_batch"
+    cuda: 1
