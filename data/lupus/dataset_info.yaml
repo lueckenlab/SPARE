@@ -2,7 +2,12 @@ id: lupus
 
 source:
   type: cxg
-  cxg_id: 6e65a13e-2a45-4340-9442-bd2c41a01f17
+  # Perez et al. 2022 "Single-cell RNA-seq reveals cell type-specific molecular
+  # and genetic associations to lupus" — 1.26M PBMCs. Verified 2026-05-23 via
+  # the CELLxGENE Discover curation API; the previous id (6e65a13e-...) is not
+  # present in the current Discover index of 2124 datasets. Collection id:
+  # 436154da-bcf1-4130-9c8b-120ff9a888f2.
+  cxg_id: 218acb0f-9f2f-4f76-b90b-15a4b7c7f629
 
 files:
   raw: lupus.h5ad

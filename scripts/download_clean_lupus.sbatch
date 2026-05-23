@@ -24,7 +24,7 @@ conda activate sample_representation_benchmark
 
 mkdir -p logs data/lupus
 
-CXG_ID="6e65a13e-2a45-4340-9442-bd2c41a01f17"
+CXG_ID="218acb0f-9f2f-4f76-b90b-15a4b7c7f629"  # Perez 2022 lupus PBMCs; see data/lupus/dataset_info.yaml
 RAW=data/lupus/lupus.h5ad
 CLEANED=data/lupus/lupus_cleaned.h5ad
 
