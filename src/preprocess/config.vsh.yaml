@@ -79,6 +79,18 @@ arguments:
     description: If set, clip the gradient norm to this value during scVI and scANVI training. Stabilizes against NaN gradient explosions on very large datasets. Off (no clipping) by default, so other datasets are unaffected.
     required: false
 
+  - type: integer
+    name: --n_scpoli_epochs
+    description: Total number of scPoli training epochs (n_epochs in patpy.tl.SCPoli). Default matches patpy's own default; lower it for very large datasets where scPoli is the long pole (e.g. sound_life ~15 min/epoch-percent on 13.8M cells).
+    required: false
+    default: 50
+
+  - type: integer
+    name: --n_scpoli_pretraining_epochs
+    description: scPoli pretraining epochs. Must be <= --n_scpoli_epochs; the script clamps it to max(1, n_scpoli_epochs - 1) if it exceeds. Default matches patpy.
+    required: false
+    default: 40
+
   - type: string
     name: --output_compression
     description: The compression format of the output file

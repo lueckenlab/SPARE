@@ -25,6 +25,8 @@ par = {
     "sample_size_threshold": 100,
     "n_scanvi_epochs": 20,
     "gradient_clip_val": None,
+    "n_scpoli_epochs": 50,
+    "n_scpoli_pretraining_epochs": 40,
     "output_metadata": "data/combat_metadata_200.csv",
 }
 ## VIASH END
@@ -157,7 +159,20 @@ for batch_key in par["batch_covariates"]:
     )
 
 print("Running scPoli")
-scpoli = pr.tl.SCPoli(sample_key=SAMPLE_KEY, cell_group_key=CELL_TYPE_KEY, layer="X_raw_counts")
+# Clamp pretraining_epochs so it never exceeds total epochs (patpy/scarches default 40/50
+# would be inconsistent if user lowered --n_scpoli_epochs below 40).
+scpoli_pretraining = min(par["n_scpoli_pretraining_epochs"], max(1, par["n_scpoli_epochs"] - 1))
+if scpoli_pretraining != par["n_scpoli_pretraining_epochs"]:
+    print(f"Clamped scPoli pretraining_epochs {par['n_scpoli_pretraining_epochs']} -> {scpoli_pretraining} "
+          f"(must be < n_scpoli_epochs={par['n_scpoli_epochs']})")
+print(f"scPoli: n_epochs={par['n_scpoli_epochs']}, pretraining_epochs={scpoli_pretraining}")
+scpoli = pr.tl.SCPoli(
+    sample_key=SAMPLE_KEY,
+    cell_group_key=CELL_TYPE_KEY,
+    layer="X_raw_counts",
+    n_epochs=par["n_scpoli_epochs"],
+    pretraining_epochs=scpoli_pretraining,
+)
 
 print("Preparing adata")
 scpoli.prepare_anndata(adata, optimize_adata=False)
