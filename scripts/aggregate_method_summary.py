@@ -51,6 +51,29 @@ PREFIX_RULES = [
     ("ehrapy", "Ehrapy"),
 ]
 
+# Handcrafted palette. The first nine entries (GloScope through Random
+# vector) match the colours from the figure in the writeup; the remainder
+# extend that palette to the methods added since.
+METHOD_COLORS = {
+    "GloScope": "#D26995",                 # magenta-pink
+    "MOFA": "#E5C239",                     # gold/yellow
+    "PILOT": "#E48F2A",                    # orange
+    "Cell type composition": "#3FA585",    # teal/green
+    "Pseudobulk": "#83B0CE",               # light blue
+    "CT pseudobulk": "#3F87B5",            # blue
+    "scPoli sample embeddings": "#D4642D", # red-orange
+    "Ehrapy": "#000000",                   # black
+    "Random vector": "#808080",            # gray
+    # New methods (extension of the writeup palette, distinct hues)
+    "SampleCLR": "#7B3FB5",                # purple
+    "MrVI": "#8C564B",                     # brown
+    "PILOT-GM-VAE": "#7F4310",             # dark amber (PILOT family, darker)
+    "scPoli": "#C13F25",                   # deeper red (scPoli family, darker)
+    "PhEMD": "#9C8FA0",                    # muted plum
+    "DiffusionEMD": "#5FB57A",             # leaf green
+    "Other": "#444444",                    # dark gray catch-all
+}
+
 
 def classify_representation(name: str) -> str:
     for prefix, family in PREFIX_RULES:
@@ -157,59 +180,69 @@ def main() -> None:
     aggregated.to_csv(aggregated_path, index=False)
     print(f"Wrote {aggregated_path}")
 
-    if not {"relevant", "technical"}.issubset(combined.columns):
-        print(
-            "averaged_scores files lack 'relevant' or 'technical' columns; "
-            "skipping plot.",
-            file=sys.stderr,
-        )
-        return
-
-    palette = sns.color_palette("husl", n_colors=combined["method"].nunique())
     method_order = (
         aggregated.sort_values("total_mean", ascending=False)["method"].tolist()
     )
-    color_map = dict(zip(method_order, palette))
+    color_for = lambda m: METHOD_COLORS.get(m, METHOD_COLORS["Other"])
 
-    fig, ax = plt.subplots(figsize=(7, 7))
-    for method in method_order:
-        group = combined[combined["method"] == method]
-        if len(group) == 0:
-            continue
-        rel_mean = group["relevant"].mean()
-        rel_std = group["relevant"].std(ddof=1) if len(group) > 1 else 0.0
-        tech_mean = group["technical"].mean()
-        tech_std = group["technical"].std(ddof=1) if len(group) > 1 else 0.0
-        ax.errorbar(
-            rel_mean,
-            tech_mean,
-            xerr=rel_std,
-            yerr=tech_std,
-            fmt="o",
-            color=color_map[method],
-            ecolor=color_map[method],
-            elinewidth=1.2,
-            capsize=3,
-            markersize=8,
-            label=f"{method} (n={len(group)})",
+    def _scatter_plot(x_col: str, y_col: str, x_label: str, y_label: str,
+                       out_name: str) -> None:
+        if not {x_col, y_col}.issubset(combined.columns):
+            print(
+                f"averaged_scores lacks {x_col!r} or {y_col!r}; skipping "
+                f"{out_name}.",
+                file=sys.stderr,
+            )
+            return
+        fig, ax = plt.subplots(figsize=(7, 7))
+        for method in method_order:
+            group = combined[combined["method"] == method].dropna(
+                subset=[x_col, y_col]
+            )
+            if len(group) == 0:
+                continue
+            x_mean = group[x_col].mean()
+            y_mean = group[y_col].mean()
+            x_std = group[x_col].std(ddof=1) if len(group) > 1 else 0.0
+            y_std = group[y_col].std(ddof=1) if len(group) > 1 else 0.0
+            ax.errorbar(
+                x_mean, y_mean, xerr=x_std, yerr=y_std,
+                fmt="o",
+                color=color_for(method),
+                ecolor=color_for(method),
+                elinewidth=1.2,
+                capsize=3,
+                markersize=8,
+                label=f"{method} (n={len(group)})",
+            )
+        ax.set_xlabel(x_label)
+        ax.set_ylabel(y_label)
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.grid(False)
+        sns.despine(ax=ax)
+        ax.legend(
+            title="Method", loc="center left", bbox_to_anchor=(1.02, 0.5),
+            frameon=False,
         )
+        fig.tight_layout()
+        path = out_dir / f"{out_name}.{args.figure_format}"
+        fig.savefig(path, dpi=150, bbox_inches="tight")
+        plt.close(fig)
+        print(f"Wrote {path}")
 
-    ax.set_xlabel("Information retention (relevant)")
-    ax.set_ylabel("Batch effect removal (technical)")
-    ax.set_xlim(0, 1)
-    ax.set_ylim(0, 1)
-    ax.grid(False)
-    sns.despine(ax=ax)
-    ax.legend(
-        title="Method", loc="center left", bbox_to_anchor=(1.02, 0.5),
-        frameon=False,
+    _scatter_plot(
+        "relevant", "technical",
+        "Information retention (relevant)",
+        "Batch effect removal (technical)",
+        "methods_summary",
     )
-
-    fig.tight_layout()
-    figure_path = out_dir / f"methods_summary.{args.figure_format}"
-    fig.savefig(figure_path, dpi=150, bbox_inches="tight")
-    plt.close(fig)
-    print(f"Wrote {figure_path}")
+    _scatter_plot(
+        "relevant", "trajectory",
+        "Information retention (relevant)",
+        "Trajectory preservation",
+        "methods_relevant_vs_trajectory",
+    )
 
 
 if __name__ == "__main__":
