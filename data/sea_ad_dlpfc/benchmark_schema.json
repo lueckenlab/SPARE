@@ -1,0 +1,28 @@
+{
+    "relevant": {
+        "adnc_score": "ranking",
+        "braak_score": "ranking",
+        "cerad_score": "ranking",
+        "thal_score": "ranking",
+        "Cognitive status": "classification",
+        "disease": "classification"
+    },
+    "technical": {
+        "assay": "classification",
+        "PMI": "regression",
+        "median_n_genes_by_counts": "regression",
+        "median_total_counts": "regression",
+        "median_pct_counts_mt": "regression",
+        "n_cells": "regression"
+    },
+    "contextual": {
+        "sex": "classification",
+        "Age at death": "regression",
+        "APOE4 status": "classification",
+        "Years of education": "regression",
+        "self_reported_ethnicity": "classification",
+        "Lewy body disease pathology": "classification",
+        "LATE-NC stage": "classification",
+        "Microinfarct pathology": "classification"
+    }
+}

@@ -18,15 +18,22 @@ keys:
   # ticatlas_processed.h5ad. Fill in before re-running preprocess.
 
 metadata:
-  # samples_metadata_cols: not recorded for the existing
-  # ticatlas_processed.h5ad. Fill in before re-running preprocess.
+  samples_metadata_cols:
+    - subtype
+    - gender
   accessible_metadata_columns:
     - subtype
     - gender
-    # 'source' was listed in the original param_list but is not in
-    # ticatlas_metadata.csv; either re-run preprocess with
-    # samples_metadata_cols including 'source' or leave it out here.
 
 preprocess:
   sample_size_threshold: 100
   output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  # No ordinal outcome variable exists for ticatlas (subtype is nominal); the
+  # trajectory metric is skipped. root_sample is not consulted in that path.
+  trajectory_variable: null
+  root_sample: null
+  inverse_trajectory: false
+  figure_format: png

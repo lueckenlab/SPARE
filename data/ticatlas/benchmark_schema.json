@@ -1,0 +1,14 @@
+{
+    "relevant": {
+        "subtype": "classification"
+    },
+    "technical": {
+        "median_n_genes_by_counts": "regression",
+        "median_total_counts": "regression",
+        "median_pct_counts_mt": "regression",
+        "n_cells": "regression"
+    },
+    "contextual": {
+        "gender": "classification"
+    }
+}

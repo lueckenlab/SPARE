@@ -1,0 +1,22 @@
+{
+    "relevant": {
+        "subject.ageAtFirstDraw": "regression"
+    },
+    "technical": {
+        "cohort.cohortGuid": "classification",
+        "batch_id": "classification",
+        "pool_id": "classification",
+        "chip_id": "classification",
+        "sample.visitName": "classification",
+        "median_n_genes_by_counts": "regression",
+        "median_total_counts": "regression",
+        "median_pct_counts_mt": "regression",
+        "n_cells": "regression"
+    },
+    "contextual": {
+        "subject.biologicalSex": "classification",
+        "subject.cmv": "classification",
+        "subject.race": "classification",
+        "subject.ethnicity": "classification"
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "relevant": {
+        "disease_status": "classification",
+        "flare_status": "classification",
+        "sledaiscore": "regression",
+        "kidney": "classification"
+    },
+    "technical": {
+        "Processing_Cohort": "classification",
+        "median_n_genes_by_counts": "regression",
+        "median_total_counts": "regression",
+        "median_pct_counts_mt": "regression",
+        "n_cells": "regression"
+    },
+    "contextual": {
+        "age": "regression",
+        "sex": "classification",
+        "self_reported_ethnicity": "classification"
+    }
+}

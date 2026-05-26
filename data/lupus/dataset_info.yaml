@@ -18,7 +18,7 @@ files:
 
 keys:
   sample: ind_cov_batch_cov
-  cell_type: cg_cov
+  cell_type: ct_cov
   batch: Processing_Cohort
   batch_covariates:
     - ind_cov_batch_cov
@@ -27,13 +27,38 @@ keys:
 metadata:
   samples_metadata_cols:
     - Processing_Cohort
-    - Age
-    - Sex
-    - pop_cov
-  # accessible_metadata_columns: not yet specified — fill in once the
-  # cleaning script merges clinical variables from the UCSF Box file
-  # (see src/clean_data/lupus/script.py).
+    - development_stage
+    - sex
+    - self_reported_ethnicity
+    # Clinical columns merged in by src/clean_data/lupus/script.py from the
+    # UCSF Box clinical spreadsheet.
+    - disease
+    - disease_state
+    - sledaiscore
+    - kidney
+    # Sample-level derived columns (added by clean_data; existing artifacts
+    # patched in-place by scripts/patch_lupus_metadata.py).
+    - disease_status
+    - flare_status
+    - age
+    - replicate
+  accessible_metadata_columns:
+    - age
+    - sex
+    - self_reported_ethnicity
+    - sledaiscore
+    - kidney
+    - Processing_Cohort
 
 preprocess:
   sample_size_threshold: 100
   output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  # Healthy control sample — picked deterministically as the lexicographically
+  # first HC in the cohort.
+  root_sample: HC-006_4.0
+  trajectory_variable: age
+  inverse_trajectory: false
+  figure_format: png

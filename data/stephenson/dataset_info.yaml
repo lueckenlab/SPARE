@@ -45,3 +45,11 @@ metadata:
 preprocess:
   sample_size_threshold: 100
   output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  # Young healthy non-smoker (Status=Healthy, Worst_Clinical_Status=Healthy).
+  root_sample: MH8919226
+  trajectory_variable: Status_on_day_collection_summary
+  inverse_trajectory: false
+  figure_format: png

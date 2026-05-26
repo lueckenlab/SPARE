@@ -53,3 +53,11 @@ metadata:
 preprocess:
   sample_size_threshold: 100
   output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  # Lowest anatomical_region_ccf_score sample in the cohort.
+  root_sample: homosapiens_None_2023_None_sikkemalisa_002_d10_1101_2022_03_10_483747D322
+  trajectory_variable: anatomical_region_ccf_score
+  inverse_trajectory: false
+  figure_format: png

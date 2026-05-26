@@ -1,0 +1,72 @@
+id: copd
+
+# This dataset was processed before the per-dataset dataset_info.yaml
+# refactor. The cleaned/processed/representations h5ads on disk date
+# from Feb 2025; no `raw`/`cleaned` artefacts exist locally. Re-running
+# clean_data/preprocess for copd is out of scope for the current
+# evaluation pass.
+
+files:
+  processed: COPD_processed.h5ad
+  metadata: COPD_metadata_benchmark.csv
+  representations: copd_representations.h5ad
+
+keys:
+  sample: sample_id
+  # The Feb 2025 representations file is already sample-level, so no
+  # cell_type column is present in .obs. Leaving the canonical name
+  # here for parity with other dataset_info.yaml files; would need to
+  # be updated if clean_data/preprocess is re-run.
+  cell_type: cell_type_reannotated
+  batch: Batch
+  batch_covariates:
+    - sample_id
+    - Batch
+
+metadata:
+  samples_metadata_cols:
+    - Subjet_Lobe_Specific
+    - Batch
+    - Smoking_Status
+    - GOLD_Stage
+    - Age
+    - Sex
+    - FEV1
+    - FEV1_FVC
+    - Bronchodilator_Use
+    - Leukotriene_Use
+    - Steroid_Use
+    - Lobe
+    - Cancer
+    - Total_Emphysema
+    - Lobe_Emphysema
+    - Lobe_Group
+    - Pack_Year
+    - Lobe_Analyzed
+    - Smoking_History
+    - "%_Moderate_Centrilobular_Emphysema_(Corrected)"
+    - Emphysema_Progression_Score
+    - Emphysema_Progression_Type
+    - Emphysema_Progression
+    - Emphysema
+  accessible_metadata_columns:
+    - Age
+    - Sex
+    - Smoking_Status
+    - Smoking_History
+    - Pack_Year
+    - Bronchodilator_Use
+    - Leukotriene_Use
+    - Steroid_Use
+
+preprocess:
+  sample_size_threshold: 100
+  output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  # Healthy 23 y/o non-smoker male — same root used in src/evaluate/params.yaml.
+  root_sample: UA65_Batch1
+  trajectory_variable: GOLD_Stage
+  inverse_trajectory: false
+  figure_format: png

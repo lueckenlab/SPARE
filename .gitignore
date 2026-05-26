@@ -196,6 +196,7 @@ data/**
 !data/**/
 !data/**/README*
 !data/**/dataset_info*.yaml
+!data/**/benchmark_schema.json
 !data/synthetic_processed.h5ad
 
 resources_test

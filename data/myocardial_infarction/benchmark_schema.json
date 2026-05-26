@@ -1,0 +1,20 @@
+{
+    "relevant": {
+        "disease": "classification",
+        "disease_progression": "ranking",
+        "patient_group": "classification",
+        "major_labl": "classification"
+    },
+    "technical": {
+        "donor_id": "classification",
+        "median_n_genes_by_counts": "regression",
+        "median_total_counts": "regression",
+        "median_pct_counts_mt": "regression",
+        "n_cells": "regression"
+    },
+    "contextual": {
+        "sex": "classification",
+        "age": "regression",
+        "development_stage": "classification"
+    }
+}

@@ -31,3 +31,11 @@ metadata:
 preprocess:
   sample_size_threshold: 100
   output_compression: gzip
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  # 19-year-old male — youngest donor in the cohort.
+  root_sample: "177_178"
+  trajectory_variable: age
+  inverse_trajectory: false
+  figure_format: png
