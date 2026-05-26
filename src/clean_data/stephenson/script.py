@@ -111,16 +111,18 @@ adata.obs.loc[
 adata = adata[adata.obs["Status"] != "LPS"].copy()
 # adata = adata[adata.obs["Site"] != "Sanger"] ## Sanger has 74913 cells
 
-# Map severity to numeric values to calculate correlations
+# Map severity to numeric values to calculate correlations. Critical > Severe
+# on the WHO COVID-19 ordinal scale (ICU/ventilation > supplemental oxygen),
+# so Critical takes the highest score.
 adata.obs["Status_on_day_collection_summary"] = adata.obs["Status_on_day_collection_summary"].map(
     {
-        "Severe": 6.0,
-        "Critical": 5.0,
+        "Critical": 6.0,
+        "Severe": 5.0,
         "Moderate": 4.0,
         "Mild": 3.0,
         "Asymptomatic": 2.0,
         "Healthy": 1.0,
-        "Non_covid": np.nan
+        "Non_covid": np.nan,
     }
 )
 

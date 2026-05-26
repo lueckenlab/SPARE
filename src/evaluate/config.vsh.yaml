@@ -19,14 +19,14 @@ arguments:
 
   - type: string
     name: --root_sample
-    description: The root sample to use for pseudotime
-    required: true
+    description: The root sample to use for pseudotime. Only consulted when --trajectory_variable is set.
+    required: false
     example: "H00052-Ha001E-PBGa"
 
   - type: string
     name: --trajectory_variable
-    description: The variable to use for pseudotime metric
-    required: true
+    description: The sample-level variable to correlate with diffusion pseudotime. Leave unset to skip the trajectory metric (e.g. ticatlas, where no ordinal outcome exists).
+    required: false
     example: "Outcome"
 
   - type: boolean
