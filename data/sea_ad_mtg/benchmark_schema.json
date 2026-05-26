@@ -8,7 +8,6 @@
         "disease": "classification"
     },
     "technical": {
-        "assay": "classification",
         "PMI": "regression",
         "median_n_genes_by_counts": "regression",
         "median_total_counts": "regression",

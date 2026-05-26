@@ -40,9 +40,11 @@ metadata:
     - self_reported_ethnicity
     - development_stage
   accessible_metadata_columns:
+    # age_range is a sparse one-hot-encoded categorical that breaks KNN
+    # impute + PCA in aggregate_representations (>93% missing per bucket);
+    # use the numeric age_or_mean_of_age_range instead.
     - BMI
     - age_or_mean_of_age_range
-    - age_range
     - anatomical_region_ccf_score
     - smoking_status
     - sex
