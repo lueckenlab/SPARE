@@ -75,6 +75,10 @@ representations = meta_adata.uns["sample_representations"]
 print("Number of representations: ", len(representations))
 print(representations)
 
+# Will be populated below if a trajectory_variable is set; merged into the
+# combined per-representation score table later. Signed Spearman r in [-1, 1].
+trajectory_scores = None
+
 if par["trajectory_variable"] is not None:
     root_matches = np.flatnonzero(meta_adata.obs_names == par["root_sample"])
     if root_matches.size == 0:
@@ -114,12 +118,16 @@ if par["trajectory_variable"] is not None:
                 corr = -corr
             trajectory_correlations.append(corr)
 
-        trajectory_metric_df = pd.DataFrame(trajectory_correlations, index=representations, columns=["correlation"])
-        trajectory_metric_df.sort_values("correlation", ascending=False, inplace=True)
-        trajectory_metric_df.to_csv(output_dir / "trajectory_metric.csv")
+        trajectory_scores = pd.Series(
+            trajectory_correlations, index=list(representations), name="trajectory"
+        ).sort_values(ascending=False)
 
+        # Plot the raw signed correlation so negative values (misaligned
+        # trajectories) are visible as diagnostic signal. The combined score
+        # table below clips negatives to 0 before folding into `total`.
         plt.figure(figsize=(5, 10))
-        sns.barplot(x="correlation", y=trajectory_metric_df.index, data=trajectory_metric_df)
+        sns.barplot(x=trajectory_scores.values, y=trajectory_scores.index, color="C0")
+        plt.xlabel("Spearman r vs trajectory variable")
         plt.tight_layout()
         plt.savefig(output_dir / "trajectory_metric.png", format=par["figure_format"])
         plt.close()
@@ -192,11 +200,33 @@ avg_knn_score_df = pd.DataFrame(
 avg_knn_score_df = avg_knn_score_df.sort_values("score", ascending=False)
 avg_knn_score_df.to_csv(output_dir / "avg_knn_score_df.csv")
 
-relevant_features_weight = 2/3
+averaged_scores = avg_knn_score_df.pivot(
+    index="representation", columns="covariate_type", values="score"
+)
 
-averaged_scores = avg_knn_score_df.pivot(index="representation", columns="covariate_type", values="score").sort_values("relevant", ascending=False)
+# Merge trajectory into the combined table. We clip the signed Spearman r
+# to [0, 1] so the weighted sum below treats anti-correlated pseudotime as
+# "no recovery" rather than letting it penalise the total (which would
+# advantage methods that fail in the misaligned direction by symmetry).
+# Raw signed values still live in the trajectory plot for diagnostic
+# inspection.
+if trajectory_scores is not None:
+    averaged_scores["trajectory"] = trajectory_scores.reindex(
+        averaged_scores.index
+    ).clip(lower=0)
+    # Weights: relevant = trajectory = 2, technical = 1. Normalised by Σw.
+    averaged_scores["total"] = (
+        2 * averaged_scores["trajectory"]
+        + 2 * averaged_scores["relevant"]
+        + averaged_scores["technical"]
+    ) / 5
+else:
+    # No trajectory for this dataset (e.g. ticatlas). Fall back to the
+    # relevant + technical weighting with the same 2:1 ratio.
+    averaged_scores["total"] = (
+        2 * averaged_scores["relevant"] + averaged_scores["technical"]
+    ) / 3
 
-averaged_scores["total"] = (averaged_scores["relevant"] * relevant_features_weight + (1 - relevant_features_weight) * averaged_scores["technical"])
 averaged_scores.sort_values("total", ascending=False, inplace=True)
 averaged_scores.to_csv(output_dir / "averaged_scores.csv")
 
