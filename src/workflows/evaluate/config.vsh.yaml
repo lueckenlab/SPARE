@@ -1,0 +1,111 @@
+name: evaluate_workflow
+description: |
+  Chained workflow: aggregate_representations -> evaluate. When --method_outputs
+  is provided, the per-method CSVs are aggregated into a sample representations
+  h5ad first; otherwise --input is treated as an already-aggregated h5ad and the
+  aggregate step is skipped.
+
+arguments:
+  - type: file
+    name: --dataset_info
+    description: |
+      Path to dataset_info.yaml. When set, fills in --input, --metadata_path,
+      --cell_type_key, --accessible_metadata_columns, --benchmark_schema,
+      --root_sample, --trajectory_variable, --inverse_trajectory,
+      --figure_format from the YAML. Individual args below still win when
+      explicitly provided.
+    direction: input
+    required: false
+
+  - type: file
+    name: --input
+    description: |
+      Aggregated representations h5ad (when --method_outputs is unset) OR the
+      output path for aggregate_representations (when --method_outputs is set).
+      Derived from dataset_info.files.representations when omitted.
+    direction: input
+    required: false
+    example: "data/combat/combat_representations.h5ad"
+
+  - type: file
+    name: --method_outputs
+    multiple: true
+    description: |
+      Per-method CSVs to feed into aggregate_representations. Leave unset when
+      the input h5ad is already aggregated (typical for the immediate post-
+      benchmark evaluate path).
+    direction: input
+    required: false
+
+  - type: file
+    name: --metadata_path
+    description: Sample-level metadata CSV. Only used when --method_outputs is set.
+    direction: input
+    required: false
+
+  - type: string
+    name: --cell_type_key
+    description: Cell type column. Only used when --method_outputs is set.
+    required: false
+
+  - type: string
+    name: --accessible_metadata_columns
+    multiple: true
+    description: Columns used to build the metadata baseline representation. Only used when --method_outputs is set.
+    required: false
+
+  - type: file
+    name: --benchmark_schema
+    description: JSON schema mapping covariate-type → column → task. Derived from dataset_info when omitted.
+    direction: input
+    required: false
+
+  - type: string
+    name: --root_sample
+    description: Root sample for pseudotime. Only consulted when --trajectory_variable is set.
+    required: false
+
+  - type: string
+    name: --trajectory_variable
+    description: Sample-level variable for trajectory metric. Leave unset to skip.
+    required: false
+
+  - type: boolean
+    name: --inverse_trajectory
+    description: Negate the trajectory correlation.
+    required: false
+    default: false
+
+  - type: string
+    name: --figure_format
+    description: Output figure format (png/pdf/svg).
+    required: false
+    default: "png"
+
+  - type: file
+    name: --output_dir
+    description: Directory for evaluate outputs (CSVs + figures).
+    direction: output
+    required: true
+    example: "output/combat_evaluate/"
+
+resources:
+  - type: nextflow_script
+    path: main.nf
+    entrypoint: run_wf
+  - path: ../utils/dataset_info.nf
+
+dependencies:
+  - name: aggregate_representations
+    repository: local
+  - name: evaluate
+    repository: local
+
+repositories:
+  - name: local
+    type: local
+
+runners:
+  - type: nextflow
+    directives:
+      label: [singlecpu]

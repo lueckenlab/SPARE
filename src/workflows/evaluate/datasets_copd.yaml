@@ -1,0 +1,2 @@
+- id: copd
+  dataset_info: ../../../data/copd/dataset_info.yaml

@@ -1,0 +1,29 @@
+# Datasets ready for the chained aggregate -> evaluate workflow.
+# Only datasets whose dataset_info.yaml has an `evaluate:` block AND a
+# benchmark_schema.json on disk go here. Lupus / ticatlas are wired in but
+# require sample_representation to finish first so their representations h5ad
+# exists.
+- id: combat
+  dataset_info: ../../../data/combat/dataset_info.yaml
+- id: copd
+  dataset_info: ../../../data/copd/dataset_info.yaml
+- id: hlca
+  dataset_info: ../../../data/hlca/dataset_info.yaml
+- id: onek1k
+  dataset_info: ../../../data/onek1k/dataset_info.yaml
+- id: stephenson
+  dataset_info: ../../../data/stephenson/dataset_info.yaml
+- id: imm_of_aging
+  dataset_info: ../../../data/imm_of_aging/dataset_info.yaml
+- id: myocardial_infarction
+  dataset_info: ../../../data/myocardial_infarction/dataset_info.yaml
+- id: sea_ad_dlpfc
+  dataset_info: ../../../data/sea_ad_dlpfc/dataset_info.yaml
+- id: sea_ad_mtg
+  dataset_info: ../../../data/sea_ad_mtg/dataset_info.yaml
+- id: sound_life
+  dataset_info: ../../../data/sound_life/dataset_info.yaml
+- id: lupus
+  dataset_info: ../../../data/lupus/dataset_info.yaml
+- id: ticatlas
+  dataset_info: ../../../data/ticatlas/dataset_info.yaml
