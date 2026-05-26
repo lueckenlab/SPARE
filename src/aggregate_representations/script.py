@@ -82,6 +82,18 @@ for representation in par["input"]:
     # from floating-point error; pp.neighbors(metric="precomputed") rejects them.
     representation_df = representation_df.clip(lower=0)
 
+    # Some methods (e.g. pilot_gm_vae) emit a small number of NaN entries when
+    # the per-pair distance computation fails. The earlier 10% threshold has
+    # already filtered out mostly-broken matrices, so the remaining NaNs are
+    # rare; fill them with the matrix-wide max so sklearn's
+    # KNeighborsTransformer (which rejects any NaN) treats those pairs as
+    # "as far apart as possible".
+    nan_mask = representation_df.isna()
+    if nan_mask.to_numpy().any():
+        fill_value = float(representation_df.fillna(0).to_numpy().max())
+        representation_df = representation_df.fillna(fill_value)
+        print(f"  Filled {int(nan_mask.to_numpy().sum())} NaN distances with max={fill_value:.4f}")
+
     # It makes more sense to put distances to the obsp, but pp.neighbors expects it to be in obsm
     # So we put full distances matrix in obsm, and obsp will contain only the distances for nearest neighbors
     meta_adata.obsm[f"{representation_name}_distances"] = representation_df.loc[samples][samples]
