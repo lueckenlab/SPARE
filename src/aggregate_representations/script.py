@@ -20,6 +20,15 @@ par = {
 print("Reading metadata")
 metadata = pd.read_csv(par["metadata_path"], index_col=0)
 
+# Some upstream metadata CSVs (notably hlca) carry duplicate sample ids
+# when the same donor appears across multiple contributing studies. The
+# meta-AnnData below must be one row per sample, otherwise downstream
+# anndata.obsm assignments fail with an index-length mismatch.
+n_dupes = int(metadata.index.duplicated().sum())
+if n_dupes:
+    print(f"Dropping {n_dupes} duplicate sample id(s) from metadata (keep=first)")
+    metadata = metadata[~metadata.index.duplicated(keep="first")]
+
 obs_only_columns = metadata.columns.drop(par["accessible_metadata_columns"])
 
 print("Converting to AnnData")
@@ -36,6 +45,15 @@ obs_metric, var_metrics = ep.pp.qc_metrics(meta_adata)
 
 print("Imputing missing values")
 ep.pp.knn_impute(meta_adata, n_neighbors=5)
+
+# KNN-impute occasionally leaves NaN for one-hot-encoded categorical
+# columns with very sparse populations (e.g. hlca's age_range buckets
+# are >93% missing). PCA below rejects any NaN, so backstop with 0 —
+# for one-hot encoded features this matches "not in that category".
+remaining_nan = int(np.isnan(meta_adata.X).sum())
+if remaining_nan:
+    print(f"Backfilling {remaining_nan} residual NaN in X with 0 (post-KNN-impute)")
+    meta_adata.X = np.nan_to_num(meta_adata.X, nan=0.0)
 
 print("Calculating PCA")
 ep.pp.pca(meta_adata)
