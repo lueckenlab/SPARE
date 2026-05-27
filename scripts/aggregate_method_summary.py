@@ -258,6 +258,8 @@ def main() -> None:
         else:
             ax.set_xlim(0, 1)
             ax.set_ylim(0, 1)
+        # Square plot area regardless of legend width.
+        ax.set_aspect("equal", adjustable="box")
         ax.grid(False)
         sns.despine(ax=ax)
         ax.legend(
@@ -272,27 +274,27 @@ def main() -> None:
 
     _scatter_plot(
         "relevant", "technical",
-        "Information retention (relevant)",
-        "Batch effect removal (technical)",
+        "Information retention",
+        "Batch mixing",
         "methods_summary",
     )
     _scatter_plot(
         "relevant", "trajectory",
-        "Information retention (relevant)",
+        "Information retention",
         "Trajectory preservation",
         "methods_relevant_vs_trajectory",
     )
     _scatter_plot(
         "relevant_gain", "technical_gain",
-        "Relevant gain vs Pseudobulk",
-        "Technical gain vs Pseudobulk",
+        "Information retention gain vs Pseudobulk",
+        "Batch mixing gain vs Pseudobulk",
         "methods_gain_summary",
         gain_axes=True,
     )
     _scatter_plot(
         "relevant_gain", "trajectory_gain",
-        "Relevant gain vs Pseudobulk",
-        "Trajectory gain vs Pseudobulk",
+        "Information retention gain vs Pseudobulk",
+        "Trajectory preservation gain vs Pseudobulk",
         "methods_gain_relevant_vs_trajectory",
         gain_axes=True,
     )
