@@ -66,6 +66,7 @@ METHOD_COLORS = {
     "Random vector": "#808080",            # gray
     # New methods (extension of the writeup palette, distinct hues)
     "SampleCLR": "#7B3FB5",                # purple
+    "SampleCLR (batch-aware)": "#4A1F70",  # deep violet (sampleclr family, darker)
     "MrVI": "#8C564B",                     # brown
     "PILOT-GM-VAE": "#7F4310",             # dark amber (PILOT family, darker)
     "scPoli": "#C13F25",                   # deeper red (scPoli family, darker)
@@ -79,6 +80,11 @@ def classify_representation(name: str) -> str:
     for prefix, family in PREFIX_RULES:
         if name == prefix or name.startswith(prefix + "_") or name.startswith(prefix):
             if name == prefix or name.startswith(prefix + "_"):
+                # Split sampleclr into batch-aware vs not. The `_ba` suffix
+                # marks the batch-aware variant; it can sit at the end or
+                # before another suffix (e.g. sampleclr_pca_ba_t05).
+                if family == "SampleCLR" and re.search(r"_ba(_|$)", name):
+                    return "SampleCLR (batch-aware)"
                 return family
     return "Other"
 
