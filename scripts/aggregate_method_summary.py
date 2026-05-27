@@ -305,6 +305,79 @@ def main() -> None:
         gain_axes=True,
     )
 
+    _build_barplots(combined, aggregated, color_for, out_dir, args.figure_format)
+
+
+# Metric -> axis label used in the barplots.
+METRIC_LABELS = {
+    "relevant": "Information retention",
+    "technical": "Batch mixing",
+    "trajectory": "Trajectory preservation",
+    "total": "Total",
+}
+
+
+def _build_barplots(combined: pd.DataFrame, aggregated: pd.DataFrame,
+                     color_for, out_dir: Path, figure_format: str) -> None:
+    """One 1×4 horizontal-bar figure per dataset, plus one cross-dataset
+    average figure with error bars. Y axis = method families sorted by
+    cross-dataset average total (descending; top of axis = best)."""
+    method_order = (
+        aggregated.sort_values("total_mean", ascending=False)["method"].tolist()
+    )
+    metrics = [m for m in METRIC_LABELS if m in combined.columns]
+    fig_h = max(3.5, 0.35 * len(method_order) + 1.2)
+
+    def _draw(values_per_metric, errors_per_metric, out_name, title):
+        fig, axes = plt.subplots(
+            1, len(metrics), figsize=(3.6 * len(metrics), fig_h), sharey=True
+        )
+        if len(metrics) == 1:
+            axes = [axes]
+        colors = [color_for(m) for m in method_order]
+        for ax, metric in zip(axes, metrics):
+            values = values_per_metric[metric]
+            errors = errors_per_metric.get(metric)
+            ax.barh(
+                method_order, values, xerr=errors, color=colors,
+                error_kw={"capsize": 2, "elinewidth": 0.8, "ecolor": "#444"},
+            )
+            ax.set_xlim(0, 1)
+            ax.set_xlabel(METRIC_LABELS[metric])
+            ax.grid(False)
+            sns.despine(ax=ax)
+        axes[0].invert_yaxis()  # best method at the top
+        fig.suptitle(title, fontsize=12)
+        fig.tight_layout()
+        path = out_dir / f"{out_name}.{figure_format}"
+        fig.savefig(path, dpi=150, bbox_inches="tight")
+        plt.close(fig)
+        print(f"Wrote {path}")
+
+    # Per-dataset
+    for dataset, group in combined.groupby("dataset"):
+        group_idx = group.set_index("method")
+        values = {
+            m: [group_idx.loc[meth, m] if meth in group_idx.index else float("nan")
+                for meth in method_order]
+            for m in metrics
+        }
+        _draw(values, {}, f"barplot_{dataset}", dataset)
+
+    # Cross-dataset average
+    agg_idx = aggregated.set_index("method")
+    values = {
+        m: [agg_idx.loc[meth, f"{m}_mean"] if meth in agg_idx.index else float("nan")
+            for meth in method_order]
+        for m in metrics
+    }
+    errors = {
+        m: [agg_idx.loc[meth, f"{m}_std"] if meth in agg_idx.index else 0.0
+            for meth in method_order]
+        for m in metrics
+    }
+    _draw(values, errors, "barplot_average", "Average across datasets (mean ± std)")
+
 
 if __name__ == "__main__":
     main()
