@@ -158,16 +158,41 @@ def main() -> None:
         sys.exit(2)
 
     combined = pd.concat(per_method_dataset, ignore_index=True)
-    combined_path = out_dir / "per_method_dataset.csv"
-    combined.to_csv(combined_path, index=False)
-    print(f"Wrote {combined_path}")
 
     metrics = [
         c for c in ("relevant", "technical", "trajectory", "contextual", "total")
         if c in combined.columns
     ]
+
+    # Gain-over-pseudobulk per dataset, per metric.
+    # gain = (score - pb) / (1 - pb), with pb = max Pseudobulk score on that
+    # metric in that dataset. 0 means parity with pseudobulk, 1 means perfect,
+    # negative means worse. NaN if no Pseudobulk row landed for the dataset
+    # or pb == 1 (degenerate).
+    pb_rows = combined[combined["method"] == "Pseudobulk"]
+    if pb_rows.empty:
+        print(
+            "WARNING: no Pseudobulk rows found — gain columns will be NaN",
+            file=sys.stderr,
+        )
+    for metric in metrics:
+        gain_col = f"{metric}_gain"
+        combined[gain_col] = float("nan")
+        for dataset, group in combined.groupby("dataset"):
+            pb_score = pb_rows[pb_rows["dataset"] == dataset][metric].max()
+            if pd.isna(pb_score) or pb_score >= 1.0:
+                continue
+            combined.loc[group.index, gain_col] = (
+                group[metric] - pb_score
+            ) / (1.0 - pb_score)
+
+    combined_path = out_dir / "per_method_dataset.csv"
+    combined.to_csv(combined_path, index=False)
+    print(f"Wrote {combined_path}")
+
+    agg_cols = metrics + [f"{m}_gain" for m in metrics]
     aggregated = (
-        combined.groupby("method")[metrics]
+        combined.groupby("method")[agg_cols]
         .agg(["mean", "std", "count"])
         .reset_index()
     )
@@ -186,7 +211,7 @@ def main() -> None:
     color_for = lambda m: METHOD_COLORS.get(m, METHOD_COLORS["Other"])
 
     def _scatter_plot(x_col: str, y_col: str, x_label: str, y_label: str,
-                       out_name: str) -> None:
+                       out_name: str, *, gain_axes: bool = False) -> None:
         if not {x_col, y_col}.issubset(combined.columns):
             print(
                 f"averaged_scores lacks {x_col!r} or {y_col!r}; skipping "
@@ -194,8 +219,15 @@ def main() -> None:
                 file=sys.stderr,
             )
             return
+        # Pseudobulk is the reference line in gain plots; don't draw it (it
+        # sits at (0,0) by construction). On absolute-score plots we still
+        # show it like any other method.
+        plot_methods = [
+            m for m in method_order
+            if not (gain_axes and m == "Pseudobulk")
+        ]
         fig, ax = plt.subplots(figsize=(7, 7))
-        for method in method_order:
+        for method in plot_methods:
             group = combined[combined["method"] == method].dropna(
                 subset=[x_col, y_col]
             )
@@ -217,8 +249,15 @@ def main() -> None:
             )
         ax.set_xlabel(x_label)
         ax.set_ylabel(y_label)
-        ax.set_xlim(0, 1)
-        ax.set_ylim(0, 1)
+        if gain_axes:
+            # Pseudobulk reference at (0, 0); show a clear cross there.
+            ax.axhline(0, color="lightgray", lw=1, zorder=0)
+            ax.axvline(0, color="lightgray", lw=1, zorder=0)
+            ax.set_xlim(-1, 1)
+            ax.set_ylim(-1, 1)
+        else:
+            ax.set_xlim(0, 1)
+            ax.set_ylim(0, 1)
         ax.grid(False)
         sns.despine(ax=ax)
         ax.legend(
@@ -242,6 +281,20 @@ def main() -> None:
         "Information retention (relevant)",
         "Trajectory preservation",
         "methods_relevant_vs_trajectory",
+    )
+    _scatter_plot(
+        "relevant_gain", "technical_gain",
+        "Relevant gain vs Pseudobulk",
+        "Technical gain vs Pseudobulk",
+        "methods_gain_summary",
+        gain_axes=True,
+    )
+    _scatter_plot(
+        "relevant_gain", "trajectory_gain",
+        "Relevant gain vs Pseudobulk",
+        "Trajectory gain vs Pseudobulk",
+        "methods_gain_relevant_vs_trajectory",
+        gain_axes=True,
     )
 
 
