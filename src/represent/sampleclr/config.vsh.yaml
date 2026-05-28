@@ -1,0 +1,153 @@
+name: sampleclr
+description: >
+  Self-supervised donor-level representation via SampleCLR
+  (contrastive sample-CLR; pretrain phase only — no labels).
+  Optional batch-aware sampler when --use_batch_aware_sampler is set.
+
+arguments:
+  - type: file
+    name: --input
+    description: Path to the input data
+    direction: input
+    required: true
+    example: "combat_processed.h5ad"
+
+  - type: file
+    name: --output
+    description: Path to save the sample embeddings (n_samples x output_dim CSV)
+    direction: output
+    required: true
+    example: "combat_sampleclr_pca.csv"
+
+  - type: string
+    name: --sample_key
+    description: Column in .obs with donor identifiers
+    required: true
+    example: "scRNASeq_sample_ID"
+
+  - type: string
+    name: --cell_type_key
+    description: Column in .obs with cell-type annotations (accepted for workflow uniformity; unused by self-supervised SampleCLR)
+    required: false
+    example: "Annotation_major_subset"
+
+  - type: string
+    name: --layer
+    description: Key in .obsm with per-cell features
+    required: false
+    default: "X_pca"
+
+  - type: string
+    name: --batch_key
+    description: |
+      Column in .obs with technical/batch labels. Only used when
+      --use_batch_aware_sampler is true; passed through from dataset_info.
+    required: false
+
+  - type: boolean
+    name: --use_batch_aware_sampler
+    description: Enable SampleCLR's batch-aware sampler (requires --batch_key).
+    required: false
+    default: false
+
+  - type: integer
+    name: --output_dim
+    description: Dimensionality of the donor embedding
+    required: false
+    default: 128
+
+  - type: integer
+    name: --n_cells_per_sample
+    description: |
+      Fixed number of cells subsampled per donor per batch. Ignored when
+      --n_cells_per_sample_train_low / --n_cells_per_sample_train_high
+      are set (then a (low, high) range is passed to SampleCLR instead).
+    required: false
+    default: 1000
+
+  - type: string
+    name: --n_cells_per_sample_train_low
+    description: |
+      Lower bound of the per-donor cells-per-batch range used during
+      training. Accepts an integer (e.g., "500") or a percentile keyword
+      "pNN" (e.g., "p25"), in which case the per-donor cell counts in the
+      loaded AnnData are used to compute the value at runtime. When set,
+      --n_cells_per_sample_train_high must also be set; together they
+      override --n_cells_per_sample.
+    required: false
+
+  - type: string
+    name: --n_cells_per_sample_train_high
+    description: |
+      Upper bound of the per-donor cells-per-batch range used during
+      training. Same format as --n_cells_per_sample_train_low.
+    required: false
+
+  - type: string
+    name: --n_cells_per_sample_inference
+    description: |
+      Cells per donor used at embedding-extraction time (forwarded as
+      subset_size to SampleCLR._compute_sample_representations). Accepts
+      an integer or "pNN" percentile keyword. When unset, the extractor
+      uses all cells per donor (sampleclr's default).
+    required: false
+
+  - type: integer
+    name: --num_epochs_pretrain
+    description: Pretraining epochs
+    required: false
+    default: 100
+
+  - type: integer
+    name: --batch_size
+    description: Donors per mini-batch
+    required: false
+    default: 16
+
+  - type: double
+    name: --lambda_
+    description: |
+      Weight on the auxiliary contrastive loss components inside
+      sampleclr.models.ContrastiveModel. Forwarded via **model_kwargs.
+      Default of 5.0 matches the patpy-benchmark protocol; the upstream
+      SampleCLR default (~0.034) is too small for this benchmark.
+    required: false
+    default: 5.0
+
+  - type: double
+    name: --contrastive_loss_temperature
+    description: |
+      Temperature for the contrastive loss (forwarded to SampleCLR's
+      ContrastiveModel as `contrastive_loss_temperature`). Default matches
+      patpy's upstream default (0.1).
+    required: false
+    default: 0.1
+
+  - type: string
+    name: --device
+    description: Training/inference device
+    required: false
+    default: "cuda"
+
+  - type: integer
+    name: --seed
+    description: Random seed
+    required: false
+    default: 42
+
+resources:
+  - type: python_script
+    path: script.py
+
+engines:
+  - type: native
+
+runners:
+  - type: executable
+  - type: nextflow
+    directives:
+      label: [highmem, gpu]
+      # SampleCLR + sampleclr live in patpy-benchmark-tutorial-gpu (patpy 0.17.0,
+      # sampleclr 0.4.1). Shared sample_representation_benchmark env is on the
+      # older patpy pin and has neither sampleclr nor a matching torch/CUDA.
+      beforeScript: "source /home/icb/vladimir.shitov/software/miniconda3/etc/profile.d/conda.sh && conda activate patpy-benchmark-tutorial-gpu"

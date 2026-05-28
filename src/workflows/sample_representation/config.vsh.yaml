@@ -92,6 +92,8 @@ dependencies:
     repository: local
   - name: pilot_gm_vae
     repository: local
+  - name: sampleclr
+    repository: local
 
 repositories:
   - name: local

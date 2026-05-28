@@ -13,6 +13,7 @@ methods = [
     diffusionemd,
     phemd,
     pilot_gm_vae,
+    sampleclr,
 ]
 
 // If state.dataset_info is set, fill missing fields from the YAML.
@@ -27,6 +28,7 @@ def applyDatasetInfo = { id, state ->
         metadata_path:               expanded.metadata_path,
         sample_key:                  expanded.sample_key,
         cell_type_key:               expanded.cell_type_key,
+        batch_key:                   expanded.batch_key,
         accessible_metadata_columns: expanded.accessible_metadata_columns,
     ].findAll { it.value != null }
     return [id, extras + state.findAll { it.value != null }]
@@ -95,6 +97,7 @@ workflow run_wf {
                         metadata_path: state.metadata_path,
                         cell_type_key: state.cell_type_key,
                         sample_key: state.sample_key,
+                        batch_key: state.batch_key,
                         output: "${methodName}_${experimentName}.csv",
                     ]
                     new_args.putAll(experimentParams)
