@@ -13,51 +13,49 @@ files:
 
 keys:
   sample: sample_id
-  # The Feb 2025 representations file is already sample-level, so no
-  # cell_type column is present in .obs. Leaving the canonical name
-  # here for parity with other dataset_info.yaml files; would need to
-  # be updated if clean_data/preprocess is re-run.
   cell_type: cell_type_reannotated
-  batch: Batch
+  batch: batch
   batch_covariates:
     - sample_id
-    - Batch
+    - batch
 
+# Column names in this section reflect what's ACTUALLY in
+# COPD_processed.h5ad obs (verified via h5py inspection 2026-05-28).
+# Prior versions of this file used canonicalised names (Bronchodilator_Use,
+# Smoking_Status, GOLD_Stage, etc.) that do not exist in the on-disk h5ad;
+# those references were corrected here. If clean_data/preprocess is
+# re-run with a fresh column-naming pass, restore the canonical names.
 metadata:
   samples_metadata_cols:
     - Subjet_Lobe_Specific
-    - Batch
-    - Smoking_Status
-    - GOLD_Stage
+    - batch
+    - Smoke
+    - GOLD
     - Age
     - Sex
     - FEV1
-    - FEV1_FVC
-    - Bronchodilator_Use
-    - Leukotriene_Use
-    - Steroid_Use
+    - FEV1.FVC
+    - Bronchodilator
+    - Leukotriene
+    - Steroids
     - Lobe
-    - Cancer
-    - Total_Emphysema
-    - Lobe_Emphysema
-    - Lobe_Group
-    - Pack_Year
-    - Lobe_Analyzed
-    - Smoking_History
-    - "%_Moderate_Centrilobular_Emphysema_(Corrected)"
-    - Emphysema_Progression_Score
-    - Emphysema_Progression_Type
-    - Emphysema_Progression
-    - Emphysema
+    - CANCER
+    - lobeemph
+    - lobegroup
+    - PackYear
+    - Disease
+    - Disease2
   accessible_metadata_columns:
     - Age
     - Sex
     - Smoking_Status
-    - Smoking_History
     - Pack_Year
     - Bronchodilator_Use
     - Leukotriene_Use
     - Steroid_Use
+    - Disease
+    - Disease_2
+    - Condition_Coarse
 
 preprocess:
   sample_size_threshold: 100

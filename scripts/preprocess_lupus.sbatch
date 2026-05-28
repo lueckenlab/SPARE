@@ -30,10 +30,10 @@ SECONDS=0
     --output data/lupus/lupus_processed.h5ad \
     --output_metadata data/lupus/lupus_metadata.csv \
     --sample_key "ind_cov_batch_cov" \
-    --cell_type_key "cg_cov" \
+    --cell_type_key "ct_cov" \
     --batch_key "Processing_Cohort" \
     --batch_covariates "ind_cov_batch_cov,Processing_Cohort" \
-    --samples_metadata_cols "Processing_Cohort,Age,Sex,pop_cov" \
+    --samples_metadata_cols "Processing_Cohort,development_stage,sex,self_reported_ethnicity" \
     --sample_size_threshold 100 \
     --output_compression gzip
 echo "Wallclock: ${SECONDS}s"
