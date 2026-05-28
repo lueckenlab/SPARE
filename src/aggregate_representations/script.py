@@ -133,6 +133,24 @@ for representation in par["input"]:
 
     meta_adata.uns["sample_representations"].append(representation_name)
 
+# When a later-processed representation drops samples, anndata subsets
+# only the OBS axis of obsm entries — DataFrames stored earlier keep
+# their original column axis, leaving rectangular (n_obs × original_cols)
+# distance matrices in obsm. Reslice column-wise to match the final
+# obs_names so downstream evaluate sees square sample × sample matrices.
+final_samples = list(meta_adata.obs_names)
+n_resliced = 0
+for key in list(meta_adata.obsm.keys()):
+    if not key.endswith("_distances"):
+        continue
+    mat = meta_adata.obsm[key]
+    if isinstance(mat, pd.DataFrame) and mat.shape[1] != len(final_samples):
+        meta_adata.obsm[key] = mat.loc[:, final_samples]
+        n_resliced += 1
+if n_resliced:
+    print(f"Resliced {n_resliced} obsm distance DataFrame(s) to "
+          f"({len(final_samples)}, {len(final_samples)})")
+
 print("Resulting AnnData")
 print(meta_adata)
 meta_adata.write_h5ad(par["output"])
