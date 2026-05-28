@@ -82,7 +82,7 @@ print("Normalizing data (full-library size factors)")
 inv_size = np.zeros_like(full_lib_size)
 nonzero = full_lib_size > 0
 inv_size[nonzero] = 1e4 / full_lib_size[nonzero]
-adata.X = sp.diags(inv_size) @ adata.X
+adata.X = sp.diags(inv_size) @ adata.layers["X_raw_counts"]
 print("Log-transforming data")
 sc.pp.log1p(adata)
 
@@ -117,24 +117,44 @@ if par["gradient_clip_val"] is not None:
     train_kwargs["gradient_clip_val"] = par["gradient_clip_val"]
     print(f"Gradient clipping enabled: gradient_clip_val={par['gradient_clip_val']}")
 
-for batch_key in par["batch_covariates"]:
+# scANVI's setup_anndata compares the labels column dtype strictly. If
+# the upstream clean script went through pd.merge (lupus), the column may
+# arrive as object dtype even though the values are clean strings - cast
+# to category here so scvi's categorical registration succeeds. Also
+# fillna('nan') so any genuine NaN rows map to scANVI's unlabeled
+# category instead of triggering a -1-code rejection in
+# _make_column_categorical.
+adata.obs[CELL_TYPE_KEY] = adata.obs[CELL_TYPE_KEY].astype(object).fillna("nan").astype("category")
+
+# Canonical positional names for the scVI/scANVI embeddings: the first
+# batch_covariate is the sample-level grouping and the second is the
+# batch-level grouping, regardless of the actual column name. Anything
+# beyond i=1 gets `batch_<i>` so the suffix is ALWAYS positional and
+# never leaks the raw column name (e.g. `X_scVI_donor_id`). This matches
+# the generic layer references in experiments.yaml (X_scVI_sample,
+# X_scVI_batch, X_scANVI_sample, X_scANVI_batch).
+def _embedding_suffix(i):
+    return {0: "sample", 1: "batch"}.get(i, f"batch_{i}")
+
+for i, batch_key in enumerate(par["batch_covariates"]):
+    embedding_suffix = _embedding_suffix(i)
     # print("Running Harmony on PCA embeddings")
     # sc.external.pp.harmony_integrate(adata, basis="X_pca", key=batch_key, adjusted_basis=f"X_harmony_{batch_key}")
 
-    print(f"Obtain scVI and scanVI for batch key: {batch_key}")
+    print(f"Obtain scVI and scanVI for batch key: {batch_key} -> {embedding_suffix}")
     # Run scVI
     scvi.model.SCVI.setup_anndata(adata, layer="X_raw_counts", batch_key=batch_key)
     vae = scvi.model.SCVI(adata, n_layers=2, n_latent=30, gene_likelihood="nb")
     vae.train(**train_kwargs)
-    embedding_name_scVI = f"X_scVI_{batch_key}"
+    embedding_name_scVI = f"X_scVI_{embedding_suffix}"
     adata.obsm[embedding_name_scVI] = vae.get_latent_representation()
     print(f"Embedding stored: {embedding_name_scVI}")
 
     counter = plot_loss(
-        history=vae.history, 
-        loss_keys=["reconstruction_loss_train", "train_loss_epoch", "elbo_train"], 
-        title=f"Training Loss Metrics for scVI ({batch_key})", 
-        filenames=[f"reconstruction_loss_scVI_{batch_key}.png", f"train_loss_epoch_scVI_{batch_key}.png", f"elbo_train_scVI_{batch_key}.png"],
+        history=vae.history,
+        loss_keys=["reconstruction_loss_train", "train_loss_epoch", "elbo_train"],
+        title=f"Training Loss Metrics for scVI ({embedding_suffix}; {batch_key})",
+        filenames=[f"reconstruction_loss_scVI_{embedding_suffix}.png", f"train_loss_epoch_scVI_{embedding_suffix}.png", f"elbo_train_scVI_{embedding_suffix}.png"],
         counter=counter
     )
 
@@ -146,15 +166,15 @@ for batch_key in par["batch_covariates"]:
         unlabeled_category="nan"
     )
     lvae.train(max_epochs=par["n_scanvi_epochs"], n_samples_per_label=100, **train_kwargs)
-    embedding_name_scANVI = f"X_scANVI_{batch_key}"
+    embedding_name_scANVI = f"X_scANVI_{embedding_suffix}"
     adata.obsm[embedding_name_scANVI] = lvae.get_latent_representation()
     print(f"Embedding stored: {embedding_name_scANVI}")
 
     counter = plot_loss(
-        history=lvae.history, 
-        loss_keys=["reconstruction_loss_train", "train_loss_epoch", "elbo_train"], 
-        title=f"Training Loss Metrics for scANVI ({batch_key})", 
-        filenames=[f"reconstruction_loss_scANVI_{batch_key}.png", f"train_loss_epoch_scANVI_{batch_key}.png", f"elbo_train_scANVI_{batch_key}.png"],
+        history=lvae.history,
+        loss_keys=["reconstruction_loss_train", "train_loss_epoch", "elbo_train"],
+        title=f"Training Loss Metrics for scANVI ({embedding_suffix}; {batch_key})",
+        filenames=[f"reconstruction_loss_scANVI_{embedding_suffix}.png", f"train_loss_epoch_scANVI_{embedding_suffix}.png", f"elbo_train_scANVI_{embedding_suffix}.png"],
         counter=counter
     )
 
