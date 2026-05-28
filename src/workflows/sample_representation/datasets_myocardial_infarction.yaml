@@ -1,0 +1,2 @@
+- id: myocardial_infarction
+  dataset_info: ../../../data/myocardial_infarction/dataset_info.yaml
