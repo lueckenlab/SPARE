@@ -47,4 +47,11 @@ runners:
   - type: executable
   - type: nextflow
     directives:
-        label: [singlecpu]
+        label: [highmem, gpu]
+        # scpoli was previously labelled [singlecpu] which forced
+        # local-executor CPU execution. scarches' scpoli trainer auto-
+        # detects GPU when one is available, so giving it the gpu label
+        # routes it to the gpu_p partition with --gres=gpu:2 and the
+        # trainer kicks into GPU mode automatically. Required for large
+        # datasets (hlca 1.7M cells, sound_life 13.8M cells) where the
+        # CPU-only training stalls past 24 h.

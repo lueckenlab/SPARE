@@ -36,6 +36,18 @@ arguments:
     default: "euclidean"
     choices: ["euclidean", "cosine", "cityblock"]
 
+  - type: boolean
+    name: --apply_clr
+    description: Apply centered log-ratio (CLR) transformation to composition vectors before computing distances.
+    required: false
+    default: false
+
+  - type: double
+    name: --pseudocount
+    description: Pseudocount added before the CLR transform to avoid log(0). Only used when --apply_clr is true.
+    required: false
+    default: 1.0
+
 resources:
   - type: python_script
     path: script.py

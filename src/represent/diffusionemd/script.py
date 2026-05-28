@@ -24,6 +24,7 @@ par = {
     "layer": "X_pca",
     "n_neighbors": 15,
     "n_scales": 6,
+    "subset_n_cells_per_sample": 2000,
 }
 ## VIASH END
 
@@ -31,6 +32,24 @@ print("Reading adata")
 adata = sc.read(par["input"])
 
 print(adata)
+
+# Subsample to at most N cells per donor. The kNN graph scales with total
+# n_cells, so this caps the graph size at n_donors * N. Donors with fewer
+# cells than the cap are kept whole.
+n_per_sample = par["subset_n_cells_per_sample"]
+if n_per_sample and n_per_sample > 0:
+    print(f"Subsampling to ≤{n_per_sample} cells per donor")
+    rng = np.random.default_rng(42)
+    sample_ids = adata.obs[par["sample_key"]]
+    keep_idxs = []
+    for level in sample_ids.unique():
+        idxs = np.where((sample_ids == level).to_numpy())[0]
+        if len(idxs) <= n_per_sample:
+            keep_idxs.extend(idxs.tolist())
+        else:
+            keep_idxs.extend(rng.choice(idxs, size=n_per_sample, replace=False).tolist())
+    adata = adata[np.sort(np.asarray(keep_idxs))].copy()
+    print(f"After subsampling: {adata.n_obs:,d} cells across {adata.obs[par['sample_key']].nunique()} donors")
 
 print("Setting up the representation method")
 representation_method = pr.tl.DiffusionEarthMoverDistance(

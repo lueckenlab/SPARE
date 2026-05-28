@@ -35,16 +35,16 @@ arguments:
     required: true
     example: "X_pca"
 
-  - type: integer 
-    name: --n_workers
-    description: Number of workers to use for parallel processing
+  - type: boolean
+    name: --use_gpu
+    description: Run the GloScope_py kNN density estimation on GPU via cuML (requires the gloscope env's CUDA stack).
     required: false
-    default: 1
+    default: true
 
   - type: integer
     name: --n_components
     description: |
-      Number of components to subset the embedding layer to. 
+      Number of components to subset the embedding layer to.
       Significant speed-up when set to a lower number, but not applicable for all methods.
     required: false
     example: 10
@@ -61,3 +61,8 @@ runners:
   - type: nextflow
     directives:
       label: [veryhighmem, gpu]
+      # GloScope_py(use_gpu=True) needs cuML, which isn't in the shared
+      # sample_representation_benchmark env. Activate the dedicated GPU env
+      # (patpy 0.16.5 + cuml 26.04.0) for this component only — same pattern
+      # as pilot_gm_vae.
+      beforeScript: "source /home/icb/vladimir.shitov/software/miniconda3/etc/profile.d/conda.sh && conda activate patpy-benchmark-tutorial-gpu"

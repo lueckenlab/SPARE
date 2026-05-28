@@ -11,11 +11,11 @@ np.random.seed(42)
 ## VIASH START
 par = {
     "input": "data/combat_processed.h5ad",
-    "output": "data/combat_pseudobulk_pca.h5ad",
+    "output": "data/combat_gloscope_pca.csv",
     "sample_key":"scRNASeq_sample_ID",
     "cell_type_key": "Annotation_major_subset",
     "layer": "X_pca",
-    "n_workers": 1,
+    "use_gpu": True,
     "n_components": 10,
 }
 ## VIASH END
@@ -25,16 +25,14 @@ adata = sc.read(par["input"])
 
 print(adata)
 
-if par["n_components"] is not None:
-    print(f"Subsetting the {par['layer']} layer to {par['n_components']} components")
-    adata.obsm[par["layer"]] = adata.obsm[par["layer"]][:, :par["n_components"]]
-
 print("Setting up the representation method")
-representation_method = pr.tl.GloScope(
+representation_method = pr.tl.GloScope_py(
     sample_key=par["sample_key"],
     cell_group_key=par["cell_type_key"],
     layer=par["layer"],
-    n_workers=par["n_workers"],
+    use_gpu=par["use_gpu"],
+    n_components=par.get("n_components"),
+    seed=42,
 )
 
 print("Preparing the anndata object")

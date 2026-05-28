@@ -47,6 +47,17 @@ arguments:
     required: false
     default: 6
 
+  - type: integer
+    name: --subset_n_cells_per_sample
+    description: |
+      Maximum cells per donor (sample) to keep before computing the kNN
+      graph. Donors with fewer cells are kept whole. Default 2000 to keep
+      the diffusion graph tractable on large cohorts (hlca / sound_life /
+      imm_of_aging would otherwise OOM under any reasonable mem cap).
+      Set to 0 to disable subsampling.
+    required: false
+    default: 2000
+
 resources:
   - type: python_script
     path: script.py

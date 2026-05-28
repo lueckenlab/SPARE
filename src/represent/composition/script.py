@@ -15,6 +15,8 @@ par = {
     "sample_key":"scRNASeq_sample_ID",
     "cell_type_key": "Annotation_major_subset",
     "distance_metric": "euclidean",
+    "apply_clr": False,
+    "pseudocount": 1.0,
 }
 ## VIASH END
 
@@ -23,10 +25,12 @@ adata = sc.read(par["input"])
 
 print(adata)
 
-print("Setting up th representation method")
+print(f"Setting up the representation method (apply_clr={par['apply_clr']})")
 representation_method = pr.tl.CellGroupComposition(
     sample_key=par["sample_key"],
     cell_group_key=par["cell_type_key"],
+    apply_clr=par["apply_clr"],
+    pseudocount=par["pseudocount"],
 )
 
 print("Preparing the anndata object")
