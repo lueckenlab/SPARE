@@ -1,0 +1,4 @@
+- id: scct_db_cd45pos
+  dataset_info: ../../../data/scct_db_cd45pos/dataset_info.yaml
+- id: scct_db_cd45neg
+  dataset_info: ../../../data/scct_db_cd45neg/dataset_info.yaml

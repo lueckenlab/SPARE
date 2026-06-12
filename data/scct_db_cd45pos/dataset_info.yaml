@@ -1,0 +1,47 @@
+id: scct_db_cd45pos
+
+# scCT-DB GSE246613 (TNBC + neoadjuvant pembrolizumab), immune (CD45+) compartment.
+# Split from the combined cohort by CD45 sort (the two compartments are
+# biologically incomparable). Within this split, sort is constant and the
+# source-dataset split encodes the response label -> NO batch covariate:
+# integration is over sample_id only, so only X_*_sample embeddings exist.
+# Built by data/scct_db/split_by_sort.py.
+
+files:
+  raw: scct_db_cd45pos_cleaned.h5ad
+  cleaned: scct_db_cd45pos_cleaned.h5ad
+  processed: scct_db_cd45pos_processed.h5ad
+  metadata: scct_db_cd45pos_metadata.csv
+  representations: scct_db_cd45pos_representations.h5ad
+
+keys:
+  sample: sample_id
+  cell_type: cell_type
+  batch: source              # constant ("GSE246613") -> global HVG (no real batch)
+  batch_covariates: [sample_id]   # [0]->X_*_sample only; no batch covariate
+
+metadata:
+  samples_metadata_cols:
+    - response
+    - timepoint
+    - dataset
+    - patient
+    - source
+  accessible_metadata_columns:
+    - timepoint
+
+preprocess:
+  sample_size_threshold: 100
+  output_compression: gzip
+  n_scanvi_epochs: 20
+
+supervision:
+  label: response
+  task: classification
+
+evaluate:
+  benchmark_schema: benchmark_schema.json
+  trajectory_variable: null
+  root_sample: null
+  inverse_trajectory: false
+  figure_format: png

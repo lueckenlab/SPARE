@@ -1,0 +1,259 @@
+pseudobulk:
+  counts_mean_euclidean:
+    layer: X_raw_counts
+    aggregation: mean
+  counts_mean_cosine:
+    layer: X_raw_counts
+    aggregation: mean
+    distance: cosine
+  counts_sum:
+    layer: X_raw_counts
+    aggregation: sum
+  pca_euclidean:
+    layer: X_pca
+    distance: euclidean
+  pca_cosine:
+    layer: X_pca
+    distance: cosine
+  scpoli_euclidean:
+    layer: X_scpoli
+    distance: euclidean
+  scpoli_cosine:
+    layer: X_scpoli
+    distance: cosine
+  scvi_sample_id_euclidean:
+    layer: X_scVI_sample
+    distance: euclidean
+  scvi_sample_id_cosine:
+    layer: X_scVI_sample
+    distance: cosine
+  scanvi_sample_id_euclidean:
+    layer: X_scANVI_sample
+    distance: euclidean
+  scanvi_sample_id_cosine:
+    layer: X_scANVI_sample
+    distance: cosine
+grouped_pseudobulk:
+  pca_euclidean:
+    layer: X_pca
+    distance: euclidean
+  pca_cosine:
+    layer: X_pca
+    distance: cosine
+  scpoli_euclidean:
+    layer: X_scpoli
+    distance: euclidean
+  scpoli_cosine:
+    layer: X_scpoli
+    distance: cosine
+  scvi_sample_id_euclidean:
+    layer: X_scVI_sample
+    distance: euclidean
+  scvi_sample_id_cosine:
+    layer: X_scVI_sample
+    distance: cosine
+  scanvi_sample_id_euclidean:
+    layer: X_scANVI_sample
+    distance: euclidean
+  scanvi_sample_id_cosine:
+    layer: X_scANVI_sample
+    distance: cosine
+random_vector:
+  dimensionality_30:
+    latent_dim: 30
+    seed: 42
+  dimensionality_10:
+    latent_dim: 10
+    seed: 42
+cell_group_composition:
+  euclidean:
+    distance: euclidean
+  cosine:
+    distance: cosine
+  clr_euclidean:
+    apply_clr: true
+    distance: euclidean
+  clr_cosine:
+    apply_clr: true
+    distance: cosine
+mrvi:
+  epochs_100:
+    max_epochs: 100
+scpoli:
+  sample_embeddings:
+    max_epochs: 50
+pilot:
+  pca:
+    layer: X_pca
+  scpoli:
+    layer: X_scpoli
+  scvi_sample_id:
+    layer: X_scVI_sample
+  scanvi_sample_id:
+    layer: X_scANVI_sample
+mofa:
+  counts:
+    layer: X_raw_counts
+  log_counts:
+    layer: X_log_norm_counts
+  pca:
+    layer: X_pca
+  scpoli:
+    layer: X_scpoli
+  scvi_sample_id:
+    layer: X_scVI_sample
+  scanvi_sample_id:
+    layer: X_scANVI_sample
+gloscope:
+  pca:
+    layer: X_pca
+    use_gpu: true
+    n_components: 10
+  scpoli:
+    layer: X_scpoli
+    use_gpu: true
+  scvi_sample_id:
+    layer: X_scVI_sample
+    use_gpu: true
+  scanvi_sample_id:
+    layer: X_scANVI_sample
+    use_gpu: true
+diffusionemd_DISABLED:
+  pca:
+    layer: X_pca
+  scpoli:
+    layer: X_scpoli
+  scvi_sample_id:
+    layer: X_scVI_sample
+  scanvi_sample_id:
+    layer: X_scANVI_sample
+phemd:
+  pca:
+    layer: X_pca
+    subset_n_obs: 2000
+  scpoli:
+    layer: X_scpoli
+    subset_n_obs: 2000
+  scvi_sample_id:
+    layer: X_scVI_sample
+    subset_n_obs: 2000
+  scanvi_sample_id:
+    layer: X_scANVI_sample
+    subset_n_obs: 2000
+pilot_gm_vae_DISABLED:
+  pca:
+    layer: X_pca
+    cuda: 1
+  scpoli:
+    layer: X_scpoli
+    cuda: 1
+  scvi_sample_id:
+    layer: X_scVI_sample
+    cuda: 1
+  scanvi_sample_id:
+    layer: X_scANVI_sample
+    cuda: 1
+sampleclr:
+  pca_t05:
+    layer: X_pca
+    contrastive_loss_temperature: 0.5
+  scpoli_t05:
+    layer: X_scpoli
+    contrastive_loss_temperature: 0.5
+  scvi_sample_id_t05:
+    layer: X_scVI_sample
+    contrastive_loss_temperature: 0.5
+  scanvi_sample_id_t05:
+    layer: X_scANVI_sample
+    contrastive_loss_temperature: 0.5
+  pca_t05_ba:
+    layer: X_pca
+    contrastive_loss_temperature: 0.5
+    use_batch_aware_sampler: true
+  scpoli_t05_ba:
+    layer: X_scpoli
+    contrastive_loss_temperature: 0.5
+    use_batch_aware_sampler: true
+  scvi_sample_id_t05_ba:
+    layer: X_scVI_sample
+    contrastive_loss_temperature: 0.5
+    use_batch_aware_sampler: true
+  scanvi_sample_id_t05_ba:
+    layer: X_scANVI_sample
+    contrastive_loss_temperature: 0.5
+    use_batch_aware_sampler: true
+mixmil:
+  pca:
+    layer: X_pca
+    n_epochs: 500
+  scpoli:
+    layer: X_scpoli
+    n_epochs: 500
+  scvi_sample_id:
+    layer: X_scVI_sample
+    n_epochs: 500
+  scanvi_sample_id:
+    layer: X_scANVI_sample
+    n_epochs: 500
+pascient:
+  raw_counts:
+    layer: X_raw_counts
+    n_epochs: 20
+    normalize: true
+sampleclr_supervised:
+  pca:
+    layer: X_pca
+    num_epochs_pretrain: 100
+    num_epochs_fine_tune: 50
+    contrastive_loss_temperature: 0.1
+  scpoli:
+    layer: X_scpoli
+    num_epochs_pretrain: 100
+    num_epochs_fine_tune: 50
+    contrastive_loss_temperature: 0.1
+  scvi_sample_id:
+    layer: X_scVI_sample
+    num_epochs_pretrain: 100
+    num_epochs_fine_tune: 50
+    contrastive_loss_temperature: 0.1
+  scanvi_sample_id:
+    layer: X_scANVI_sample
+    num_epochs_pretrain: 100
+    num_epochs_fine_tune: 50
+    contrastive_loss_temperature: 0.1
+  pca_ba:
+    layer: X_pca
+    num_epochs_pretrain: 100
+    num_epochs_fine_tune: 50
+    contrastive_loss_temperature: 0.1
+    use_batch_aware_sampler: true
+  scpoli_ba:
+    layer: X_scpoli
+    num_epochs_pretrain: 100
+    num_epochs_fine_tune: 50
+    contrastive_loss_temperature: 0.1
+    use_batch_aware_sampler: true
+  scvi_sample_id_ba:
+    layer: X_scVI_sample
+    num_epochs_pretrain: 100
+    num_epochs_fine_tune: 50
+    contrastive_loss_temperature: 0.1
+    use_batch_aware_sampler: true
+  scanvi_sample_id_ba:
+    layer: X_scANVI_sample
+    num_epochs_pretrain: 100
+    num_epochs_fine_tune: 50
+    contrastive_loss_temperature: 0.1
+    use_batch_aware_sampler: true
+pseudobulk_probe:
+  pca:
+    layer: X_pca
+  scpoli:
+    layer: X_scpoli
+  scvi_sample_id:
+    layer: X_scVI_sample
+  scanvi_sample_id:
+    layer: X_scANVI_sample
+composition_probe:
+  clr:
+    apply_clr: true
